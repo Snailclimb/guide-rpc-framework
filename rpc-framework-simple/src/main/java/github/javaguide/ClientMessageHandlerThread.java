@@ -1,6 +1,8 @@
 package github.javaguide;
 
 import github.javaguide.dto.RpcRequest;
+import github.javaguide.dto.RpcResponse;
+import github.javaguide.enumeration.RpcResponseCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,12 +17,12 @@ import java.net.Socket;
  * @author shuang.kou
  * @createTime 2020年05月10日 09:18:00
  */
-public class WorkerThread implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(WorkerThread.class);
+public class ClientMessageHandlerThread implements Runnable {
+    private static final Logger logger = LoggerFactory.getLogger(ClientMessageHandlerThread.class);
     private Socket socket;
     private Object service;
 
-    public WorkerThread(Socket socket, Object service) {
+    public ClientMessageHandlerThread(Socket socket, Object service) {
         this.socket = socket;
         this.service = service;
     }
@@ -32,12 +34,24 @@ public class WorkerThread implements Runnable {
         try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
             RpcRequest rpcRequest = (RpcRequest) objectInputStream.readObject();
-            Method method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypes());
-            Object result = method.invoke(service, rpcRequest.getParameters());
-            objectOutputStream.writeObject(result);
+            Object result = invokeTargetMethod(rpcRequest);
+            objectOutputStream.writeObject(RpcResponse.success(result));
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             logger.error("occur exception:", e);
         }
+    }
+
+    private Object invokeTargetMethod(RpcRequest rpcRequest) throws NoSuchMethodException, ClassNotFoundException, IllegalAccessException, InvocationTargetException {
+        Class<?> cls = Class.forName(rpcRequest.getInterfaceName());
+        // 判断类是否实现了对应的接口
+        if (!cls.isAssignableFrom(service.getClass())) {
+            return RpcResponse.fail(RpcResponseCode.NOT_FOUND_CLASS);
+        }
+        Method method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypes());
+        if (null == method) {
+            return RpcResponse.fail(RpcResponseCode.NOT_FOUND_METHOD);
+        }
+        return method.invoke(service, rpcRequest.getParameters());
     }
 }
