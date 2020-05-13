@@ -1,4 +1,4 @@
-package github.javaguide;
+package github.javaguide.remoting.socket;
 
 import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
@@ -18,7 +18,7 @@ import java.net.Socket;
  * @createTime 2020年05月10日 18:40:00
  */
 public class RpcClient {
-    public static final Logger logger = LoggerFactory.getLogger(RpcClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(RpcClient.class);
 
     public Object sendRpcRequest(RpcRequest rpcRequest, String host, int port) {
         try (Socket socket = new Socket(host, port)) {

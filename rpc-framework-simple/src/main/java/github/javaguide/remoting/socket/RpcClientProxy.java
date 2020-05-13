@@ -1,4 +1,4 @@
-package github.javaguide;
+package github.javaguide.remoting.socket;
 
 import github.javaguide.dto.RpcRequest;
 import org.slf4j.Logger;
