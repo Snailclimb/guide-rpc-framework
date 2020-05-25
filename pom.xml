@@ -15,6 +15,8 @@
         <!--logging-->
         <log4j.version>2.9.0</log4j.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <netty.version>4.1.42.Final</netty.version>
+        <kryo.version>4.0.2</kryo.version>
     </properties>
     <modules>
         <module>rpc-framework-core</module>

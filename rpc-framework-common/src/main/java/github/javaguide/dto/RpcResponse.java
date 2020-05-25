@@ -1,9 +1,12 @@
 package github.javaguide.dto;
 
 import github.javaguide.enumeration.RpcResponseCode;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 
@@ -11,7 +14,12 @@ import java.io.Serializable;
  * @author shuang.kou
  * @createTime 2020年05月12日 16:15:00
  */
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@ToString
 public class RpcResponse<T> implements Serializable {
 
     private static final long serialVersionUID = 715745410605631233L;
