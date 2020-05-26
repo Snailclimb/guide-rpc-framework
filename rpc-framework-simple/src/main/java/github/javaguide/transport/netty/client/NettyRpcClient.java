@@ -20,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 客户端。发送消息到服务端，并接收服务端返回的方法执行结果
+ *
  * @author shuang.kou
  * @createTime 2020年05月25日 16:43:00
  */

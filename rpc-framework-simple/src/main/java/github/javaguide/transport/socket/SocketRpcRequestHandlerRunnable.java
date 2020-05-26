@@ -33,6 +33,7 @@ public class SocketRpcRequestHandlerRunnable implements Runnable {
 
     @Override
     public void run() {
+        logger.info(String.format("server handle message from client by thread: %s", Thread.currentThread().getName()));
         try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
             RpcRequest rpcRequest = (RpcRequest) objectInputStream.readObject();

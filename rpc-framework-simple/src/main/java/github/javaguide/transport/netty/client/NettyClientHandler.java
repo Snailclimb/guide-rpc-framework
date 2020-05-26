@@ -3,6 +3,7 @@ package github.javaguide.transport.netty.client;
 import github.javaguide.dto.RpcResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
 import org.slf4j.Logger;
@@ -10,6 +11,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 自定义客户端 ChannelHandler 来处理服务端发过来的数据
+ *
+ * <p>
+ * 如果继承自 SimpleChannelInboundHandler 的话就不要考虑 ByteBuf 的释放 ，{@link SimpleChannelInboundHandler} 内部的
+ * channelRead 方法会替你释放 ByteBuf ，避免可能导致的内存泄露问题。详见《Netty进阶之路 跟着案例学 Netty》
  *
  * @author shuang.kou
  * @createTime 2020年05月25日 20:50:00
