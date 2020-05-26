@@ -1,13 +1,13 @@
 package github.javaguide.transport;
 
 import github.javaguide.dto.RpcRequest;
-import github.javaguide.transport.socket.SocketRpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.UUID;
 
 /**
  * @author shuang.kou
@@ -33,6 +33,7 @@ public class RpcClientProxy implements InvocationHandler {
                 .parameters(args)
                 .interfaceName(method.getDeclaringClass().getName())
                 .paramTypes(method.getParameterTypes())
+                .requestId(UUID.randomUUID().toString())
                 .build();
         return rpcClient.sendRpcRequest(rpcRequest);
     }

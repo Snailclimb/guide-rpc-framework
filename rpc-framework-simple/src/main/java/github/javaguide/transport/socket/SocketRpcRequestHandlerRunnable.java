@@ -22,8 +22,9 @@ public class SocketRpcRequestHandlerRunnable implements Runnable {
     private Socket socket;
     private static RpcRequestHandler rpcRequestHandler;
     private static ServiceRegistry serviceRegistry;
+
     static {
-        rpcRequestHandler=new RpcRequestHandler();
+        rpcRequestHandler = new RpcRequestHandler();
         serviceRegistry = new DefaultServiceRegistry();
     }
 
@@ -40,7 +41,7 @@ public class SocketRpcRequestHandlerRunnable implements Runnable {
             String interfaceName = rpcRequest.getInterfaceName();
             Object service = serviceRegistry.getService(interfaceName);
             Object result = rpcRequestHandler.handle(rpcRequest, service);
-            objectOutputStream.writeObject(RpcResponse.success(result));
+            objectOutputStream.writeObject(RpcResponse.success(result, rpcRequest.getRequestId()));
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException e) {
             logger.error("occur exception:", e);

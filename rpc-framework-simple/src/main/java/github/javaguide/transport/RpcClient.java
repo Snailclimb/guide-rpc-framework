@@ -7,5 +7,5 @@ import github.javaguide.dto.RpcRequest;
  * @createTime 2020年05月25日 17:02:00
  */
 public interface RpcClient {
-   Object sendRpcRequest(RpcRequest rpcRequest);
+    Object sendRpcRequest(RpcRequest rpcRequest);
 }
