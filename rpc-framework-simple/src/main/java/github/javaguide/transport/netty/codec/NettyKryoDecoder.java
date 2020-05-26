@@ -1,4 +1,4 @@
-package github.javaguide.transport.netty;
+package github.javaguide.transport.netty.codec;
 
 import github.javaguide.serialize.Serializer;
 import io.netty.buffer.ByteBuf;
@@ -11,8 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
+ * 自定义解码器。负责处理"入站"消息，将消息格式转换为我们需要的业务对象
+ *
  * @author shuang.kou
- * @createTime 2020年05月13日 19:42:00
+ * @createTime 2020年05月25日 19:42:00
  */
 @AllArgsConstructor
 public class NettyKryoDecoder extends ByteToMessageDecoder {
@@ -26,31 +28,40 @@ public class NettyKryoDecoder extends ByteToMessageDecoder {
      */
     private static final int BODY_LENGTH = 4;
 
+    /**
+     * 解码 ByteBuf 对象
+     *
+     * @param ctx 解码器关联的 ChannelHandlerContext 对象
+     * @param in  "入站"数据，也就是 ByteBuf 对象
+     * @param out 解码之后的数据对象需要添加到 out 对象里面
+     */
     @Override
-    protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
 
         //1.byteBuf中写入的消息长度所占的字节数已经是4了，所以 byteBuf 的可读字节必须大于 4，
-        if (byteBuf.readableBytes() >= BODY_LENGTH) {
+        if (in.readableBytes() >= BODY_LENGTH) {
             //2.标记当前readIndex的位置，以便后面重置readIndex 的时候使用
-            byteBuf.markReaderIndex();
+            in.markReaderIndex();
             //3.读取消息的长度
             //注意： 消息长度是encode的时候我们自己写入的，参见 NettyKryoEncoder 的encode方法
-            int dataLength = byteBuf.readInt();
+            int dataLength = in.readInt();
             //4.遇到不合理的情况直接 return
-            if (dataLength < 0 || byteBuf.readableBytes() < 0) {
+            if (dataLength < 0 || in.readableBytes() < 0) {
+                logger.error("data length or byteBuf readableBytes is not valid");
                 return;
             }
             //5.如果可读字节数小于消息长度的话，说明是不完整的消息，重置readIndex
-            if (byteBuf.readableBytes() < dataLength) {
-                byteBuf.resetReaderIndex();
+            if (in.readableBytes() < dataLength) {
+                in.resetReaderIndex();
                 return;
             }
             // 6.走到这里说明没什么问题了，可以序列化了
             byte[] body = new byte[dataLength];
-            byteBuf.readBytes(body);
+            in.readBytes(body);
             // 将bytes数组转换为我们需要的对象
             Object obj = serializer.deserialize(body, genericClass);
-            list.add(obj);
+            out.add(obj);
+            logger.info("successful decode ByteBuf to Object");
         }
     }
 }

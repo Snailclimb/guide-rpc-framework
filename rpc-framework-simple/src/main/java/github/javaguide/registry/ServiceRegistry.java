@@ -1,6 +1,8 @@
 package github.javaguide.registry;
 
 /**
+ * 服务注册中心接口
+ *
  * @author shuang.kou
  * @createTime 2020年05月13日 08:39:00
  */

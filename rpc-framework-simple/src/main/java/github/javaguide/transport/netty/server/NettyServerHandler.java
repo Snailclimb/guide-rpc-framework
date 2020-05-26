@@ -1,4 +1,4 @@
-package github.javaguide.transport.netty;
+package github.javaguide.transport.netty.server;
 
 import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
@@ -14,18 +14,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 自定义服务端的 ChannelHandler 来处理客户端发过来的数据
+ *
  * @author shuang.kou
- * @createTime 2020年05月13日 20:44:00
+ * @createTime 2020年05月25日 20:44:00
  */
 public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(NettyServerHandler.class);
     private static RpcRequestHandler rpcRequestHandler;
     private static ServiceRegistry serviceRegistry;
+
     static {
-        rpcRequestHandler=new RpcRequestHandler();
+        rpcRequestHandler = new RpcRequestHandler();
         serviceRegistry = new DefaultServiceRegistry();
     }
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {

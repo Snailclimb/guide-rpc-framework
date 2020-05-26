@@ -1,9 +1,11 @@
-package github.javaguide.transport.netty;
+package github.javaguide.transport.netty.client;
 
 import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
 import github.javaguide.serialize.kyro.KryoSerializer;
 import github.javaguide.transport.RpcClient;
+import github.javaguide.transport.netty.codec.NettyKryoDecoder;
+import github.javaguide.transport.netty.codec.NettyKryoEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
