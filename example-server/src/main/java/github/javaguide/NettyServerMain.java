@@ -1,8 +1,7 @@
 package github.javaguide;
 
 import github.javaguide.registry.DefaultServiceRegistry;
-import github.javaguide.transport.netty.NettyRpcServer;
-import github.javaguide.transport.socket.SocketRpcServer;
+import github.javaguide.transport.netty.server.NettyRpcServer;
 
 /**
  * @author shuang.kou

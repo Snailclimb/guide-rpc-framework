@@ -2,8 +2,7 @@ package github.javaguide;
 
 import github.javaguide.transport.RpcClient;
 import github.javaguide.transport.RpcClientProxy;
-import github.javaguide.transport.netty.NettyRpcClient;
-import github.javaguide.transport.socket.SocketRpcClient;
+import github.javaguide.transport.netty.client.NettyRpcClient;
 
 /**
  * @author shuang.kou

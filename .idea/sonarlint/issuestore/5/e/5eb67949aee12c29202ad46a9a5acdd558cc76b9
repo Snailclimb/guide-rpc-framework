@@ -1,2 +1,6 @@
 
-U	java:S106"9Replace this use of System.out or System.err by a logger.(ß«Åº8‡¨ôÁ .
+U	java:S106"9Replace this use of System.out or System.err by a logger.(ß«Åº8‡¨ôÁ .
+[
+java:S1854">Remove this useless assignment to local variable "rpcClient2".(ú³µ¿8Õ«ÙØ¤.
+L
+java:S1481"/Remove this unused "rpcClient2" local variable.(ú³µ¿8÷åÛØ¤.

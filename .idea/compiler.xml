@@ -8,10 +8,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="rpc-framework-core" />
+        <module name="hello-service-api" />
         <module name="example-server" />
         <module name="rpc-framework-simple" />
         <module name="example-client" />
-        <module name="hello-service-api" />
         <module name="rpc-framework-common" />
       </profile>
     </annotationProcessing>
