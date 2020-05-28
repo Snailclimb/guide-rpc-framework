@@ -86,7 +86,7 @@ public class NettyRpcClient implements RpcClient {
                 return rpcResponse.getData();
             }
         } catch (InterruptedException e) {
-            logger.error("occur exception when connect server:", e);
+            logger.error("occur github.javaguide.exception when connect server:", e);
         }
         return null;
     }

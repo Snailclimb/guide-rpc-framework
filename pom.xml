@@ -22,11 +22,11 @@
         <guava.version>29.0-jre</guava.version>
     </properties>
     <modules>
-        <module>rpc-framework-core</module>
         <module>rpc-framework-simple</module>
         <module>hello-service-api</module>
         <module>example-client</module>
         <module>example-server</module>
+        <module>rpc-framework-common</module>
         <module>rpc-framework-common</module>
     </modules>
     <dependencies>
@@ -47,5 +47,17 @@
             <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${encoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
