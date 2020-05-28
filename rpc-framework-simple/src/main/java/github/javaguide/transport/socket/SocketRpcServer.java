@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService;
  */
 public class SocketRpcServer {
 
-    private ExecutorService threadPool;
+    private final ExecutorService threadPool;
     private static final Logger logger = LoggerFactory.getLogger(SocketRpcServer.class);
 
     public SocketRpcServer() {
@@ -24,7 +24,7 @@ public class SocketRpcServer {
 
     public void start(int port) {
 
-        try (ServerSocket server = new ServerSocket(port);) {
+        try (ServerSocket server = new ServerSocket(port)) {
             logger.info("server starts...");
             Socket socket;
             while ((socket = server.accept()) != null) {

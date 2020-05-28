@@ -81,12 +81,13 @@ public class NettyRpcClient implements RpcClient {
                 futureChannel.closeFuture().sync();
                 AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse" + rpcRequest.getRequestId());
                 RpcResponse rpcResponse = futureChannel.attr(key).get();
+                logger.info("client get rpcResponse from channel:{}", rpcResponse);
                 //校验 RpcResponse 和 RpcRequest
                 RpcMessageChecker.check(rpcResponse, rpcRequest);
                 return rpcResponse.getData();
             }
         } catch (InterruptedException e) {
-            logger.error("occur github.javaguide.exception when connect server:", e);
+            logger.error("occur exception when connect server:", e);
         }
         return null;
     }

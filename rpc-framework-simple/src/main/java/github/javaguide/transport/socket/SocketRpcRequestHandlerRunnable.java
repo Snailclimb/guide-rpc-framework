@@ -2,8 +2,6 @@ package github.javaguide.transport.socket;
 
 import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
-import github.javaguide.registry.DefaultServiceRegistry;
-import github.javaguide.registry.ServiceRegistry;
 import github.javaguide.transport.RpcRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +18,10 @@ import java.net.Socket;
 public class SocketRpcRequestHandlerRunnable implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(SocketRpcRequestHandlerRunnable.class);
     private Socket socket;
-    private static RpcRequestHandler rpcRequestHandler;
-    private static ServiceRegistry serviceRegistry;
+    private static final RpcRequestHandler rpcRequestHandler;
 
     static {
         rpcRequestHandler = new RpcRequestHandler();
-        serviceRegistry = new DefaultServiceRegistry();
     }
 
     public SocketRpcRequestHandlerRunnable(Socket socket) {
@@ -38,13 +34,11 @@ public class SocketRpcRequestHandlerRunnable implements Runnable {
         try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
             RpcRequest rpcRequest = (RpcRequest) objectInputStream.readObject();
-            String interfaceName = rpcRequest.getInterfaceName();
-            Object service = serviceRegistry.getService(interfaceName);
-            Object result = rpcRequestHandler.handle(rpcRequest, service);
+            Object result = rpcRequestHandler.handle(rpcRequest);
             objectOutputStream.writeObject(RpcResponse.success(result, rpcRequest.getRequestId()));
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException e) {
-            logger.error("occur github.javaguide.exception:", e);
+            logger.error("occur exception:", e);
         }
     }
 

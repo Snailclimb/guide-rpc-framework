@@ -49,7 +49,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error("client catch github.javaguide.exception：", cause);
+        logger.error("client catch exception：", cause);
         cause.printStackTrace();
         ctx.close();
     }

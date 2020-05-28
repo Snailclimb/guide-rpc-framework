@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  * @createTime 2020年05月12日 17:36:00
  */
 public class HelloServiceImpl2 {
-    private static final Logger logger = LoggerFactory.getLogger(HelloServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(HelloServiceImpl2.class);
 
     public String hello(Hello hello) {
         logger.info("HelloServiceImpl2收到: {}.", hello.getMessage());
