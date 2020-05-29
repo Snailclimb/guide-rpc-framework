@@ -1,7 +1,7 @@
 package github.javaguide;
 
 import github.javaguide.registry.DefaultServiceRegistry;
-import github.javaguide.transport.netty.server.NettyRpcServer;
+import github.javaguide.transport.netty.server.NettyServer;
 
 /**
  * @author shuang.kou
@@ -13,7 +13,7 @@ public class NettyServerMain {
         DefaultServiceRegistry defaultServiceRegistry = new DefaultServiceRegistry();
         // 手动注册
         defaultServiceRegistry.register(helloService);
-        NettyRpcServer socketRpcServer = new NettyRpcServer(9999);
+        NettyServer socketRpcServer = new NettyServer(9999);
         socketRpcServer.run();
     }
 }

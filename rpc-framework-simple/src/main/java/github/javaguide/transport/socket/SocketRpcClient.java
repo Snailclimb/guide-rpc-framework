@@ -3,7 +3,7 @@ package github.javaguide.transport.socket;
 import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
 import github.javaguide.exception.RpcException;
-import github.javaguide.transport.RpcClient;
+import github.javaguide.transport.ClientTransport;
 import github.javaguide.utils.checker.RpcMessageChecker;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ import java.net.Socket;
  * @createTime 2020年05月10日 18:40:00
  */
 @AllArgsConstructor
-public class SocketRpcClient implements RpcClient {
+public class SocketRpcClient implements ClientTransport {
     private static final Logger logger = LoggerFactory.getLogger(SocketRpcClient.class);
     private String host;
     private int port;
@@ -37,6 +37,7 @@ public class SocketRpcClient implements RpcClient {
             RpcMessageChecker.check(rpcResponse, rpcRequest);
             return rpcResponse.getData();
         } catch (IOException | ClassNotFoundException e) {
+            logger.error("occur exception when send sendRpcRequest");
             throw new RpcException("调用服务失败:", e);
         }
     }
