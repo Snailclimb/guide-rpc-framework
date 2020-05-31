@@ -1,4 +1,4 @@
-package github.javaguide.registry;
+package github.javaguide.provider;
 
 import github.javaguide.enumeration.RpcErrorMessageEnum;
 import github.javaguide.exception.RpcException;
@@ -10,16 +10,16 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 默认的服务注册中心实现，通过 Map 保存服务信息，可以通过 zookeeper 来改进
- *
  * @author shuang.kou
  * @createTime 2020年05月13日 11:23:00
  */
-public class DefaultServiceRegistry implements ServiceRegistry {
-    private static final Logger logger = LoggerFactory.getLogger(DefaultServiceRegistry.class);
+public class ServiceProviderImpl implements ServiceProvider {
+    private static final Logger logger = LoggerFactory.getLogger(ServiceProviderImpl.class);
+
 
     /**
-     * 接口名和服务的对应关系，TODO 处理一个接口被两个实现类实现的情况
+     * 接口名和服务的对应关系
+     * note:处理一个接口被两个实现类实现的情况如何处理？
      * key:service/interface name
      * value:service
      */
@@ -27,11 +27,11 @@ public class DefaultServiceRegistry implements ServiceRegistry {
     private static final Set<String> registeredService = ConcurrentHashMap.newKeySet();
 
     /**
-     * TODO 修改为扫描注解注册
+     * note:可以修改为扫描注解注册
      * 将这个对象所有实现的接口都注册进去
      */
     @Override
-    public synchronized <T> void register(T service) {
+    public <T> void addServiceProvider(T service) {
         String serviceName = service.getClass().getCanonicalName();
         if (registeredService.contains(serviceName)) {
             return;
@@ -48,7 +48,7 @@ public class DefaultServiceRegistry implements ServiceRegistry {
     }
 
     @Override
-    public synchronized Object getService(String serviceName) {
+    public Object getServiceProvider(String serviceName) {
         Object service = serviceMap.get(serviceName);
         if (null == service) {
             throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND);

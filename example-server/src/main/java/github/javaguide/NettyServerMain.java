@@ -1,6 +1,5 @@
 package github.javaguide;
 
-import github.javaguide.registry.DefaultServiceRegistry;
 import github.javaguide.transport.netty.server.NettyServer;
 
 /**
@@ -9,11 +8,8 @@ import github.javaguide.transport.netty.server.NettyServer;
  */
 public class NettyServerMain {
     public static void main(String[] args) {
-        HelloServiceImpl helloService = new HelloServiceImpl();
-        DefaultServiceRegistry defaultServiceRegistry = new DefaultServiceRegistry();
-        // 手动注册
-        defaultServiceRegistry.register(helloService);
-        NettyServer socketRpcServer = new NettyServer(9999);
-        socketRpcServer.run();
+        HelloService helloService = new HelloServiceImpl();
+        NettyServer nettyServer = new NettyServer("127.0.0.1", 9999);
+        nettyServer.publishService(helloService, HelloService.class);
     }
 }

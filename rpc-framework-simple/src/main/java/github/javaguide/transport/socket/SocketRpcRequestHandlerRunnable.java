@@ -2,7 +2,7 @@ package github.javaguide.transport.socket;
 
 import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
-import github.javaguide.transport.RpcRequestHandler;
+import github.javaguide.handler.RpcRequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

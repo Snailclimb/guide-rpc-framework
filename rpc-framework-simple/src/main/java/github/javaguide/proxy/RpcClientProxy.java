@@ -1,6 +1,7 @@
-package github.javaguide.transport;
+package github.javaguide.proxy;
 
 import github.javaguide.dto.RpcRequest;
+import github.javaguide.transport.ClientTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

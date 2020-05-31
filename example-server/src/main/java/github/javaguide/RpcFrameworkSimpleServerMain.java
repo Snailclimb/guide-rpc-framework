@@ -1,6 +1,5 @@
 package github.javaguide;
 
-import github.javaguide.registry.DefaultServiceRegistry;
 import github.javaguide.transport.socket.SocketRpcServer;
 
 /**
@@ -9,11 +8,8 @@ import github.javaguide.transport.socket.SocketRpcServer;
  */
 public class RpcFrameworkSimpleServerMain {
     public static void main(String[] args) {
-        HelloServiceImpl helloService = new HelloServiceImpl();
-        DefaultServiceRegistry defaultServiceRegistry = new DefaultServiceRegistry();
-        // 手动注册
-        defaultServiceRegistry.register(helloService);
-        SocketRpcServer socketRpcServer = new SocketRpcServer();
-        socketRpcServer.start(9999);
+        HelloService helloService = new HelloServiceImpl();
+        SocketRpcServer socketRpcServer = new SocketRpcServer("127.0.0.1", 8080);
+        socketRpcServer.publishService(helloService,HelloService.class);
     }
 }

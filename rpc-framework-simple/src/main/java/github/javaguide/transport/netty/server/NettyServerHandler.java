@@ -2,7 +2,7 @@ package github.javaguide.transport.netty.server;
 
 import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
-import github.javaguide.transport.RpcRequestHandler;
+import github.javaguide.handler.RpcRequestHandler;
 import github.javaguide.utils.concurrent.ThreadPoolFactory;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;

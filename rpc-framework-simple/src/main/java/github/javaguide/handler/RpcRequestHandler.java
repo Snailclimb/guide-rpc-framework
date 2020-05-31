@@ -1,10 +1,10 @@
-package github.javaguide.transport;
+package github.javaguide.handler;
 
 import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
 import github.javaguide.enumeration.RpcResponseCode;
-import github.javaguide.registry.DefaultServiceRegistry;
-import github.javaguide.registry.ServiceRegistry;
+import github.javaguide.provider.ServiceProvider;
+import github.javaguide.provider.ServiceProviderImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +17,10 @@ import java.lang.reflect.Method;
  */
 public class RpcRequestHandler {
     private static final Logger logger = LoggerFactory.getLogger(RpcRequestHandler.class);
-    private static final ServiceRegistry serviceRegistry;
+    private static final ServiceProvider SERVICE_PROVIDER;
 
     static {
-        serviceRegistry = new DefaultServiceRegistry();
+        SERVICE_PROVIDER = new ServiceProviderImpl();
     }
 
     /**
@@ -29,7 +29,7 @@ public class RpcRequestHandler {
     public Object handle(RpcRequest rpcRequest) {
         Object result = null;
         //通过注册中心获取到目标类（客户端需要调用类）
-        Object service = serviceRegistry.getService(rpcRequest.getInterfaceName());
+        Object service = SERVICE_PROVIDER.getServiceProvider(rpcRequest.getInterfaceName());
         try {
             result = invokeTargetMethod(rpcRequest, service);
             logger.info("service:{} successful invoke method:{}", rpcRequest.getInterfaceName(), rpcRequest.getMethodName());

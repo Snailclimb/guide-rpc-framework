@@ -2,6 +2,8 @@ package github.javaguide.transport.netty.client;
 
 import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
+import github.javaguide.registry.ServiceRegistry;
+import github.javaguide.registry.ZkServiceRegistry;
 import github.javaguide.transport.ClientTransport;
 import github.javaguide.utils.checker.RpcMessageChecker;
 import io.netty.channel.Channel;
@@ -14,21 +16,24 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
+ * 基于 Netty 传输 RpcRequest
+ *
  * @author shuang.kou
  * @createTime 2020年05月29日 11:34:00
  */
 public class NettyClientClientTransport implements ClientTransport {
     private static final Logger logger = LoggerFactory.getLogger(NettyClientClientTransport.class);
-    private InetSocketAddress inetSocketAddress;
+    private ServiceRegistry serviceRegistry;
 
-    public NettyClientClientTransport(InetSocketAddress inetSocketAddress) {
-        this.inetSocketAddress = inetSocketAddress;
+    public NettyClientClientTransport() {
+        this.serviceRegistry = new ZkServiceRegistry();
     }
 
     @Override
     public Object sendRpcRequest(RpcRequest rpcRequest) {
         AtomicReference<Object> result = new AtomicReference<>(null);
         try {
+            InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
             Channel channel = ChannelProvider.get(inetSocketAddress);
             if (channel.isActive()) {
                 channel.writeAndFlush(rpcRequest).addListener((ChannelFutureListener) future -> {

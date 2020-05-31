@@ -3,6 +3,8 @@ package github.javaguide.transport;
 import github.javaguide.dto.RpcRequest;
 
 /**
+ * 传输 RpcRequest。
+ *
  * @author shuang.kou
  * @createTime 2020年05月29日 13:26:00
  */
