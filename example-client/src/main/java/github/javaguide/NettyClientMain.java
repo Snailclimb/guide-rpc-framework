@@ -17,5 +17,6 @@ public class NettyClientMain {
         //如需使用 assert 断言，需要在 VM options 添加参数：-ea
         assert "Hello description is 222".equals(hello);
         String hello2 = helloService.hello(new Hello("111", "222"));
+        System.out.println(hello2);
     }
 }

@@ -3,8 +3,8 @@ package github.javaguide.transport.socket;
 import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
 import github.javaguide.exception.RpcException;
-import github.javaguide.registry.ServiceRegistry;
-import github.javaguide.registry.ZkServiceRegistry;
+import github.javaguide.registry.ServiceDiscovery;
+import github.javaguide.registry.ZkServiceDiscovery;
 import github.javaguide.transport.ClientTransport;
 import github.javaguide.utils.checker.RpcMessageChecker;
 import lombok.AllArgsConstructor;
@@ -26,15 +26,15 @@ import java.net.Socket;
 @AllArgsConstructor
 public class SocketRpcClient implements ClientTransport {
     private static final Logger logger = LoggerFactory.getLogger(SocketRpcClient.class);
-    private final ServiceRegistry serviceRegistry;
+    private final ServiceDiscovery serviceDiscovery;
 
     public SocketRpcClient() {
-        this.serviceRegistry = new ZkServiceRegistry();
+        this.serviceDiscovery = new ZkServiceDiscovery();
     }
 
     @Override
     public Object sendRpcRequest(RpcRequest rpcRequest) {
-        InetSocketAddress inetSocketAddress = serviceRegistry.lookupService(rpcRequest.getInterfaceName());
+        InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
         try (Socket socket = new Socket()) {
             socket.connect(inetSocketAddress);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
