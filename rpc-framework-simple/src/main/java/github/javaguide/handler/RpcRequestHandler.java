@@ -12,6 +12,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * RpcRequest 的处理器
+ *
  * @author shuang.kou
  * @createTime 2020年05月13日 09:05:00
  */
@@ -24,7 +26,7 @@ public class RpcRequestHandler {
     }
 
     /**
-     * 处理 rpcRequest 然后返回方法执行结果
+     * 处理 rpcRequest ：调用对应的方法，然后返回方法执行结果
      */
     public Object handle(RpcRequest rpcRequest) {
         Object result = null;

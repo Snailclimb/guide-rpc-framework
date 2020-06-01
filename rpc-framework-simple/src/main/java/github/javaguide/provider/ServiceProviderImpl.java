@@ -28,22 +28,15 @@ public class ServiceProviderImpl implements ServiceProvider {
 
     /**
      * note:可以修改为扫描注解注册
-     * 将这个对象所有实现的接口都注册进去
      */
     @Override
-    public <T> void addServiceProvider(T service) {
-        String serviceName = service.getClass().getCanonicalName();
+    public <T> void addServiceProvider(T service, Class<T> serviceClass) {
+        String serviceName = serviceClass.getCanonicalName();
         if (registeredService.contains(serviceName)) {
             return;
         }
         registeredService.add(serviceName);
-        Class[] interfaces = service.getClass().getInterfaces();
-        if (interfaces.length == 0) {
-            throw new RpcException(RpcErrorMessageEnum.SERVICE_NOT_IMPLEMENT_ANY_INTERFACE);
-        }
-        for (Class i : interfaces) {
-            serviceMap.put(i.getCanonicalName(), service);
-        }
+        serviceMap.put(serviceName, service);
         logger.info("Add service: {} and interfaces:{}", serviceName, service.getClass().getInterfaces());
     }
 

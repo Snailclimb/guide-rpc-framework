@@ -27,7 +27,10 @@ public class CuratorHelper {
     private static final int CONNECTION_TIMEOUT_MS = 10 * 1000;
     private static final int SESSION_TIMEOUT_MS = 60 * 1000;
     public static final String ZK_REGISTER_ROOT_PATH = "/my-rpc";
-    private static final Map<String, List<String>> serviceAddressMap = new ConcurrentHashMap<>();
+    private static Map<String, List<String>> serviceAddressMap = new ConcurrentHashMap<>();
+
+    private CuratorHelper() {
+    }
 
     public static CuratorFramework getZkClient() {
         // 重试策略，重试3次，并在两次重试之间等待100毫秒，以防出现连接问题。
@@ -57,7 +60,7 @@ public class CuratorHelper {
     }
 
     /**
-     * 获取某个字节下的子节点
+     * 获取某个字节下的子节点,也就是获取所有提供服务的生产者的地址
      */
     public static List<String> getChildrenNodes(final CuratorFramework zkClient, final String serviceName) {
         if (serviceAddressMap.containsKey(serviceName)) {

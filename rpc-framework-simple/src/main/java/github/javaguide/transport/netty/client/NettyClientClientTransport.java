@@ -52,6 +52,7 @@ public class NettyClientClientTransport implements ClientTransport {
                 RpcMessageChecker.check(rpcResponse, rpcRequest);
                 result.set(rpcResponse.getData());
             } else {
+                NettyClient.close();
                 System.exit(0);
             }
 
