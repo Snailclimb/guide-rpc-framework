@@ -25,12 +25,9 @@ public class RpcRequestHandler {
      * 处理 rpcRequest ：调用对应的方法，然后返回方法执行结果
      */
     public Object handle(RpcRequest rpcRequest) {
-        Object result;
         //通过注册中心获取到目标类（客户端需要调用类）
         Object service = serviceProvider.getServiceProvider(rpcRequest.getInterfaceName());
-        result = invokeTargetMethod(rpcRequest, service);
-        log.info("service:{} successful invoke method:{}", rpcRequest.getInterfaceName(), rpcRequest.getMethodName());
-        return result;
+        return invokeTargetMethod(rpcRequest, service);
     }
 
     /**
@@ -38,7 +35,7 @@ public class RpcRequestHandler {
      *
      * @param rpcRequest 客户端请求
      * @param service    提供服务的对象
-     * @return
+     * @return 目标方法执行的结果
      */
     private Object invokeTargetMethod(RpcRequest rpcRequest, Object service) {
         Object result;
@@ -48,6 +45,7 @@ public class RpcRequestHandler {
                 return RpcResponse.fail(RpcResponseCode.NOT_FOUND_METHOD);
             }
             result = method.invoke(service, rpcRequest.getParameters());
+            log.info("service:[{}] successful invoke method:[{}]", rpcRequest.getInterfaceName(), rpcRequest.getMethodName());
         } catch (NoSuchMethodException | IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {
             throw new RpcException(e.getMessage(), e);
         }

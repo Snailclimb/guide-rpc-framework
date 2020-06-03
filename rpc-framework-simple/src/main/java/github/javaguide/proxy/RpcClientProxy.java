@@ -10,7 +10,8 @@ import java.lang.reflect.Proxy;
 import java.util.UUID;
 
 /**
- * 动态代理类。当动态代理对象调用一个方法的时候，实际调用的是下面的 invoke 方法
+ * 动态代理类。当动态代理对象调用一个方法的时候，实际调用的是下面的 invoke 方法。
+ * 正是因为动态代理才让客户端调用的远程方法像是调用本地方法一样（屏蔽了中间过程）
  *
  * @author shuang.kou
  * @createTime 2020年05月10日 19:01:00

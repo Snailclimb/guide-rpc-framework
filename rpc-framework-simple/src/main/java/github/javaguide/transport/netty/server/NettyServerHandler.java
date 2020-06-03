@@ -4,13 +4,14 @@ import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
 import github.javaguide.handler.RpcRequestHandler;
 import github.javaguide.utils.concurrent.ThreadPoolFactory;
+import github.javaguide.utils.factory.SingletonFactory;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
-import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.util.concurrent.ExecutorService;
 
@@ -31,7 +32,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
     private final ExecutorService threadPool;
 
     public NettyServerHandler() {
-        this.rpcRequestHandler = new RpcRequestHandler();
+        this.rpcRequestHandler = SingletonFactory.getInstance(RpcRequestHandler.class);
         this.threadPool = ThreadPoolFactory.createDefaultThreadPool(THREAD_NAME_PREFIX);
     }
 

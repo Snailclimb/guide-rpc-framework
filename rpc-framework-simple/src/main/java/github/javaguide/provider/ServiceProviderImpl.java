@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 实现了 ServiceProvider 接口，可以将其看做是一个保存和提供服务实例对象的示例
+ *
  * @author shuang.kou
  * @createTime 2020年05月13日 11:23:00
  */
