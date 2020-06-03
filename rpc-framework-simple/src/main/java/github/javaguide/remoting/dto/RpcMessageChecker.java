@@ -7,6 +7,8 @@ import github.javaguide.exception.RpcException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 校验 RpcRequest 和 RpcRequest
+ *
  * @author shuang.kou
  * @createTime 2020年05月26日 18:03:00
  */
