@@ -23,13 +23,14 @@
         <!-- test -->
         <junit.jupiter.version>5.5.2</junit.jupiter.version>
         <junit.platform.version>1.5.2</junit.platform.version>
+        <!-- checkstyle -->
+        <checkstyle-maven-plugin.version>3.0.0</checkstyle-maven-plugin.version>
     </properties>
     <modules>
         <module>rpc-framework-simple</module>
         <module>hello-service-api</module>
         <module>example-client</module>
         <module>example-server</module>
-        <module>rpc-framework-common</module>
         <module>rpc-framework-common</module>
     </modules>
     <dependencies>
@@ -132,6 +133,33 @@
                     <encoding>${encoding}</encoding>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle-maven-plugin.version}</version>
+                <configuration>
+                    <configLocation>config/checkstyle.xml</configLocation>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle-maven-plugin.version}</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>

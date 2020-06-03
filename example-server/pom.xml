@@ -12,11 +12,6 @@
     <artifactId>example-server</artifactId>
     <dependencies>
         <dependency>
-            <artifactId>guide-rpc-framework</artifactId>
-            <groupId>github.javaguide</groupId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>github.javaguide</groupId>
             <artifactId>hello-service-api</artifactId>
             <version>${project.version}</version>
@@ -24,8 +19,7 @@
         <dependency>
             <groupId>github.javaguide</groupId>
             <artifactId>rpc-framework-simple</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

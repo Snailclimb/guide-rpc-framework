@@ -1,0 +1,9 @@
+#!/bin/sh
+#set -x
+
+echo "begin to execute hook"
+mvn checkstyle:check
+
+RESULT=$?
+
+exit $RESULT

@@ -30,8 +30,8 @@ public class KryoSerializer implements Serializer {
         Kryo kryo = new Kryo();
         kryo.register(RpcResponse.class);
         kryo.register(RpcRequest.class);
-        kryo.setReferences(true);//默认值为true,是否关闭注册行为,关闭之后可能存在序列化问题，一般推荐设置为 true
-        kryo.setRegistrationRequired(false);//默认值为false,是否关闭循环引用，可以提高性能，但是一般不推荐设置为 true
+        kryo.setReferences(true); //默认值为true,是否关闭注册行为,关闭之后可能存在序列化问题，一般推荐设置为 true
+        kryo.setRegistrationRequired(false); //默认值为false,是否关闭循环引用，可以提高性能，但是一般不推荐设置为 true
         return kryo;
     });
 

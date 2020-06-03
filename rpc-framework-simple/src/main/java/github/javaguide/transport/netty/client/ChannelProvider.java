@@ -28,7 +28,7 @@ public class ChannelProvider {
      * 最多重试次数
      */
     private static final int MAX_RETRY_COUNT = 5;
-
+    
     public static Channel get(InetSocketAddress inetSocketAddress) {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         try {

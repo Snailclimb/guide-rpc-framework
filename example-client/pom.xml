@@ -14,13 +14,13 @@
         <dependency>
             <groupId>github.javaguide</groupId>
             <artifactId>rpc-framework-simple</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>github.javaguide</groupId>
             <artifactId>hello-service-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

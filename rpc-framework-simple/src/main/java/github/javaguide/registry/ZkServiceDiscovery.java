@@ -24,7 +24,7 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
 
     @Override
     public InetSocketAddress lookupService(String serviceName) {
-        // TODO 负载均衡
+        // TODO(shuang.kou):feat: 负载均衡
         // 这里直接去了第一个找到的服务地址
         String serviceAddress = CuratorHelper.getChildrenNodes(zkClient, serviceName).get(0);
         logger.info("成功找到服务地址:{}", serviceAddress);
