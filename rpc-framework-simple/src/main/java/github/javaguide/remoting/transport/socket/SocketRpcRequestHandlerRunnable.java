@@ -1,7 +1,7 @@
-package github.javaguide.transport.socket;
+package github.javaguide.remoting.transport.socket;
 
-import github.javaguide.dto.RpcRequest;
-import github.javaguide.dto.RpcResponse;
+import github.javaguide.remoting.dto.RpcRequest;
+import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.handler.RpcRequestHandler;
 import github.javaguide.utils.factory.SingletonFactory;
 import lombok.extern.slf4j.Slf4j;

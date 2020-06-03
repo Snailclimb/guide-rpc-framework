@@ -1,11 +1,11 @@
-package github.javaguide.transport.netty.client;
+package github.javaguide.remoting.transport.netty.client;
 
-import github.javaguide.dto.RpcRequest;
-import github.javaguide.dto.RpcResponse;
+import github.javaguide.remoting.dto.RpcRequest;
+import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.registry.ServiceDiscovery;
 import github.javaguide.registry.ZkServiceDiscovery;
-import github.javaguide.transport.ClientTransport;
-import github.javaguide.utils.checker.RpcMessageChecker;
+import github.javaguide.remoting.transport.ClientTransport;
+import github.javaguide.remoting.dto.RpcMessageChecker;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.util.AttributeKey;

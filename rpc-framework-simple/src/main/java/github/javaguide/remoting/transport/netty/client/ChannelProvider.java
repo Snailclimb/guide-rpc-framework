@@ -1,4 +1,4 @@
-package github.javaguide.transport.netty.client;
+package github.javaguide.remoting.transport.netty.client;
 
 import github.javaguide.enumeration.RpcErrorMessageEnum;
 import github.javaguide.exception.RpcException;

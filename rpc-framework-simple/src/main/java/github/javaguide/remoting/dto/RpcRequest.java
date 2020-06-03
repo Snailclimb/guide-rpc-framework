@@ -1,4 +1,4 @@
-package github.javaguide.dto;
+package github.javaguide.remoting.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

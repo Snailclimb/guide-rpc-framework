@@ -1,6 +1,6 @@
-package github.javaguide.transport;
+package github.javaguide.remoting.transport;
 
-import github.javaguide.dto.RpcRequest;
+import github.javaguide.remoting.dto.RpcRequest;
 
 /**
  * 传输 RpcRequest。

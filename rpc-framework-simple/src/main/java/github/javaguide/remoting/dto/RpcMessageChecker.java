@@ -1,7 +1,6 @@
-package github.javaguide.utils.checker;
+package github.javaguide.remoting.dto;
 
-import github.javaguide.dto.RpcRequest;
-import github.javaguide.dto.RpcResponse;
+
 import github.javaguide.enumeration.RpcErrorMessageEnum;
 import github.javaguide.enumeration.RpcResponseCode;
 import github.javaguide.exception.RpcException;

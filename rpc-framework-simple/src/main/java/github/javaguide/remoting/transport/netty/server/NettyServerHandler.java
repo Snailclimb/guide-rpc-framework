@@ -1,7 +1,7 @@
-package github.javaguide.transport.netty.server;
+package github.javaguide.remoting.transport.netty.server;
 
-import github.javaguide.dto.RpcRequest;
-import github.javaguide.dto.RpcResponse;
+import github.javaguide.remoting.dto.RpcRequest;
+import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.handler.RpcRequestHandler;
 import github.javaguide.utils.concurrent.ThreadPoolFactory;
 import github.javaguide.utils.factory.SingletonFactory;

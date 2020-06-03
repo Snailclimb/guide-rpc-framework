@@ -1,4 +1,4 @@
-package github.javaguide.dto;
+package github.javaguide.remoting.dto;
 
 import github.javaguide.enumeration.RpcResponseCode;
 import lombok.AllArgsConstructor;

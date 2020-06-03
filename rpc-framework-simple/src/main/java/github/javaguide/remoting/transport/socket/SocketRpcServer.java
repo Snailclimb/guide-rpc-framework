@@ -1,4 +1,4 @@
-package github.javaguide.transport.socket;
+package github.javaguide.remoting.transport.socket;
 
 import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.ServiceProviderImpl;

@@ -1,7 +1,7 @@
 package github.javaguide.handler;
 
-import github.javaguide.dto.RpcRequest;
-import github.javaguide.dto.RpcResponse;
+import github.javaguide.remoting.dto.RpcRequest;
+import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.enumeration.RpcResponseCode;
 import github.javaguide.exception.RpcException;
 import github.javaguide.provider.ServiceProvider;

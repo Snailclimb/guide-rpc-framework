@@ -1,7 +1,7 @@
 package github.javaguide.proxy;
 
-import github.javaguide.dto.RpcRequest;
-import github.javaguide.transport.ClientTransport;
+import github.javaguide.remoting.dto.RpcRequest;
+import github.javaguide.remoting.transport.ClientTransport;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;

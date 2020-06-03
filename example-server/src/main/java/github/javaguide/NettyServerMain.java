@@ -1,6 +1,6 @@
 package github.javaguide;
 
-import github.javaguide.transport.netty.server.NettyServer;
+import github.javaguide.remoting.transport.netty.server.NettyServer;
 
 /**
  * @author shuang.kou

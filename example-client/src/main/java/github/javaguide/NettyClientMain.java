@@ -1,8 +1,8 @@
 package github.javaguide;
 
-import github.javaguide.transport.ClientTransport;
+import github.javaguide.remoting.transport.ClientTransport;
 import github.javaguide.proxy.RpcClientProxy;
-import github.javaguide.transport.netty.client.NettyClientClientTransport;
+import github.javaguide.remoting.transport.netty.client.NettyClientClientTransport;
 
 /**
  * @author shuang.kou

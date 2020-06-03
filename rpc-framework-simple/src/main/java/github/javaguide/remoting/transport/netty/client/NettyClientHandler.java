@@ -1,6 +1,6 @@
-package github.javaguide.transport.netty.client;
+package github.javaguide.remoting.transport.netty.client;
 
-import github.javaguide.dto.RpcResponse;
+import github.javaguide.remoting.dto.RpcResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;

@@ -1,10 +1,10 @@
-package github.javaguide.transport.netty.client;
+package github.javaguide.remoting.transport.netty.client;
 
-import github.javaguide.dto.RpcRequest;
-import github.javaguide.dto.RpcResponse;
+import github.javaguide.remoting.dto.RpcRequest;
+import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.serialize.kyro.KryoSerializer;
-import github.javaguide.transport.netty.codec.kyro.NettyKryoDecoder;
-import github.javaguide.transport.netty.codec.kyro.NettyKryoEncoder;
+import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoDecoder;
+import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;

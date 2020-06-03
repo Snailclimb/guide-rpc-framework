@@ -1,6 +1,6 @@
 package github.javaguide;
 
-import github.javaguide.transport.socket.SocketRpcServer;
+import github.javaguide.remoting.transport.socket.SocketRpcServer;
 
 /**
  * @author shuang.kou
