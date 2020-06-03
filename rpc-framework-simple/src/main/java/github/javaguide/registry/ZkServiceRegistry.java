@@ -1,9 +1,7 @@
 package github.javaguide.registry;
 
 import github.javaguide.utils.zk.CuratorHelper;
-import org.apache.curator.framework.CuratorFramework;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
 
@@ -13,14 +11,8 @@ import java.net.InetSocketAddress;
  * @author shuang.kou
  * @createTime 2020年05月31日 10:56:00
  */
+@Slf4j
 public class ZkServiceRegistry implements ServiceRegistry {
-    private static final Logger logger = LoggerFactory.getLogger(ZkServiceRegistry.class);
-    private final CuratorFramework zkClient;
-
-    public ZkServiceRegistry() {
-        zkClient = CuratorHelper.getZkClient();
-        zkClient.start();
-    }
 
     @Override
     public void registerService(String serviceName, InetSocketAddress inetSocketAddress) {
@@ -28,7 +20,6 @@ public class ZkServiceRegistry implements ServiceRegistry {
         StringBuilder servicePath = new StringBuilder(CuratorHelper.ZK_REGISTER_ROOT_PATH).append("/").append(serviceName);
         //服务子节点下注册子节点：服务地址
         servicePath.append(inetSocketAddress.toString());
-        CuratorHelper.createEphemeralNode(zkClient, servicePath.toString());
-        logger.info("节点创建成功，节点为:{}", servicePath);
+        CuratorHelper.createEphemeralNode(servicePath.toString());
     }
 }

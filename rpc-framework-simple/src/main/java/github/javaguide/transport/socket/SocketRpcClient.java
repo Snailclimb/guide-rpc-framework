@@ -8,8 +8,7 @@ import github.javaguide.registry.ZkServiceDiscovery;
 import github.javaguide.transport.ClientTransport;
 import github.javaguide.utils.checker.RpcMessageChecker;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -24,8 +23,8 @@ import java.net.Socket;
  * @createTime 2020年05月10日 18:40:00
  */
 @AllArgsConstructor
+@Slf4j
 public class SocketRpcClient implements ClientTransport {
-    private static final Logger logger = LoggerFactory.getLogger(SocketRpcClient.class);
     private final ServiceDiscovery serviceDiscovery;
 
     public SocketRpcClient() {
@@ -47,7 +46,7 @@ public class SocketRpcClient implements ClientTransport {
             RpcMessageChecker.check(rpcResponse, rpcRequest);
             return rpcResponse.getData();
         } catch (IOException | ClassNotFoundException e) {
-            logger.error("occur exception when send sendRpcRequest");
+            log.error("occur exception when send sendRpcRequest");
             throw new RpcException("调用服务失败:", e);
         }
     }

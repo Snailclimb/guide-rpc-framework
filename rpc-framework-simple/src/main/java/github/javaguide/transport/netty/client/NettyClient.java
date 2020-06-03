@@ -12,8 +12,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 用于初始化 和 关闭 Bootstrap 对象
@@ -21,13 +20,10 @@ import org.slf4j.LoggerFactory;
  * @author shuang.kou
  * @createTime 2020年05月29日 17:51:00
  */
-public class NettyClient {
-
-    private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
-
-
-    private static final Bootstrap b;
-    private static final EventLoopGroup eventLoopGroup;
+@Slf4j
+public final class NettyClient {
+    private static Bootstrap b;
+    private static EventLoopGroup eventLoopGroup;
 
     private NettyClient() {
     }
@@ -59,7 +55,7 @@ public class NettyClient {
     }
 
     public static void close() {
-        logger.info("call close method");
+        log.info("call close method");
         eventLoopGroup.shutdownGracefully();
     }
 

@@ -5,8 +5,7 @@ import github.javaguide.provider.ServiceProviderImpl;
 import github.javaguide.registry.ServiceRegistry;
 import github.javaguide.registry.ZkServiceRegistry;
 import github.javaguide.utils.concurrent.ThreadPoolFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -18,10 +17,10 @@ import java.util.concurrent.ExecutorService;
  * @author shuang.kou
  * @createTime 2020年05月10日 08:01:00
  */
+@Slf4j
 public class SocketRpcServer {
 
     private final ExecutorService threadPool;
-    private static final Logger logger = LoggerFactory.getLogger(SocketRpcServer.class);
     private final String host;
     private final int port;
     private final ServiceRegistry serviceRegistry;
@@ -45,15 +44,15 @@ public class SocketRpcServer {
     private void start() {
         try (ServerSocket server = new ServerSocket()) {
             server.bind(new InetSocketAddress(host, port));
-            logger.info("server starts...");
+            log.info("server starts...");
             Socket socket;
             while ((socket = server.accept()) != null) {
-                logger.info("client connected");
+                log.info("client connected");
                 threadPool.execute(new SocketRpcRequestHandlerRunnable(socket));
             }
             threadPool.shutdown();
         } catch (IOException e) {
-            logger.error("occur IOException:", e);
+            log.error("occur IOException:", e);
         }
     }
 

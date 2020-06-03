@@ -2,8 +2,7 @@ package github.javaguide.provider;
 
 import github.javaguide.enumeration.RpcErrorMessageEnum;
 import github.javaguide.exception.RpcException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.Set;
@@ -13,18 +12,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author shuang.kou
  * @createTime 2020年05月13日 11:23:00
  */
+@Slf4j
 public class ServiceProviderImpl implements ServiceProvider {
-    private static final Logger logger = LoggerFactory.getLogger(ServiceProviderImpl.class);
-
 
     /**
      * 接口名和服务的对应关系
-     * note:处理一个接口被两个实现类实现的情况如何处理？
+     * note:处理一个接口被两个实现类实现的情况如何处理？（通过 group 分组）
      * key:service/interface name
      * value:service
      */
-    private static final Map<String, Object> serviceMap = new ConcurrentHashMap<>();
-    private static final Set<String> registeredService = ConcurrentHashMap.newKeySet();
+    private static Map<String, Object> serviceMap = new ConcurrentHashMap<>();
+    private static Set<String> registeredService = ConcurrentHashMap.newKeySet();
 
     /**
      * note:可以修改为扫描注解注册
@@ -37,7 +35,7 @@ public class ServiceProviderImpl implements ServiceProvider {
         }
         registeredService.add(serviceName);
         serviceMap.put(serviceName, service);
-        logger.info("Add service: {} and interfaces:{}", serviceName, service.getClass().getInterfaces());
+        log.info("Add service: {} and interfaces:{}", serviceName, service.getClass().getInterfaces());
     }
 
     @Override

@@ -3,8 +3,8 @@ package github.javaguide.transport.socket;
 import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
 import github.javaguide.handler.RpcRequestHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import github.javaguide.utils.factory.SingletonFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -15,22 +15,20 @@ import java.net.Socket;
  * @author shuang.kou
  * @createTime 2020年05月10日 09:18:00
  */
+@Slf4j
 public class SocketRpcRequestHandlerRunnable implements Runnable {
-    private static final Logger logger = LoggerFactory.getLogger(SocketRpcRequestHandlerRunnable.class);
     private Socket socket;
-    private static final RpcRequestHandler rpcRequestHandler;
+    private RpcRequestHandler rpcRequestHandler;
 
-    static {
-        rpcRequestHandler = new RpcRequestHandler();
-    }
 
     public SocketRpcRequestHandlerRunnable(Socket socket) {
         this.socket = socket;
+        this.rpcRequestHandler = SingletonFactory.getInstance(RpcRequestHandler.class);
     }
 
     @Override
     public void run() {
-        logger.info(String.format("server handle message from client by thread: %s", Thread.currentThread().getName()));
+        log.info("server handle message from client by thread: [{}]", Thread.currentThread().getName());
         try (ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream())) {
             RpcRequest rpcRequest = (RpcRequest) objectInputStream.readObject();
@@ -38,7 +36,7 @@ public class SocketRpcRequestHandlerRunnable implements Runnable {
             objectOutputStream.writeObject(RpcResponse.success(result, rpcRequest.getRequestId()));
             objectOutputStream.flush();
         } catch (IOException | ClassNotFoundException e) {
-            logger.error("occur exception:", e);
+            log.error("occur exception:", e);
         }
     }
 

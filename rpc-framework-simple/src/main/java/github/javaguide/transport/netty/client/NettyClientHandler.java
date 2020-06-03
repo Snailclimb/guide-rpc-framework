@@ -6,8 +6,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 自定义客户端 ChannelHandler 来处理服务端发过来的数据
@@ -19,8 +18,8 @@ import org.slf4j.LoggerFactory;
  * @author shuang.kou
  * @createTime 2020年05月25日 20:50:00
  */
+@Slf4j
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
-    private static final Logger logger = LoggerFactory.getLogger(NettyClientHandler.class);
 
     /**
      * 读取服务端传输的消息
@@ -28,7 +27,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
-            logger.info(String.format("client receive msg: %s", msg));
+            log.info("client receive msg: [{}]", msg);
             RpcResponse rpcResponse = (RpcResponse) msg;
             // 声明一个 AttributeKey 对象，类似于 Map 中的 key
             AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse" + rpcResponse.getRequestId());
@@ -49,7 +48,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        logger.error("client catch exception：", cause);
+        log.error("client catch exception：", cause);
         cause.printStackTrace();
         ctx.close();
     }

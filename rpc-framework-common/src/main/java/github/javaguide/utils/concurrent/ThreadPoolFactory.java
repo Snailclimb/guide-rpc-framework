@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @author shuang.kou
  * @createTime 2020年05月26日 16:00:00
  */
-public class ThreadPoolFactory {
+public final class ThreadPoolFactory {
     /**
      * 线程池参数
      */

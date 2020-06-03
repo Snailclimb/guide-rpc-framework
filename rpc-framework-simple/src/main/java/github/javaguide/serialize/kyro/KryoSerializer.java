@@ -7,8 +7,7 @@ import github.javaguide.dto.RpcRequest;
 import github.javaguide.dto.RpcResponse;
 import github.javaguide.exception.SerializeException;
 import github.javaguide.serialize.Serializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,8 +18,8 @@ import java.io.ByteArrayOutputStream;
  * @author shuang.kou
  * @createTime 2020年05月13日 19:29:00
  */
+@Slf4j
 public class KryoSerializer implements Serializer {
-    private static final Logger logger = LoggerFactory.getLogger(KryoSerializer.class);
 
     /**
      * 由于 Kryo 不是线程安全的。每个线程都应该有自己的 Kryo，Input 和 Output 实例。
@@ -45,7 +44,6 @@ public class KryoSerializer implements Serializer {
             kryoThreadLocal.remove();
             return output.toBytes();
         } catch (Exception e) {
-            logger.error("occur exception when serialize:", e);
             throw new SerializeException("序列化失败");
         }
     }
@@ -60,7 +58,6 @@ public class KryoSerializer implements Serializer {
             kryoThreadLocal.remove();
             return clazz.cast(o);
         } catch (Exception e) {
-            logger.error("occur exception when deserialize:", e);
             throw new SerializeException("反序列化失败");
         }
     }

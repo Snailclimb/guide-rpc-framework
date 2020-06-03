@@ -5,8 +5,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
@@ -17,8 +16,8 @@ import java.util.List;
  * @createTime 2020年05月25日 19:42:00
  */
 @AllArgsConstructor
+@Slf4j
 public class NettyKryoDecoder extends ByteToMessageDecoder {
-    private static final Logger logger = LoggerFactory.getLogger(NettyKryoDecoder.class);
 
     private Serializer serializer;
     private Class<?> genericClass;
@@ -47,7 +46,7 @@ public class NettyKryoDecoder extends ByteToMessageDecoder {
             int dataLength = in.readInt();
             //4.遇到不合理的情况直接 return
             if (dataLength < 0 || in.readableBytes() < 0) {
-                logger.error("data length or byteBuf readableBytes is not valid");
+                log.error("data length or byteBuf readableBytes is not valid");
                 return;
             }
             //5.如果可读字节数小于消息长度的话，说明是不完整的消息，重置readIndex
@@ -61,7 +60,7 @@ public class NettyKryoDecoder extends ByteToMessageDecoder {
             // 将bytes数组转换为我们需要的对象
             Object obj = serializer.deserialize(body, genericClass);
             out.add(obj);
-            logger.info("successful decode ByteBuf to Object");
+            log.info("successful decode ByteBuf to Object");
         }
     }
 }
