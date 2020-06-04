@@ -32,9 +32,11 @@ guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。
 **为什么要把可优化点列出来？**  主要是想给哪些希望优化这个 RPC 框架的小伙伴一点思路。欢迎大家 Clone 本仓库，然后自己进行优化。
 
 - [x] **使用Netty（基于NIO）替代BIO实现网络传输；**
-- [x] **增加Netty进行客户端连接服务端时的重试机制。**
 - [x] **使用开源的序列化机制 Kyro（也可以用其它的）替代 JDK 自带的序列化机制；**
 - [x] **使用Zookeeper管理相关服务地址信息**
+- [x] Netty重用Channel避免重复连接服务端
+- [x] 使用 `CompletableFuture` 包装接受客户端返回结果（之前的实现是通过 `AttributeMap` 绑定到Channel上实现的） 详见：[使用CompletableFuture优化接受服务提供端返回结果](./docs/使用CompletableFuture优化接受服务提供端返回结果.md)
+- [ ] 增加 Netty 心跳机制
 - [ ] **增加可配置比如序列化方式、注册中心的实现方式,避免硬编码** ：通过API配置，后续集成 Spring 的话建议使用配置文件的方式进行配置
 - [ ] **客户端调用远程服务的时候进行负载均衡** ：发布服务的时候增加 一个 loadbalance 参数即可。
 - [ ] **使用注解进行服务配置和消费**
@@ -49,8 +51,6 @@ guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。
 ### 项目模块概览
 
 ![](./images/RPC框架各个模块介绍.png)
-
-## 效果展示
 
 ## 运行项目
 
@@ -111,6 +111,50 @@ IntelliJ IDEA-> Preferences->Plugins->搜索下载CheckStyle 插件，然后按�
 
 这里使用 Docker 来下载安装。
 
+下载：
+
+```shell
+docker pull zookeeper:3.4.14
+```
+
+运行：
+
+```shell
+docker run -d --name zookeeper -p 2181:2181 zookeeper:3.4.14
+```
+
+## 使用
+
+### 服务提供端
+
+实现接口：
+
+```java
+public class HelloServiceImpl implements HelloService {
+   @Override
+    public String hello(Hello hello) {
+      ......
+    }
+}
+```
+
+发布服务(使用Netty进行传输)：
+
+```java
+HelloService helloService = new HelloServiceImpl();
+NettyServer nettyServer = new NettyServer("127.0.0.1", 9999);
+nettyServer.publishService(helloService, HelloService.class);
+```
+
+### 服务消费端
+
+```java
+ClientTransport rpcClient = new NettyClientTransport();
+RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient);
+HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
+String hello = helloService.hello(new Hello("111", "222"));
+```
+
 ## 相关问题
 
 ### 为什么要造这个轮子？Dubbo不香么？
@@ -125,7 +169,5 @@ IntelliJ IDEA-> Preferences->Plugins->搜索下载CheckStyle 插件，然后按�
 
 ### 如果我要自己写的话，可以参考哪些资料？
 
-
-
-
+代办~~~
 

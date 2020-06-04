@@ -1,5 +1,6 @@
 package github.javaguide.proxy;
 
+import github.javaguide.remoting.dto.RpcMessageChecker;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.transport.ClientTransport;
@@ -47,22 +48,23 @@ public class RpcClientProxy implements InvocationHandler {
     @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
-        log.info("Call invoke method and invoked method: {}", method.getName());
+        log.info("invoked method: [{}]", method.getName());
         RpcRequest rpcRequest = RpcRequest.builder().methodName(method.getName())
                 .parameters(args)
                 .interfaceName(method.getDeclaringClass().getName())
                 .paramTypes(method.getParameterTypes())
                 .requestId(UUID.randomUUID().toString())
                 .build();
-        Object result = null;
+        RpcResponse rpcResponse = null;
         if (clientTransport instanceof NettyClientTransport) {
             CompletableFuture<RpcResponse> completableFuture = (CompletableFuture<RpcResponse>) clientTransport.sendRpcRequest(rpcRequest);
-            result = completableFuture.get().getData();
+            rpcResponse = completableFuture.get();
         }
         if (clientTransport instanceof SocketRpcClient) {
-            RpcResponse rpcResponse = (RpcResponse) clientTransport.sendRpcRequest(rpcRequest);
-            result = rpcResponse.getData();
+            rpcResponse = (RpcResponse) clientTransport.sendRpcRequest(rpcRequest);
         }
-        return result;
+        //校验 RpcResponse 和 RpcRequest
+        RpcMessageChecker.check(rpcResponse, rpcRequest);
+        return rpcResponse.getData();
     }
 }

@@ -2,6 +2,7 @@ package github.javaguide.remoting.transport.netty.client;
 
 import github.javaguide.remoting.dto.RpcResponse;
 
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,14 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @createTime 2020年06月04日 17:30:00
  */
 public class UnprocessedRequests {
-    private static ConcurrentHashMap<String, CompletableFuture<RpcResponse>> unprocessedResponseFutures = new ConcurrentHashMap<>();
+    private static Map<String, CompletableFuture<RpcResponse>> unprocessedResponseFutures = new ConcurrentHashMap<>();
 
     public void put(String requestId, CompletableFuture<RpcResponse> future) {
         unprocessedResponseFutures.put(requestId, future);
-    }
-
-    public void remove(String requestId) {
-        unprocessedResponseFutures.remove(requestId);
     }
 
     public void complete(RpcResponse rpcResponse) {
