@@ -1,4 +1,4 @@
-package github.javaguide.utils.factory;
+package github.javaguide.factory;
 
 import java.util.HashMap;
 import java.util.Map;

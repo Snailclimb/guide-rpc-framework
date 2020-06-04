@@ -1,6 +1,6 @@
 # guide-rpc-framework
 
-guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。代码注释详细，结构清晰，非常适合阅读和学习。
+guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。代码注释详细，结构清晰，并且集成了 Check Style 规范代码结构，非常适合阅读和学习。
 
 由于Guide哥自身精力和能力有限，如果大家觉得有需要改进和完善的地方的话，欢迎将本项目 clone 到自己本地，在本地修改后提交 PR 给我，我会在第一时间 Review 你的代码。
 
@@ -56,6 +56,10 @@ guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。
 
 **1.导入项目**
 
+克隆项目到自己的本地：`git clone git@github.com:Snailclimb/guide-rpc-framework.git`
+
+然后使用 IDEA 打开，等待项目初始化完成。
+
 **2.初始化git hooks**
 
 > 以下演示的是 Mac/Linux对应的操作，Window 用户需要手动将 `config/git-hooks` 目录下的`pre-commit ` 文件拷贝到 项目下的 `.git/hooks/` 目录。
@@ -95,11 +99,17 @@ exit $RESULT
 
 **3.CheckStyle 插件下载和配置**
 
-Settings->Plugins->搜索下载CheckStyle 插件，然后按照如下方式
+IntelliJ IDEA-> Preferences->Plugins->搜索下载CheckStyle 插件，然后按照如下方式进行配置。
 
 ![](./images/setting-check-style.png)
 
+配置完成之后，按照如下方式使用这个插件！
+
 ![](./images/run-check-style.png)
+
+**4.下载运行zookeeper**
+
+这里使用 Docker 来下载安装。
 
 ## 相关问题
 

@@ -4,7 +4,7 @@ import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.ServiceProviderImpl;
 import github.javaguide.registry.ServiceRegistry;
 import github.javaguide.registry.ZkServiceRegistry;
-import github.javaguide.utils.concurrent.ThreadPoolFactory;
+import github.javaguide.utils.concurrent.ThreadPoolFactoryUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class SocketRpcServer {
     public SocketRpcServer(String host, int port) {
         this.host = host;
         this.port = port;
-        threadPool = ThreadPoolFactory.createDefaultThreadPool("socket-server-rpc-pool");
+        threadPool = ThreadPoolFactoryUtils.createDefaultThreadPool("socket-server-rpc-pool");
         serviceRegistry = new ZkServiceRegistry();
         serviceProvider = new ServiceProviderImpl();
     }

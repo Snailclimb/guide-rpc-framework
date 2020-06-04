@@ -3,8 +3,8 @@ package github.javaguide.remoting.transport.netty.server;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.handler.RpcRequestHandler;
-import github.javaguide.utils.concurrent.ThreadPoolFactory;
-import github.javaguide.utils.factory.SingletonFactory;
+import github.javaguide.utils.concurrent.ThreadPoolFactoryUtils;
+import github.javaguide.factory.SingletonFactory;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -33,7 +33,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
     public NettyServerHandler() {
         this.rpcRequestHandler = SingletonFactory.getInstance(RpcRequestHandler.class);
-        this.threadPool = ThreadPoolFactory.createDefaultThreadPool(THREAD_NAME_PREFIX);
+        this.threadPool = ThreadPoolFactoryUtils.createDefaultThreadPool(THREAD_NAME_PREFIX);
     }
 
     @Override

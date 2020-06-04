@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @author shuang.kou
  * @createTime 2020年05月26日 16:00:00
  */
-public final class ThreadPoolFactory {
+public final class ThreadPoolFactoryUtils {
     /**
      * 线程池参数
      */
@@ -25,7 +25,7 @@ public final class ThreadPoolFactory {
     private static final int KEEP_ALIVE_TIME = 1;
     private static final int BLOCKING_QUEUE_CAPACITY = 100;
 
-    private ThreadPoolFactory() {
+    private ThreadPoolFactoryUtils() {
 
     }
 

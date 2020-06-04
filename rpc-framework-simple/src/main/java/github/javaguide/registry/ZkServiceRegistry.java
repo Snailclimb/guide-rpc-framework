@@ -1,6 +1,6 @@
 package github.javaguide.registry;
 
-import github.javaguide.utils.zk.CuratorHelper;
+import github.javaguide.utils.zk.CuratorUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
@@ -17,9 +17,9 @@ public class ZkServiceRegistry implements ServiceRegistry {
     @Override
     public void registerService(String serviceName, InetSocketAddress inetSocketAddress) {
         //根节点下注册子节点：服务
-        StringBuilder servicePath = new StringBuilder(CuratorHelper.ZK_REGISTER_ROOT_PATH).append("/").append(serviceName);
+        StringBuilder servicePath = new StringBuilder(CuratorUtils.ZK_REGISTER_ROOT_PATH).append("/").append(serviceName);
         //服务子节点下注册子节点：服务地址
         servicePath.append(inetSocketAddress.toString());
-        CuratorHelper.createEphemeralNode(servicePath.toString());
+        CuratorUtils.createPersistentNode(servicePath.toString());
     }
 }
