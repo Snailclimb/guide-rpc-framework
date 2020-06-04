@@ -6,13 +6,19 @@ import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoDecoder;
 import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoEncoder;
 import github.javaguide.serialize.kyro.KryoSerializer;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+
+import java.net.InetSocketAddress;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 用于初始化 和 关闭 Bootstrap 对象
@@ -22,16 +28,15 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public final class NettyClient {
-    private static Bootstrap b;
+    private static Bootstrap bootstrap;
     private static EventLoopGroup eventLoopGroup;
 
     // 初始化相关资源比如 EventLoopGroup、Bootstrap
-
     static {
         eventLoopGroup = new NioEventLoopGroup();
-        b = new Bootstrap();
+        bootstrap = new Bootstrap();
         KryoSerializer kryoSerializer = new KryoSerializer();
-        b.group(eventLoopGroup)
+        bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
                 //连接的超时时间，超过这个时间还是建立不上的话则代表连接失败
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
@@ -52,14 +57,23 @@ public final class NettyClient {
                 });
     }
 
-    public static void close() {
+    @SneakyThrows
+    public Channel doConnect(InetSocketAddress inetSocketAddress) {
+        CompletableFuture<Channel> completableFuture = new CompletableFuture<>();
+        bootstrap.connect(inetSocketAddress).addListener((ChannelFutureListener) future -> {
+            if (future.isSuccess()) {
+                log.info("客户端连接成功!");
+                completableFuture.complete(future.channel());
+            } else {
+                throw new IllegalStateException();
+            }
+        });
+        return completableFuture.get();
+    }
+
+    public void close() {
         log.info("call close method");
         eventLoopGroup.shutdownGracefully();
     }
-
-    public static Bootstrap getBootstrap() {
-        return b;
-    }
-
 
 }

@@ -29,6 +29,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     /**
      * 读取服务端传输的消息
      */
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
