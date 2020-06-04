@@ -12,6 +12,7 @@ import org.apache.zookeeper.CreateMode;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -25,6 +26,7 @@ public final class CuratorUtils {
     private static final String CONNECT_STRING = "127.0.0.1:2181";
     public static final String ZK_REGISTER_ROOT_PATH = "/my-rpc";
     private static Map<String, List<String>> serviceAddressMap = new ConcurrentHashMap<>();
+    private static Set<String> registeredPathSet = ConcurrentHashMap.newKeySet();
     private static CuratorFramework zkClient;
 
     static {
@@ -41,13 +43,14 @@ public final class CuratorUtils {
      */
     public static void createPersistentNode(String path) {
         try {
-            if (zkClient.checkExists().forPath(path) == null) {
+            if (registeredPathSet.contains(path) || zkClient.checkExists().forPath(path) != null) {
+                log.info("节点已经存在，节点为:[{}]", path);
+            } else {
                 //eg: /my-rpc/github.javaguide.HelloService/127.0.0.1:9999
                 zkClient.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(path);
                 log.info("节点创建成功，节点为:[{}]", path);
-            } else {
-                log.info("节点已经存在，节点为:[{}]", path);
             }
+            registeredPathSet.add(path);
         } catch (Exception e) {
             throw new RpcException(e.getMessage(), e.getCause());
         }
@@ -73,6 +76,20 @@ public final class CuratorUtils {
             throw new RpcException(e.getMessage(), e.getCause());
         }
         return result;
+    }
+
+    /**
+     * 清空注册中心的数据
+     */
+    public static void clearRegistry() {
+        registeredPathSet.stream().parallel().forEach(p -> {
+            try {
+                zkClient.delete().forPath(p);
+            } catch (Exception e) {
+                throw new RpcException(e.getMessage(), e.getCause());
+            }
+        });
+        log.info("服务端（Provider）所有注册的服务都被清空:[{}]", registeredPathSet.toString());
     }
 
     private static CuratorFramework getZkClient() {

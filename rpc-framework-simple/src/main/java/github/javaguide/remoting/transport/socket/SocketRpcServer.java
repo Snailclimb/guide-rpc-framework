@@ -1,5 +1,6 @@
 package github.javaguide.remoting.transport.socket;
 
+import github.javaguide.config.CustomShutdownHook;
 import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.ServiceProviderImpl;
 import github.javaguide.registry.ServiceRegistry;
@@ -44,10 +45,10 @@ public class SocketRpcServer {
     private void start() {
         try (ServerSocket server = new ServerSocket()) {
             server.bind(new InetSocketAddress(host, port));
-            log.info("server starts...");
+            CustomShutdownHook.getCustomShutdownHook().clearAll();
             Socket socket;
             while ((socket = server.accept()) != null) {
-                log.info("client connected");
+                log.info("client connected [{}]", socket.getInetAddress());
                 threadPool.execute(new SocketRpcRequestHandlerRunnable(socket));
             }
             threadPool.shutdown();
