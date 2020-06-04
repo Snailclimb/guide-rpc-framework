@@ -101,11 +101,11 @@ exit $RESULT
 
 IntelliJ IDEA-> Preferences->Plugins->搜索下载CheckStyle 插件，然后按照如下方式进行配置。
 
-![](./images/setting-check-style.png)
+![CheckStyle 插件下载和配置](./images/setting-check-style.png)
 
 配置完成之后，按照如下方式使用这个插件！
 
-![](./images/run-check-style.png)
+![插件使用方式](./images/run-check-style.png)
 
 **4.下载运行zookeeper**
 
