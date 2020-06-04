@@ -1,13 +1,18 @@
 package github.javaguide.proxy;
 
 import github.javaguide.remoting.dto.RpcRequest;
+import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.transport.ClientTransport;
+import github.javaguide.remoting.transport.netty.client.NettyClientTransport;
+import github.javaguide.remoting.transport.socket.SocketRpcClient;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 动态代理类。当动态代理对象调用一个方法的时候，实际调用的是下面的 invoke 方法。
@@ -38,6 +43,8 @@ public class RpcClientProxy implements InvocationHandler {
     /**
      * 当你使用代理对象调用方法的时候实际会调用到这个方法。代理对象就是你通过上面的 getProxy 方法获取到的对象。
      */
+    @SneakyThrows
+    @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         log.info("Call invoke method and invoked method: {}", method.getName());
@@ -47,6 +54,15 @@ public class RpcClientProxy implements InvocationHandler {
                 .paramTypes(method.getParameterTypes())
                 .requestId(UUID.randomUUID().toString())
                 .build();
-        return clientTransport.sendRpcRequest(rpcRequest);
+        Object result = null;
+        if (clientTransport instanceof NettyClientTransport) {
+            CompletableFuture<RpcResponse> completableFuture = (CompletableFuture<RpcResponse>) clientTransport.sendRpcRequest(rpcRequest);
+            result = completableFuture.get().getData();
+        }
+        if (clientTransport instanceof SocketRpcClient) {
+            RpcResponse rpcResponse = (RpcResponse) clientTransport.sendRpcRequest(rpcRequest);
+            result = rpcResponse.getData();
+        }
+        return result;
     }
 }

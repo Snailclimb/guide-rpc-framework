@@ -2,7 +2,7 @@ package github.javaguide;
 
 import github.javaguide.remoting.transport.ClientTransport;
 import github.javaguide.proxy.RpcClientProxy;
-import github.javaguide.remoting.transport.netty.client.NettyClientClientTransport;
+import github.javaguide.remoting.transport.netty.client.NettyClientTransport;
 
 /**
  * @author shuang.kou
@@ -10,7 +10,7 @@ import github.javaguide.remoting.transport.netty.client.NettyClientClientTranspo
  */
 public class NettyClientMain {
     public static void main(String[] args) {
-        ClientTransport rpcClient = new NettyClientClientTransport();
+        ClientTransport rpcClient = new NettyClientTransport();
         RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
         String hello = helloService.hello(new Hello("111", "222"));

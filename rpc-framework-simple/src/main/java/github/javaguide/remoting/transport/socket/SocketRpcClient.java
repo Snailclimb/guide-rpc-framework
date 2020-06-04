@@ -1,12 +1,12 @@
 package github.javaguide.remoting.transport.socket;
 
-import github.javaguide.remoting.dto.RpcRequest;
-import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.exception.RpcException;
 import github.javaguide.registry.ServiceDiscovery;
 import github.javaguide.registry.ZkServiceDiscovery;
-import github.javaguide.remoting.transport.ClientTransport;
 import github.javaguide.remoting.dto.RpcMessageChecker;
+import github.javaguide.remoting.dto.RpcRequest;
+import github.javaguide.remoting.dto.RpcResponse;
+import github.javaguide.remoting.transport.ClientTransport;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +44,7 @@ public class SocketRpcClient implements ClientTransport {
             RpcResponse rpcResponse = (RpcResponse) objectInputStream.readObject();
             //校验 RpcResponse 和 RpcRequest
             RpcMessageChecker.check(rpcResponse, rpcRequest);
-            return rpcResponse.getData();
+            return rpcResponse;
         } catch (IOException | ClassNotFoundException e) {
             throw new RpcException("调用服务失败:", e);
         }

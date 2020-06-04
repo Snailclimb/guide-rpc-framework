@@ -2,9 +2,9 @@ package github.javaguide.remoting.transport.netty.client;
 
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
-import github.javaguide.serialize.kyro.KryoSerializer;
 import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoDecoder;
 import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoEncoder;
+import github.javaguide.serialize.kyro.KryoSerializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -25,10 +25,8 @@ public final class NettyClient {
     private static Bootstrap b;
     private static EventLoopGroup eventLoopGroup;
 
-    private NettyClient() {
-    }
-
     // 初始化相关资源比如 EventLoopGroup、Bootstrap
+
     static {
         eventLoopGroup = new NioEventLoopGroup();
         b = new Bootstrap();
@@ -59,7 +57,9 @@ public final class NettyClient {
         eventLoopGroup.shutdownGracefully();
     }
 
-    public static Bootstrap initializeBootstrap() {
+    public static Bootstrap getBootstrap() {
         return b;
     }
+
+
 }

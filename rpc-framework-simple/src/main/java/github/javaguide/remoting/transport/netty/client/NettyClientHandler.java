@@ -1,10 +1,10 @@
 package github.javaguide.remoting.transport.netty.client;
 
+import github.javaguide.factory.SingletonFactory;
 import github.javaguide.remoting.dto.RpcResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.util.AttributeKey;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +20,11 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
+    private final UnprocessedRequests unprocessedRequests;
+
+    public NettyClientHandler() {
+        this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
+    }
 
     /**
      * 读取服务端传输的消息
@@ -29,15 +34,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         try {
             log.info("client receive msg: [{}]", msg);
             RpcResponse rpcResponse = (RpcResponse) msg;
-            // 声明一个 AttributeKey 对象，类似于 Map 中的 key
-            AttributeKey<RpcResponse> key = AttributeKey.valueOf("rpcResponse" + rpcResponse.getRequestId());
-            /*
-             * AttributeMap 可以看作是一个Channel的共享数据源
-             * AttributeMap 的 key 是 AttributeKey，value 是 Attribute
-             */
-            // 将服务端的返回结果保存到 AttributeMap 上
-            ctx.channel().attr(key).set(rpcResponse);
-            ctx.channel().close();
+            unprocessedRequests.complete(rpcResponse);
         } finally {
             ReferenceCountUtil.release(msg);
         }

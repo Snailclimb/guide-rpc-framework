@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ChannelProvider {
 
-    private static Bootstrap bootstrap = NettyClient.initializeBootstrap();
+    private static Bootstrap bootstrap = NettyClient.getBootstrap();
     private static Channel channel = null;
     /**
      * 最多重试次数
@@ -51,7 +51,6 @@ public class ChannelProvider {
                 return;
             }
             if (retry == 0) {
-                log.error("客户端连接失败:重试次数已用完，放弃连接！");
                 countDownLatch.countDown();
                 throw new RpcException(RpcErrorMessageEnum.CLIENT_CONNECT_SERVER_FAILURE);
             }
