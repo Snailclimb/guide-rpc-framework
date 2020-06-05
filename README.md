@@ -2,11 +2,17 @@
 
 > 如访问速度不佳，可放在 Gitee 地址：https://gitee.com/SnailClimb/guide-rpc-framework 。
 
+## 前言
+
+大概 2 个月前，我说过要利用业余时间写一个简单的 RPC 框架，今天（2020-06-05）总算将其开源出来，希望对小伙伴们有帮助。
+
+虽说 RPC 的原理实际不难，但是，自己在实现的过程中自己也遇到了很多问题。Guide-rpc-framework 目前只实现了 RPC 框架最基本的功能，一些可优化点都在下面提到了，有兴趣的小伙伴可以自行完善。
+
+## 介绍
+
 guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。代码注释详细，结构清晰，并且集成了 Check Style 规范代码结构，非常适合阅读和学习。
 
 由于 Guide 哥自身精力和能力有限，如果大家觉得有需要改进和完善的地方的话，欢迎将本项目 clone 到自己本地，在本地修改后提交 PR 给我，我会在第一时间 Review 你的代码。
-
-## 介绍
 
 **我们先从一个基本的 RPC 框架设计思路说起！**
 
@@ -27,9 +33,9 @@ guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。
 
 ### 项目基本情况和可优化点
 
-最期初的是时候，我是基于传统的 **BIO** 的方式 **Socket** 进行网络传输，然后利用 **JDK 自带的序列化机制** 以及内存直接存储相关服务相关信息来实现这个 RPC 框架的。
+为了循序渐进，最初的是时候，我是基于传统的 **BIO** 的方式 **Socket** 进行网络传输，然后利用 **JDK 自带的序列化机制** 以及内存直接存储相关服务相关信息来实现这个 RPC 框架的。
 
-后面，我对原始版本进行了优化，已完成的优化点和可以完成的优化点如下。
+后面，我对原始版本进行了优化，已完成的优化点和可以完成的优化点我都列在了下面 👇。
 
 **为什么要把可优化点列出来？** 主要是想给哪些希望优化这个 RPC 框架的小伙伴一点思路。欢迎大家 Clone 本仓库，然后自己进行优化。
 
@@ -66,14 +72,18 @@ guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。
 
 ### 2.初始化 git hooks
 
+**这一步主要是为了在 commit 代码之前，跑 Check Style，保证代码格式没问题，如果有问题的话就不能提交。**
+
 > 以下演示的是 Mac/Linux 对应的操作，Window 用户需要手动将 `config/git-hooks` 目录下的`pre-commit` 文件拷贝到 项目下的 `.git/hooks/` 目录。
 
-你需要以此执行下面这些命令：
+执行下面这些命令：
 
 ```shell
 ➜  guide-rpc-framework git:(master) ✗ chmod +x ./init.sh
 ➜  guide-rpc-framework git:(master) ✗ ./init.sh
 ```
+
+**简单介绍一下是怎么做的！**
 
 `init.sh` 这个脚本的主要作用是将 git commit 钩子拷贝到项目下的 `.git/hooks/` 目录，这样你每次 commit 的时候就会执行了。
 
@@ -173,7 +183,7 @@ String hello = helloService.hello(new Hello("111", "222"));
 **Java** ：
 
 1. 动态代理机制；
-2. 序列化机制以及各种序列化框架的对比，比如hession2、kyro、protostuff。
+2. 序列化机制以及各种序列化框架的对比，比如 hession2、kyro、protostuff。
 3. 线程池的使用；
 4. `CompletableFuture` 的使用
 5. ......
@@ -191,9 +201,4 @@ String hello = helloService.hello(new Hello("111", "222"));
 
 2. 数据结构；
 
-3. 如何使用Netflix公司开源的zookeeper客户端框架Curator进行增删改查；
-
-   
-
-
-
+3. 如何使用 Netflix 公司开源的 zookeeper 客户端框架 Curator 进行增删改查；
