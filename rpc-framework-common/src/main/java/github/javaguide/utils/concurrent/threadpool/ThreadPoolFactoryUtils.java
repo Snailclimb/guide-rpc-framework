@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +21,12 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public final class ThreadPoolFactoryUtils {
 
+    /**
+     * 通过 threadNamePrefix 来区分不同线程池（我们可以把相同 threadNamePrefix 的线程池看作是为同一业务场景服务）。
+     * TODO :通过信号量机制( {@link Semaphore} 满足条件)限制创建的线程池数量（线程池和线程不是越多越好）
+     * key: threadNamePrefix
+     * value: threadPool
+     */
     private static Map<String, ExecutorService> threadPools = new ConcurrentHashMap<>();
 
     private ThreadPoolFactoryUtils() {
