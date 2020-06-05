@@ -1,7 +1,7 @@
 package github.javaguide;
 
-import github.javaguide.remoting.transport.ClientTransport;
 import github.javaguide.proxy.RpcClientProxy;
+import github.javaguide.remoting.transport.ClientTransport;
 import github.javaguide.remoting.transport.netty.client.NettyClientTransport;
 
 /**
@@ -16,7 +16,9 @@ public class NettyClientMain {
         String hello = helloService.hello(new Hello("111", "222"));
         //如需使用 assert 断言，需要在 VM options 添加参数：-ea
         assert "Hello description is 222".equals(hello);
-        String hello2 = helloService.hello(new Hello("111", "222"));
-        System.out.println(hello2);
+        for (int i = 0; i < 50; i++) {
+            String des = helloService.hello(new Hello("111", "~~~" + i));
+            System.out.println(des);
+        }
     }
 }

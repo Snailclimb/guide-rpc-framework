@@ -168,6 +168,32 @@ String hello = helloService.hello(new Hello("111", "222"));
 
 大家在实际项目上还是要尽量少造轮子，有优秀的框架之后尽量就去用，Dubbo 在各个方面做的都比较好和完善。
 
-### 如果我要自己写的话，可以参考哪些资料？
+### 如果我要自己写的话，需要提前了解哪些知识
 
-代办~~~
+**Java** ：
+
+1. 动态代理机制；
+2. 序列化机制以及各种序列化框架的对比，比如hession2、kyro、protostuff。
+3. 线程池的使用；
+4. `CompletableFuture` 的使用
+5. ......
+
+**Netty** ：
+
+1. 使用 Netty 进行网络传输；
+2. `ByteBuf` 介绍
+3. Netty 粘包拆包
+4. Netty 长连接和心跳机制
+
+**Zookeeper** :
+
+1. 基本概念；
+
+2. 数据结构；
+
+3. 如何使用Netflix公司开源的zookeeper客户端框架Curator进行增删改查；
+
+   
+
+
+

@@ -4,7 +4,9 @@ import github.javaguide.factory.SingletonFactory;
 import github.javaguide.handler.RpcRequestHandler;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
-import github.javaguide.utils.concurrent.ThreadPoolFactoryUtils;
+import github.javaguide.utils.concurrent.threadpool.CustomThreadPoolConfig;
+import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtils;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -31,7 +33,9 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
     public NettyServerHandler() {
         this.rpcRequestHandler = SingletonFactory.getInstance(RpcRequestHandler.class);
-        this.threadPool = ThreadPoolFactoryUtils.createDefaultThreadPool(THREAD_NAME_PREFIX);
+        CustomThreadPoolConfig customThreadPoolConfig = new CustomThreadPoolConfig();
+        customThreadPoolConfig.setCorePoolSize(6);
+        this.threadPool = ThreadPoolFactoryUtils.createCustomThreadPoolIfAbsent(THREAD_NAME_PREFIX, customThreadPoolConfig);
     }
 
     @Override
@@ -45,7 +49,8 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
                 log.info(String.format("server get result: %s", result.toString()));
                 if (ctx.channel().isActive() && ctx.channel().isWritable()) {
                     //返回方法执行结果给客户端
-                    ctx.writeAndFlush(RpcResponse.success(result, rpcRequest.getRequestId()));
+                    RpcResponse<Object> rpcResponse = RpcResponse.success(result, rpcRequest.getRequestId());
+                    ctx.writeAndFlush(rpcResponse).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
                 } else {
                     log.error("not writable now, message dropped");
                 }
