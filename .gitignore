@@ -11,3 +11,8 @@
 /rpc-framework-simple/rpc-framework-simple.iml
 /rpc-framework-common/rpc-framework-common.iml
 /hello-service-api/hello-service-api.iml
+
+/.settings
+*/.settings
+.classpath
+.project
