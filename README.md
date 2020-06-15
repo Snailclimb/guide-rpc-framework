@@ -2,6 +2,10 @@
 
 > 如访问速度不佳，可放在 Gitee 地址：https://gitee.com/SnailClimb/guide-rpc-framework 。
 
+欢迎关注我的公众号获取手写 RPC 框架的最新教程。
+
+![我的公众号](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/167598cd2e17b8ec.png)
+
 ## 前言
 
 大概 2 个月前，我说过要利用业余时间写一个简单的 RPC 框架，今天（2020-06-05）总算将其开源出来，希望对小伙伴们有帮助。
@@ -198,7 +202,9 @@ String hello = helloService.hello(new Hello("111", "222"));
 **Zookeeper** :
 
 1. 基本概念；
-
 2. 数据结构；
-
 3. 如何使用 Netflix 公司开源的 zookeeper 客户端框架 Curator 进行增删改查；
+
+
+
+
