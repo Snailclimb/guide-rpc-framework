@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -64,7 +66,7 @@ public final class ThreadPoolFactoryUtils {
             log.info("shut down thread pool [{}] [{}]", entry.getKey(), executorService.isTerminated());
             try {
                 executorService.awaitTermination(10, TimeUnit.SECONDS);
-            } catch (InterruptedException ie) {
+            } catch (InterruptedException e) {
                 log.error("Thread pool never terminated");
                 executorService.shutdownNow();
             }
@@ -98,4 +100,20 @@ public final class ThreadPoolFactoryUtils {
         return Executors.defaultThreadFactory();
     }
 
+    /**
+     * 打印线程池的状态
+     *
+     * @param threadPool 线程池对象
+     */
+    public static void printThreadPoolStatus(ThreadPoolExecutor threadPool) {
+        ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(1, createThreadFactory("print-thread-pool-status", false));
+        scheduledExecutorService.scheduleAtFixedRate(() -> {
+            log.info("============ThreadPool Status=============");
+            log.info("ThreadPool Size: [{}]", threadPool.getPoolSize());
+            log.info("Active Threads: [{}]", threadPool.getActiveCount());
+            log.info("Number of Tasks : [{}]", threadPool.getCompletedTaskCount());
+            log.info("Number of Tasks in Queue: {}", threadPool.getQueue().size());
+            log.info("===========================================");
+        }, 0, 1, TimeUnit.SECONDS);
+    }
 }
