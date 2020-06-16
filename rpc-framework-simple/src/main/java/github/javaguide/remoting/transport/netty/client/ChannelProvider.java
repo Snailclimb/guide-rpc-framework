@@ -1,7 +1,6 @@
 package github.javaguide.remoting.transport.netty.client;
 
 import github.javaguide.factory.SingletonFactory;
-import github.javaguide.remoting.transport.netty.client.NettyClient;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 

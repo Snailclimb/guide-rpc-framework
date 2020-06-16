@@ -5,6 +5,5 @@ package github.javaguide.enumeration;
  * @createTime 2020年06月16日 20:34:00
  */
 public enum RpcMessageTypeEnum {
-    HEART_BEAT,
-    RPC_REQUEST
+    HEART_BEAT
 }
