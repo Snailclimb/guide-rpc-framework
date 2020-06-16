@@ -1,5 +1,6 @@
 package github.javaguide.remoting.transport.netty.server;
 
+import github.javaguide.enumeration.RpcMessageTypeEnum;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.handler.RpcRequestHandler;
 import github.javaguide.remoting.dto.RpcRequest;
@@ -8,6 +9,8 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.ReferenceCountUtil;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,6 +37,10 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         try {
             log.info("server receive msg: [{}] ", msg);
             RpcRequest rpcRequest = (RpcRequest) msg;
+            if (rpcRequest.getRpcMessageTypeEnum() == RpcMessageTypeEnum.HEART_BEAT) {
+                log.info("receive heat beat msg from client");
+                return;
+            }
             //执行目标方法（客户端需要执行的方法）并且返回方法结果
             Object result = rpcRequestHandler.handle(rpcRequest);
             log.info(String.format("server get result: %s", result.toString()));
@@ -47,6 +54,19 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         } finally {
             //确保 ByteBuf 被释放，不然可能会有内存泄露问题
             ReferenceCountUtil.release(msg);
+        }
+    }
+
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent) {
+            IdleState state = ((IdleStateEvent) evt).state();
+            if (state == IdleState.READER_IDLE) {
+                log.info("idle check happen, so close the connection");
+                ctx.close();
+            }
+        } else {
+            super.userEventTriggered(ctx, evt);
         }
     }
 
