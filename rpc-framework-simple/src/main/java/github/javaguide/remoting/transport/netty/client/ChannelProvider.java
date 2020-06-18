@@ -28,10 +28,6 @@ public final class ChannelProvider {
 
     }
 
-    /**
-     * 最多重试次数
-     */
-
     public static Channel get(InetSocketAddress inetSocketAddress) {
         String key = inetSocketAddress.toString();
         // 判断是否有对应地址的连接
@@ -50,4 +46,9 @@ public final class ChannelProvider {
         return channel;
     }
 
+    public static void remove(InetSocketAddress inetSocketAddress) {
+        String key = inetSocketAddress.toString();
+        channels.remove(key);
+        log.info("Channel map size :[{}]", channels.size());
+    }
 }

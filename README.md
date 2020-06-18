@@ -2,6 +2,10 @@
 
 > 如访问速度不佳，可放在 Gitee 地址：https://gitee.com/SnailClimb/guide-rpc-framework 。
 
+欢迎关注我的公众号获取手写 RPC 框架的最新教程。
+
+![我的公众号](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/167598cd2e17b8ec.png)
+
 ## 前言
 
 大概 2 个月前，我说过要利用业余时间写一个简单的 RPC 框架，今天（2020-06-05）总算将其开源出来，希望对小伙伴们有帮助。
@@ -44,7 +48,7 @@ guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。
 - [x] **使用 Zookeeper 管理相关服务地址信息**
 - [x] Netty 重用 Channel 避免重复连接服务端
 - [x] 使用 `CompletableFuture` 包装接受客户端返回结果（之前的实现是通过 `AttributeMap` 绑定到 Channel 上实现的） 详见：[使用 CompletableFuture 优化接受服务提供端返回结果](./docs/使用CompletableFuture优化接受服务提供端返回结果.md)
-- [ ] **增加 Netty 心跳机制**
+- [x] **增加 Netty 心跳机制** : 保证客户端和服务端的连接不被断掉，避免重连。
 - [ ] **增加可配置比如序列化方式、注册中心的实现方式,避免硬编码** ：通过 API 配置，后续集成 Spring 的话建议使用配置文件的方式进行配置
 - [ ] **客户端调用远程服务的时候进行负载均衡** ：发布服务的时候增加 一个 loadbalance 参数即可。
 - [ ] **使用注解进行服务配置和消费**
@@ -198,7 +202,9 @@ String hello = helloService.hello(new Hello("111", "222"));
 **Zookeeper** :
 
 1. 基本概念；
-
 2. 数据结构；
-
 3. 如何使用 Netflix 公司开源的 zookeeper 客户端框架 Curator 进行增删改查；
+
+
+
+
