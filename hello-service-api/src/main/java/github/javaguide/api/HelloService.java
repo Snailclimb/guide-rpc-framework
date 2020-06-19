@@ -1,4 +1,4 @@
-package github.javaguide;
+package github.javaguide.api;
 
 /**
  * @author shuang.kou
