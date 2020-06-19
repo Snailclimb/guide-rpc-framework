@@ -16,11 +16,11 @@ import java.util.Set;
  * @author:lvxuhong
  * @date:2020/6/18
  */
-public class Scanner extends ClassPathBeanDefinitionScanner {
+public class RpcServiceScanner extends ClassPathBeanDefinitionScanner {
 
     private RpcServiceFactoryBean<Object> rpcServiceFactoryBean = new RpcServiceFactoryBean<>();
 
-    public Scanner(BeanDefinitionRegistry registry) {
+    public RpcServiceScanner(BeanDefinitionRegistry registry) {
         super(registry);
     }
 

@@ -1,6 +1,6 @@
 package github.javaguide.spring.annotation;
 
-import github.javaguide.spring.rpcservice.Scanner;
+import github.javaguide.spring.rpcservice.RpcServiceScanner;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
@@ -26,7 +26,7 @@ public class RpcServiceScannerRegistrar implements ImportBeanDefinitionRegistrar
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
         AnnotationAttributes annoAttrs = AnnotationAttributes.fromMap(
                 importingClassMetadata.getAnnotationAttributes(RpcServiceScan.class.getName()));
-        Scanner scanner = new Scanner(registry);
+        RpcServiceScanner scanner = new RpcServiceScanner(registry);
         String value = annoAttrs.getString("value");
         if (resourceLoader != null) {
             scanner.setResourceLoader(resourceLoader);
