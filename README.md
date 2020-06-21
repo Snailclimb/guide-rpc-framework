@@ -1,6 +1,6 @@
 # guide-rpc-framework
 
-> 如访问速度不佳，可放在 Gitee 地址：https://gitee.com/SnailClimb/guide-rpc-framework 。
+> 如访问速度不佳，可放在 Gitee 地址：https://gitee.com/SnailClimb/guide-rpc-framework 。如果要提交 issue 或者 pr 的话，请在 Github 提交：[https://github.com/Snailclimb/guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 。
 
 欢迎关注我的公众号获取手写 RPC 框架的最新教程。
 
@@ -49,8 +49,9 @@ guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。
 - [x] Netty 重用 Channel 避免重复连接服务端
 - [x] 使用 `CompletableFuture` 包装接受客户端返回结果（之前的实现是通过 `AttributeMap` 绑定到 Channel 上实现的） 详见：[使用 CompletableFuture 优化接受服务提供端返回结果](./docs/使用CompletableFuture优化接受服务提供端返回结果.md)
 - [x] **增加 Netty 心跳机制** : 保证客户端和服务端的连接不被断掉，避免重连。
+- [x] **客户端调用远程服务的时候进行负载均衡** ：调用服务的时候，从很多服务地址中根据相应的负载均衡算法选取一个服务地址。ps：目前只实现了随机负载均衡算法。
+- [ ] **对 SPI 机制的运用** 
 - [ ] **增加可配置比如序列化方式、注册中心的实现方式,避免硬编码** ：通过 API 配置，后续集成 Spring 的话建议使用配置文件的方式进行配置
-- [ ] **客户端调用远程服务的时候进行负载均衡** ：发布服务的时候增加 一个 loadbalance 参数即可。
 - [ ] **使用注解进行服务配置和消费**
 - [ ] **处理一个接口有多个实现的情况** ：对服务分组，发布服务的时候增加一个 group 参数即可。
 - [ ] **增加服务版本号** ：建议使用两位数字版本，如：1.0，通常在接口不兼容时版本号才需要升级。为什么要增加服务版本号？为后续不兼容升级提供可能，比如服务接口增加方法，或服务模型增加字段，可向后兼容，删除方法或删除字段，将不兼容，枚举类型新增字段也不兼容，需通过变更版本号升级。
