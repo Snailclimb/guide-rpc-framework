@@ -32,7 +32,6 @@
         <module>example-client</module>
         <module>example-server</module>
         <module>rpc-framework-common</module>
-        <module>rpc-framework-spring</module>
     </modules>
     <dependencies>
         <!-- lombok -->
