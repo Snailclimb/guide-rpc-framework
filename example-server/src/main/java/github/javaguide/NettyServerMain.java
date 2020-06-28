@@ -1,6 +1,5 @@
 package github.javaguide;
 
-import github.javaguide.api.HelloService;
 import github.javaguide.remoting.transport.netty.server.NettyServer;
 
 /**
