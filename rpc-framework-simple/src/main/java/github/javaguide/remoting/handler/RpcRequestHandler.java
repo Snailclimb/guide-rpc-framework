@@ -1,4 +1,4 @@
-package github.javaguide.handler;
+package github.javaguide.remoting.handler;
 
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;

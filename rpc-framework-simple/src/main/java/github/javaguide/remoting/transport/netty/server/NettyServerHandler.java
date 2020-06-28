@@ -2,7 +2,7 @@ package github.javaguide.remoting.transport.netty.server;
 
 import github.javaguide.enumeration.RpcMessageTypeEnum;
 import github.javaguide.factory.SingletonFactory;
-import github.javaguide.handler.RpcRequestHandler;
+import github.javaguide.remoting.handler.RpcRequestHandler;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import io.netty.channel.ChannelFutureListener;
