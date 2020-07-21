@@ -2,7 +2,7 @@ package github.javaguide.remoting.transport.socket;
 
 import github.javaguide.exception.RpcException;
 import github.javaguide.registry.ServiceDiscovery;
-import github.javaguide.registry.ZkServiceDiscovery;
+import github.javaguide.registry.zk.ZkServiceDiscovery;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.transport.ClientTransport;
 import lombok.AllArgsConstructor;

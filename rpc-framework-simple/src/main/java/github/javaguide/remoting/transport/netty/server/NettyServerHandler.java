@@ -1,6 +1,6 @@
 package github.javaguide.remoting.transport.netty.server;
 
-import github.javaguide.enumeration.RpcMessageTypeEnum;
+import github.javaguide.enumeration.RpcMessageType;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.remoting.handler.RpcRequestHandler;
 import github.javaguide.remoting.dto.RpcRequest;
@@ -37,7 +37,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
         try {
             log.info("server receive msg: [{}] ", msg);
             RpcRequest rpcRequest = (RpcRequest) msg;
-            if (rpcRequest.getRpcMessageTypeEnum() == RpcMessageTypeEnum.HEART_BEAT) {
+            if (rpcRequest.getRpcMessageType() == RpcMessageType.HEART_BEAT) {
                 log.info("receive heat beat msg from client");
                 return;
             }

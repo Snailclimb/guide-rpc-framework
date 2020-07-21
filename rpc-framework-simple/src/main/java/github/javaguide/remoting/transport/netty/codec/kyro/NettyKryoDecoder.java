@@ -19,8 +19,8 @@ import java.util.List;
 @Slf4j
 public class NettyKryoDecoder extends ByteToMessageDecoder {
 
-    private Serializer serializer;
-    private Class<?> genericClass;
+    private final Serializer serializer;
+    private final Class<?> genericClass;
 
     /**
      * Netty传输的消息长度也就是对象序列化后对应的字节数组的大小，存储在 ByteBuf 头部

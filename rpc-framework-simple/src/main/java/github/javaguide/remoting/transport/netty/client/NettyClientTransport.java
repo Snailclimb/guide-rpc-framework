@@ -2,7 +2,7 @@ package github.javaguide.remoting.transport.netty.client;
 
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.registry.ServiceDiscovery;
-import github.javaguide.registry.ZkServiceDiscovery;
+import github.javaguide.registry.zk.ZkServiceDiscovery;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.transport.ClientTransport;
@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * 基于 Netty 传输 RpcRequest。
+ * transport rpcRequest based on netty.
  *
  * @author shuang.kou
  * @createTime 2020年05月29日 11:34:00
@@ -23,20 +23,22 @@ import java.util.concurrent.CompletableFuture;
 public class NettyClientTransport implements ClientTransport {
     private final ServiceDiscovery serviceDiscovery;
     private final UnprocessedRequests unprocessedRequests;
+    private final ChannelProvider channelProvider;
 
     public NettyClientTransport() {
         this.serviceDiscovery = new ZkServiceDiscovery();
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
+        this.channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
     }
 
     @Override
-    public CompletableFuture<RpcResponse> sendRpcRequest(RpcRequest rpcRequest) {
-        // 构建返回值
-        CompletableFuture<RpcResponse> resultFuture = new CompletableFuture<>();
+    public CompletableFuture<RpcResponse<Object>> sendRpcRequest(RpcRequest rpcRequest) {
+        // build return value
+        CompletableFuture<RpcResponse<Object>> resultFuture = new CompletableFuture<>();
         InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
-        Channel channel = ChannelProvider.get(inetSocketAddress);
+        Channel channel = channelProvider.get(inetSocketAddress);
         if (channel != null && channel.isActive()) {
-            // 放入未处理的请求
+            // put unprocessed request
             unprocessedRequests.put(rpcRequest.getRequestId(), resultFuture);
             channel.writeAndFlush(rpcRequest).addListener((ChannelFutureListener) future -> {
                 if (future.isSuccess()) {

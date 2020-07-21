@@ -1,5 +1,6 @@
 package github.javaguide.remoting.handler;
 
+import github.javaguide.factory.SingletonFactory;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.enumeration.RpcResponseCode;
@@ -19,7 +20,11 @@ import java.lang.reflect.Method;
  */
 @Slf4j
 public class RpcRequestHandler {
-    private static ServiceProvider serviceProvider = new ServiceProviderImpl();
+    private final ServiceProvider serviceProvider;
+
+    public RpcRequestHandler() {
+        serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
+    }
 
     /**
      * 处理 rpcRequest ：调用对应的方法，然后返回方法执行结果

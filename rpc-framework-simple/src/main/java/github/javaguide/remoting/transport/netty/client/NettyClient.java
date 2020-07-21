@@ -32,11 +32,11 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public final class NettyClient {
-    private static final Bootstrap bootstrap;
-    private static final EventLoopGroup eventLoopGroup;
+    private final Bootstrap bootstrap;
+    private final EventLoopGroup eventLoopGroup;
 
     // initialize resources such as EventLoopGroup, Bootstrap
-    static {
+    public NettyClient() {
         eventLoopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         KryoSerializer kryoSerializer = new KryoSerializer();
@@ -62,6 +62,7 @@ public final class NettyClient {
                     }
                 });
     }
+
 
     /**
      * connect server and get the channel ,so that you can send rpc message to server

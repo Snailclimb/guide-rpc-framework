@@ -14,7 +14,7 @@ public interface ServiceProvider {
      * @param service      服务实例对象
      * @param serviceClass 服务实例对象实现的接口类
      */
-   void addServiceProvider(Object service, Class<?> serviceClass);
+    void addServiceProvider(Object service, Class<?> serviceClass);
 
     /**
      * 获取服务实例对象
@@ -23,4 +23,11 @@ public interface ServiceProvider {
      * @return 服务实例对象
      */
     Object getServiceProvider(String serviceName);
+
+    /**
+     * 发布服务
+     *
+     * @param service 服务实例对象
+     */
+    void publishService(Object service);
 }

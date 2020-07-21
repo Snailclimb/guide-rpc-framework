@@ -1,9 +1,11 @@
-package github.javaguide.registry;
+package github.javaguide.registry.zk;
 
 import github.javaguide.loadbalance.LoadBalance;
 import github.javaguide.loadbalance.RandomLoadBalance;
-import github.javaguide.utils.zk.CuratorUtils;
+import github.javaguide.registry.ServiceDiscovery;
+import github.javaguide.registry.zk.util.CuratorUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.curator.framework.CuratorFramework;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -25,7 +27,8 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
     @Override
     public InetSocketAddress lookupService(String serviceName) {
         // 这里直接去了第一个找到的服务地址,eg:127.0.0.1:9999
-        List<String> serviceUrlList = CuratorUtils.getChildrenNodes(serviceName);
+        CuratorFramework zkClient = CuratorUtils.getZkClient();
+        List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, serviceName);
         // 负载均衡
         String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList);
         log.info("成功找到服务地址:[{}]", targetServiceUrl);

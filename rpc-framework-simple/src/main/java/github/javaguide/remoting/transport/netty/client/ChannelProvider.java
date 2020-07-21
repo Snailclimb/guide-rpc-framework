@@ -15,36 +15,37 @@ import java.util.concurrent.ConcurrentHashMap;
  * @createTime 2020年05月29日 16:36:00
  */
 @Slf4j
-public final class ChannelProvider {
+public class ChannelProvider {
 
-    private static final Map<String, Channel> channels = new ConcurrentHashMap<>();
-    private static final NettyClient nettyClient = SingletonFactory.getInstance(NettyClient.class);
+    private final Map<String, Channel> channelMap;
+    private final NettyClient nettyClient;
 
-    private ChannelProvider() {
-
+    public ChannelProvider() {
+        channelMap = new ConcurrentHashMap<>();
+        nettyClient = SingletonFactory.getInstance(NettyClient.class);
     }
 
-    public static Channel get(InetSocketAddress inetSocketAddress) {
+    public Channel get(InetSocketAddress inetSocketAddress) {
         String key = inetSocketAddress.toString();
         // determine if there is a connection for the corresponding address
-        if (channels.containsKey(key)) {
-            Channel channel = channels.get(key);
+        if (channelMap.containsKey(key)) {
+            Channel channel = channelMap.get(key);
             // if so, determine if the connection is available, and if so, get it directly
             if (channel != null && channel.isActive()) {
                 return channel;
             } else {
-                channels.remove(key);
+                channelMap.remove(key);
             }
         }
         // otherwise, reconnect to get the Channel
         Channel channel = nettyClient.doConnect(inetSocketAddress);
-        channels.put(key, channel);
+        channelMap.put(key, channel);
         return channel;
     }
 
-    public static void remove(InetSocketAddress inetSocketAddress) {
+    public void remove(InetSocketAddress inetSocketAddress) {
         String key = inetSocketAddress.toString();
-        channels.remove(key);
-        log.info("Channel map size :[{}]", channels.size());
+        channelMap.remove(key);
+        log.info("Channel map size :[{}]", channelMap.size());
     }
 }

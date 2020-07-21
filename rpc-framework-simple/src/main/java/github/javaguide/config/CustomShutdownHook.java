@@ -1,7 +1,7 @@
 package github.javaguide.config;
 
+import github.javaguide.registry.zk.util.CuratorUtils;
 import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtils;
-import github.javaguide.utils.zk.CuratorUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -21,7 +21,7 @@ public class CustomShutdownHook {
     public void clearAll() {
         log.info("addShutdownHook for clearAll");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            CuratorUtils.clearRegistry();
+            CuratorUtils.clearRegistry(CuratorUtils.getZkClient());
             ThreadPoolFactoryUtils.shutDownAllThreadPool();
         }));
     }

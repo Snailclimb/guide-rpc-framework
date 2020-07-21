@@ -1,5 +1,7 @@
 import github.javaguide.HelloService;
 import github.javaguide.HelloServiceImpl;
+import github.javaguide.provider.ServiceProvider;
+import github.javaguide.provider.ServiceProviderImpl;
 import github.javaguide.remoting.transport.netty.server.NettyServer;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -13,6 +15,7 @@ public class NettyServerMain2 {
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(NettyServerMain.class);
         NettyServer nettyServer = applicationContext.getBean(NettyServer.class);
         nettyServer.start();
-        nettyServer.publishService(helloService, HelloService.class);
+        ServiceProvider serviceProvider = new ServiceProviderImpl();
+        serviceProvider.publishService(helloService);
     }
 }
