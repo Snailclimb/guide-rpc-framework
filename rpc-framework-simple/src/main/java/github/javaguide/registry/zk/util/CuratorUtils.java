@@ -110,6 +110,7 @@ public final class CuratorUtils {
         zkClient = CuratorFrameworkFactory.builder()
                 // the server to connect to (can be a server list)
                 .connectString(defaultZookeeperAddress)
+                .authorization("digest", "user1:123456".getBytes())
                 .retryPolicy(retryPolicy)
                 .build();
         zkClient.start();

@@ -9,11 +9,11 @@ import github.javaguide.remoting.transport.netty.client.NettyClientTransport;
  * @author shuang.kou
  * @createTime 2020年05月10日 07:25:00
  */
-public class NettyClientMain {
+public class NettyClientMain2 {
     public static void main(String[] args) throws InterruptedException {
         ClientTransport rpcClient = new NettyClientTransport();
         RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
-                .group("test1").version("version1").build();
+                .group("test2").version("version1").build();
         RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient, rpcServiceProperties);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
         String hello = helloService.hello(new Hello("111", "222"));

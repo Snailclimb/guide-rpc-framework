@@ -1,5 +1,6 @@
 package github.javaguide.remoting.transport.netty.client;
 
+import github.javaguide.entity.RpcServiceProperties;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.registry.ServiceDiscovery;
 import github.javaguide.registry.zk.ZkServiceDiscovery;
@@ -35,7 +36,12 @@ public class NettyClientTransport implements ClientTransport {
     public CompletableFuture<RpcResponse<Object>> sendRpcRequest(RpcRequest rpcRequest) {
         // build return value
         CompletableFuture<RpcResponse<Object>> resultFuture = new CompletableFuture<>();
-        InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest.getInterfaceName());
+        // build rpc service name by ppcRequest
+        String rpcServiceName = RpcServiceProperties.builder().serviceName(rpcRequest.getInterfaceName())
+                .group(rpcRequest.getGroup()).version(rpcRequest.getVersion()).build().toRpcServiceName();
+        // get server address
+        InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcServiceName);
+        // get  server address related channel
         Channel channel = channelProvider.get(inetSocketAddress);
         if (channel != null && channel.isActive()) {
             // put unprocessed request

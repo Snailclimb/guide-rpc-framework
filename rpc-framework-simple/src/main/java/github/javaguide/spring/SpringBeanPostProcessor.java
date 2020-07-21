@@ -1,6 +1,7 @@
-package github.javaguide.remoting.transport.netty.server;
+package github.javaguide.spring;
 
 import github.javaguide.annotation.RpcService;
+import github.javaguide.entity.RpcServiceProperties;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.ServiceProviderImpl;
@@ -32,7 +33,12 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (bean.getClass().isAnnotationPresent(RpcService.class)) {
             log.info("[{}] is annotated with  [{}]", bean.getClass().getName(), RpcService.class.getCanonicalName());
-            serviceProvider.publishService(bean);
+            // get RpcService annotation
+            RpcService rpcService = bean.getClass().getAnnotation(RpcService.class);
+            // build RpcServiceProperties
+            RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
+                    .group(rpcService.group()).version(rpcService.version()).build();
+            serviceProvider.publishService(bean, rpcServiceProperties);
         }
         return bean;
     }

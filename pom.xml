@@ -18,6 +18,8 @@
         <checkstyle-maven-plugin.version>3.1.1</checkstyle-maven-plugin.version>
         <spring.version>5.2.7.RELEASE</spring.version>
         <curator-version>4.2.0</curator-version>
+        <!--TODO 升级org.apache.zookeeper版本到3.4.14报错-->
+        <zookeeper-version>3.4.6</zookeeper-version>
         <!-- test -->
         <junit.jupiter.version>5.5.2</junit.jupiter.version>
         <junit.platform.version>1.5.2</junit.platform.version>
@@ -112,7 +114,7 @@
         <dependency>
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
-            <version>3.4.6</version>
+            <version>${zookeeper-version}</version>
             <exclusions>
                 <exclusion>
                     <artifactId>netty</artifactId>

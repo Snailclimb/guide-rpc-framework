@@ -26,4 +26,6 @@ public class RpcRequest implements Serializable {
     private Object[] parameters;
     private Class<?>[] paramTypes;
     private RpcMessageType rpcMessageType;
+    private String version;
+    private String group;
 }

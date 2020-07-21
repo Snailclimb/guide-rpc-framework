@@ -1,5 +1,8 @@
 package github.javaguide.remoting.handler;
 
+import github.javaguide.annotation.RpcService;
+import github.javaguide.entity.RpcServiceProperties;
+import github.javaguide.enumeration.RpcProperties;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
@@ -30,8 +33,11 @@ public class RpcRequestHandler {
      * 处理 rpcRequest ：调用对应的方法，然后返回方法执行结果
      */
     public Object handle(RpcRequest rpcRequest) {
+        RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder().serviceName(rpcRequest.getInterfaceName())
+                .version(rpcRequest.getVersion())
+                .group(rpcRequest.getGroup()).build();
         //通过注册中心获取到目标类（客户端需要调用类）
-        Object service = serviceProvider.getServiceProvider(rpcRequest.getInterfaceName());
+        Object service = serviceProvider.getServiceProvider(rpcServiceProperties);
         return invokeTargetMethod(rpcRequest, service);
     }
 
@@ -46,9 +52,6 @@ public class RpcRequestHandler {
         Object result;
         try {
             Method method = service.getClass().getMethod(rpcRequest.getMethodName(), rpcRequest.getParamTypes());
-            if (null == method) {
-                return RpcResponse.fail(RpcResponseCode.NOT_FOUND_METHOD);
-            }
             result = method.invoke(service, rpcRequest.getParameters());
             log.info("service:[{}] successful invoke method:[{}]", rpcRequest.getInterfaceName(), rpcRequest.getMethodName());
         } catch (NoSuchMethodException | IllegalArgumentException | InvocationTargetException | IllegalAccessException e) {

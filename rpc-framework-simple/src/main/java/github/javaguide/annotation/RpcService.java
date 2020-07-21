@@ -7,8 +7,15 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+
 import org.springframework.stereotype.Component;
 
+/**
+ * RPC service annotation, marked on the service implementation class
+ *
+ * @author shuang.kou
+ * @createTime 2020年07月21日 13:11:00
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
