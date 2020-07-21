@@ -12,19 +12,18 @@
         <encoding>UTF-8</encoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <!--logging-->
-        <log4j.version>2.9.0</log4j.version>
-        <slf4j.version>1.7.25</slf4j.version>
-        <!--Netty-->
         <netty.version>4.1.42.Final</netty.version>
         <kryo.version>4.0.2</kryo.version>
-        <!--tools-->
         <guava.version>29.0-jre</guava.version>
+        <checkstyle-maven-plugin.version>3.1.1</checkstyle-maven-plugin.version>
+        <spring.version>5.2.7.RELEASE</spring.version>
+        <curator-version>4.2.0</curator-version>
         <!-- test -->
         <junit.jupiter.version>5.5.2</junit.jupiter.version>
         <junit.platform.version>1.5.2</junit.platform.version>
-        <!-- checkstyle -->
-        <checkstyle-maven-plugin.version>3.1.1</checkstyle-maven-plugin.version>
+        <!--logging-->
+        <log4j.version>2.9.0</log4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
     </properties>
     <modules>
         <module>rpc-framework-simple</module>
@@ -75,7 +74,7 @@
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-framework</artifactId>
-            <version>4.0.1</version>
+            <version>${curator-version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.zookeeper</groupId>
@@ -94,7 +93,7 @@
         <dependency>
             <groupId>org.apache.curator</groupId>
             <artifactId>curator-recipes</artifactId>
-            <version>4.0.1</version>
+            <version>${curator-version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.zookeeper</groupId>
@@ -113,7 +112,7 @@
         <dependency>
             <groupId>org.apache.zookeeper</groupId>
             <artifactId>zookeeper</artifactId>
-            <version>3.4.14</version>
+            <version>3.4.6</version>
             <exclusions>
                 <exclusion>
                     <artifactId>netty</artifactId>

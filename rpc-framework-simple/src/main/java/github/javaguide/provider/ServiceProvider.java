@@ -13,9 +13,8 @@ public interface ServiceProvider {
      *
      * @param service      服务实例对象
      * @param serviceClass 服务实例对象实现的接口类
-     * @param <T>          服务接口的类型
      */
-    <T> void addServiceProvider(T service, Class<T> serviceClass);
+   void addServiceProvider(Object service, Class<?> serviceClass);
 
     /**
      * 获取服务实例对象

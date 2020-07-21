@@ -1,5 +1,6 @@
 package github.javaguide.remoting.transport.netty.server;
 
+import github.javaguide.annotation.RpcService;
 import github.javaguide.config.CustomShutdownHook;
 import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.ServiceProviderImpl;
@@ -22,40 +23,44 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 服务端。接收客户端消息，并且根据客户端的消息调用相应的方法，然后返回结果给客户端。
+ * Server. Receive the client message, call the corresponding method according to the client message,
+ * and then return the result to the client.
  *
  * @author shuang.kou
  * @createTime 2020年05月25日 16:42:00
  */
 @Slf4j
-public class NettyServer {
-    private final String host;
-    private final int port;
-    private final KryoSerializer kryoSerializer;
-    private final ServiceRegistry serviceRegistry;
-    private final ServiceProvider serviceProvider;
+@Component
+@PropertySource("classpath:rpc.properties")
+public class NettyServer implements InitializingBean, ApplicationContextAware {
+    @Value("${rpc.server.host}")
+    private String host;
+    @Value("${rpc.server.port}")
+    private int port;
 
-    public NettyServer(String host, int port) {
-        this.host = host;
-        this.port = port;
-        kryoSerializer = new KryoSerializer();
-        serviceRegistry = new ZkServiceRegistry();
-        serviceProvider = new ServiceProviderImpl();
-    }
+    private final KryoSerializer kryoSerializer = new KryoSerializer();
+    private final ServiceRegistry serviceRegistry = new ZkServiceRegistry();
+    private final ServiceProvider serviceProvider = new ServiceProviderImpl();
 
-    public <T> void publishService(T service, Class<T> serviceClass) {
+    public void publishService(Object service, Class<?> serviceClass) {
         serviceProvider.addServiceProvider(service, serviceClass);
         serviceRegistry.registerService(serviceClass.getCanonicalName(), new InetSocketAddress(host, port));
-        start();
     }
 
-    private void start() {
-        CustomShutdownHook.getCustomShutdownHook().clearAll();
+    public void start() {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -92,5 +97,20 @@ public class NettyServer {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
+    }
+
+    /**
+     * Called after setting all bean properties
+     */
+    @Override
+    public void afterPropertiesSet() {
+        CustomShutdownHook.getCustomShutdownHook().clearAll();
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        // 获得所有被 RpcService 注解的类
+        Map<String, Object> registeredBeanMap = applicationContext.getBeansWithAnnotation(RpcService.class);
+        registeredBeanMap.values().forEach(o -> publishService(o, o.getClass().getInterfaces()[0]));
     }
 }
