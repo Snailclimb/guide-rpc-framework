@@ -1,5 +1,6 @@
 package github.javaguide.remoting.dto;
 
+import github.javaguide.entity.RpcServiceProperties;
 import github.javaguide.enumeration.RpcMessageType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,4 +29,10 @@ public class RpcRequest implements Serializable {
     private RpcMessageType rpcMessageType;
     private String version;
     private String group;
+
+    public RpcServiceProperties toRpcProperties() {
+        return RpcServiceProperties.builder().serviceName(this.getInterfaceName())
+                .version(this.getVersion())
+                .group(this.getGroup()).build();
+    }
 }

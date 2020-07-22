@@ -8,7 +8,7 @@ import org.apache.curator.framework.CuratorFramework;
 import java.net.InetSocketAddress;
 
 /**
- * 基于 zookeeper 实现服务注册
+ * service registration  based on zookeeper
  *
  * @author shuang.kou
  * @createTime 2020年05月31日 10:56:00
@@ -17,9 +17,8 @@ import java.net.InetSocketAddress;
 public class ZkServiceRegistry implements ServiceRegistry {
 
     @Override
-    public void registerService(String serviceName, InetSocketAddress inetSocketAddress) {
-        //根节点下注册子节点：服务
-        String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + "/" + serviceName + inetSocketAddress.toString();
+    public void registerService(String rpcServiceName, InetSocketAddress inetSocketAddress) {
+        String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + "/" + rpcServiceName + inetSocketAddress.toString();
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         CuratorUtils.createPersistentNode(zkClient, servicePath);
     }

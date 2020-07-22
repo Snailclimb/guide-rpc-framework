@@ -1,22 +1,17 @@
 package github.javaguide.remoting.handler;
 
-import github.javaguide.annotation.RpcService;
-import github.javaguide.entity.RpcServiceProperties;
-import github.javaguide.enumeration.RpcProperties;
-import github.javaguide.factory.SingletonFactory;
-import github.javaguide.remoting.dto.RpcRequest;
-import github.javaguide.remoting.dto.RpcResponse;
-import github.javaguide.enumeration.RpcResponseCode;
 import github.javaguide.exception.RpcException;
+import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.ServiceProviderImpl;
+import github.javaguide.remoting.dto.RpcRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * RpcRequest 的处理器
+ * RpcRequest processor
  *
  * @author shuang.kou
  * @createTime 2020年05月13日 09:05:00
@@ -30,23 +25,19 @@ public class RpcRequestHandler {
     }
 
     /**
-     * 处理 rpcRequest ：调用对应的方法，然后返回方法执行结果
+     * Processing rpcRequest: call the corresponding method, and then return the method
      */
     public Object handle(RpcRequest rpcRequest) {
-        RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder().serviceName(rpcRequest.getInterfaceName())
-                .version(rpcRequest.getVersion())
-                .group(rpcRequest.getGroup()).build();
-        //通过注册中心获取到目标类（客户端需要调用类）
-        Object service = serviceProvider.getServiceProvider(rpcServiceProperties);
+        Object service = serviceProvider.getService(rpcRequest.toRpcProperties());
         return invokeTargetMethod(rpcRequest, service);
     }
 
     /**
-     * 根据 rpcRequest 和 service 对象特定的方法并返回结果
+     * get method execution results
      *
-     * @param rpcRequest 客户端请求
-     * @param service    提供服务的对象
-     * @return 目标方法执行的结果
+     * @param rpcRequest client request
+     * @param service    service object
+     * @return the result of the target method execution
      */
     private Object invokeTargetMethod(RpcRequest rpcRequest, Object service) {
         Object result;

@@ -1,7 +1,6 @@
 package github.javaguide.proxy;
 
 import github.javaguide.entity.RpcServiceProperties;
-import github.javaguide.enumeration.RpcProperties;
 import github.javaguide.remoting.dto.RpcMessageChecker;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
@@ -18,8 +17,9 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * 动态代理类。当动态代理对象调用一个方法的时候，实际调用的是下面的 invoke 方法。
- * 正是因为动态代理才让客户端调用的远程方法像是调用本地方法一样（屏蔽了中间过程）
+ * Dynamic proxy class.
+ * When a dynamic proxy object calls a method, it actually calls the following invoke method.
+ * It is precisely because of the dynamic proxy that the remote method called by the client is like calling the local method (the intermediate process is shielded)
  *
  * @author shuang.kou
  * @createTime 2020年05月10日 19:01:00
@@ -27,7 +27,7 @@ import java.util.concurrent.CompletableFuture;
 @Slf4j
 public class RpcClientProxy implements InvocationHandler {
     /**
-     * 用于发送请求给服务端，对应socket和netty两种实现方式
+     * Used to send requests to the server.And there are two implementations: socket and netty
      */
     private final ClientTransport clientTransport;
     private final RpcServiceProperties rpcServiceProperties;
@@ -50,7 +50,7 @@ public class RpcClientProxy implements InvocationHandler {
     }
 
     /**
-     * 通过 Proxy.newProxyInstance() 方法获取某个类的代理对象
+     * get the proxy object
      */
     @SuppressWarnings("unchecked")
     public <T> T getProxy(Class<T> clazz) {
@@ -58,7 +58,8 @@ public class RpcClientProxy implements InvocationHandler {
     }
 
     /**
-     * 当你使用代理对象调用方法的时候实际会调用到这个方法。代理对象就是你通过上面的 getProxy 方法获取到的对象。
+     * This method is actually called when you use a proxy object to call a method.
+     * The proxy object is the object you get through the getProxy method.
      */
     @SneakyThrows
     @SuppressWarnings("unchecked")
@@ -81,7 +82,6 @@ public class RpcClientProxy implements InvocationHandler {
         if (clientTransport instanceof SocketRpcClient) {
             rpcResponse = (RpcResponse<Object>) clientTransport.sendRpcRequest(rpcRequest);
         }
-        //校验 RpcResponse 和 RpcRequest
         RpcMessageChecker.check(rpcResponse, rpcRequest);
         return rpcResponse.getData();
     }

@@ -2,7 +2,6 @@ package github.javaguide.provider;
 
 import github.javaguide.entity.RpcServiceProperties;
 import github.javaguide.enumeration.RpcErrorMessage;
-import github.javaguide.enumeration.RpcProperties;
 import github.javaguide.exception.RpcException;
 import github.javaguide.registry.ServiceRegistry;
 import github.javaguide.registry.zk.ZkServiceRegistry;
@@ -17,8 +16,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 实现了 ServiceProvider 接口，可以将其看做是一个保存和提供服务实例对象的示例
- *
  * @author shuang.kou
  * @createTime 2020年05月13日 11:23:00
  */
@@ -26,10 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServiceProviderImpl implements ServiceProvider {
 
     /**
-     * 接口名和服务的对应关系
-     * note:处理一个接口被两个实现类实现的情况如何处理？（通过 group 分组）
-     * key:service/interface name
-     * value:service
+     * key: rpc service name(interface name + version + group)
+     * value: service object
      */
     private final Map<String, Object> serviceMap;
     private final Set<String> registeredService;
@@ -43,7 +38,7 @@ public class ServiceProviderImpl implements ServiceProvider {
     }
 
     @Override
-    public void addServiceProvider(Object service, Class<?> serviceClass, RpcServiceProperties rpcServiceProperties) {
+    public void addService(Object service, Class<?> serviceClass, RpcServiceProperties rpcServiceProperties) {
         String rpcServiceName = rpcServiceProperties.toRpcServiceName();
         if (registeredService.contains(rpcServiceName)) {
             return;
@@ -54,7 +49,7 @@ public class ServiceProviderImpl implements ServiceProvider {
     }
 
     @Override
-    public Object getServiceProvider(RpcServiceProperties rpcServiceProperties) {
+    public Object getService(RpcServiceProperties rpcServiceProperties) {
         Object service = serviceMap.get(rpcServiceProperties.toRpcServiceName());
         if (null == service) {
             throw new RpcException(RpcErrorMessage.SERVICE_CAN_NOT_BE_FOUND);
@@ -74,7 +69,7 @@ public class ServiceProviderImpl implements ServiceProvider {
             Class<?> serviceRelatedInterface = service.getClass().getInterfaces()[0];
             String serviceName = serviceRelatedInterface.getCanonicalName();
             rpcServiceProperties.setServiceName(serviceName);
-            this.addServiceProvider(service, serviceRelatedInterface, rpcServiceProperties);
+            this.addService(service, serviceRelatedInterface, rpcServiceProperties);
             serviceRegistry.registerService(rpcServiceProperties.toRpcServiceName(), new InetSocketAddress(host, NettyServer.PORT));
         } catch (UnknownHostException e) {
             log.error("occur exception when getHostAddress", e);

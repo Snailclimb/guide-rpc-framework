@@ -7,7 +7,7 @@ import github.javaguide.exception.RpcException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 校验 RpcRequest 和 RpcRequest
+ * Verify RpcRequest and RpcRequest
  *
  * @author shuang.kou
  * @createTime 2020年05月26日 18:03:00
@@ -19,7 +19,7 @@ public final class RpcMessageChecker {
     private RpcMessageChecker() {
     }
 
-    public static void check(RpcResponse rpcResponse, RpcRequest rpcRequest) {
+    public static void check(RpcResponse<Object> rpcResponse, RpcRequest rpcRequest) {
         if (rpcResponse == null) {
             throw new RpcException(RpcErrorMessage.SERVICE_INVOCATION_FAILURE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
         }

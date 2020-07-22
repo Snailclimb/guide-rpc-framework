@@ -5,7 +5,7 @@ import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 当服务端（provider）关闭的时候做一些事情比如取消注册所有服务
+ * When the server  is closed, do something such as unregister all services
  *
  * @author shuang.kou
  * @createTime 2020年06月04日 13:11:00

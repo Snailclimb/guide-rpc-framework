@@ -25,15 +25,15 @@ public class RpcResponse<T> implements Serializable {
     private static final long serialVersionUID = 715745410605631233L;
     private String requestId;
     /**
-     * 响应码
+     * response code
      */
     private Integer code;
     /**
-     * 响应消息
+     * response message
      */
     private String message;
     /**
-     * 响应数据
+     * response body
      */
     private T data;
 

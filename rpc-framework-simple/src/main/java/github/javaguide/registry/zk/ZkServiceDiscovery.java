@@ -1,5 +1,7 @@
 package github.javaguide.registry.zk;
 
+import github.javaguide.enumeration.RpcErrorMessage;
+import github.javaguide.exception.RpcException;
 import github.javaguide.loadbalance.LoadBalance;
 import github.javaguide.loadbalance.RandomLoadBalance;
 import github.javaguide.registry.ServiceDiscovery;
@@ -11,7 +13,7 @@ import java.net.InetSocketAddress;
 import java.util.List;
 
 /**
- * 基于 zookeeper 实现服务发现
+ * service discovery based on zookeeper
  *
  * @author shuang.kou
  * @createTime 2020年06月01日 15:16:00
@@ -25,13 +27,15 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
     }
 
     @Override
-    public InetSocketAddress lookupService(String serviceName) {
-        // 这里直接去了第一个找到的服务地址,eg:127.0.0.1:9999
+    public InetSocketAddress lookupService(String rpcServiceName) {
         CuratorFramework zkClient = CuratorUtils.getZkClient();
-        List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, serviceName);
-        // 负载均衡
+        List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);
+        if (serviceUrlList.size() == 0) {
+            throw new RpcException(RpcErrorMessage.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);
+        }
+        // load balancing
         String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList);
-        log.info("成功找到服务地址:[{}]", targetServiceUrl);
+        log.info("Successfully found the service address:[{}]", targetServiceUrl);
         String[] socketAddressArray = targetServiceUrl.split(":");
         String host = socketAddressArray[0];
         int port = Integer.parseInt(socketAddressArray[1]);

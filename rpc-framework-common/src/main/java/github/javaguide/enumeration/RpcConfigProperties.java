@@ -1,6 +1,6 @@
 package github.javaguide.enumeration;
 
-public enum RpcProperties {
+public enum RpcConfigProperties {
 
     RPC_CONFIG_PATH("rpc.properties"),
     ZK_ADDRESS("rpc.zookeeper.address");
@@ -8,7 +8,7 @@ public enum RpcProperties {
     private final String propertyValue;
 
 
-    RpcProperties(String propertyValue) {
+    RpcConfigProperties(String propertyValue) {
         this.propertyValue = propertyValue;
     }
 

@@ -1,6 +1,6 @@
 package github.javaguide.registry.zk.util;
 
-import github.javaguide.enumeration.RpcProperties;
+import github.javaguide.enumeration.RpcConfigProperties;
 import github.javaguide.exception.RpcException;
 import github.javaguide.utils.file.PropertiesFileUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * zookeeper 客户端 Curator 工具类
+ * Curator(zookeeper client) utils
  *
  * @author shuang.kou
  * @createTime 2020年05月31日 11:38:00
@@ -30,28 +30,28 @@ public final class CuratorUtils {
 
     private static final int BASE_SLEEP_TIME = 1000;
     private static final int MAX_RETRIES = 3;
-    private static String defaultZookeeperAddress = "127.0.0.1:2181";
     public static final String ZK_REGISTER_ROOT_PATH = "/my-rpc";
     private static final Map<String, List<String>> SERVICE_ADDRESS_MAP = new ConcurrentHashMap<>();
     private static final Set<String> REGISTERED_PATH_SET = ConcurrentHashMap.newKeySet();
     private static CuratorFramework zkClient;
+    private static String defaultZookeeperAddress = "127.0.0.1:2181";
 
     private CuratorUtils() {
     }
 
     /**
-     * 创建持久化节点。不同于临时节点，持久化节点不会因为客户端断开连接而被删除
+     * Create persistent nodes. Unlike temporary nodes, persistent nodes are not removed when the client disconnects
      *
-     * @param path 节点路径
+     * @param path node path
      */
     public static void createPersistentNode(CuratorFramework zkClient, String path) {
         try {
             if (REGISTERED_PATH_SET.contains(path) || zkClient.checkExists().forPath(path) != null) {
-                log.info("节点已经存在，节点为:[{}]", path);
+                log.info("The node already exists. The node is:[{}]", path);
             } else {
                 //eg: /my-rpc/github.javaguide.HelloService/127.0.0.1:9999
                 zkClient.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(path);
-                log.info("节点创建成功，节点为:[{}]", path);
+                log.info("The node was created successfully. The node is:[{}]", path);
             }
             REGISTERED_PATH_SET.add(path);
         } catch (Exception e) {
@@ -60,21 +60,21 @@ public final class CuratorUtils {
     }
 
     /**
-     * 获取某个字节下的子节点,也就是获取所有提供服务的生产者的地址
+     * Gets the children under a node
      *
-     * @param serviceName 服务对象接口名 eg:github.javaguide.HelloService
-     * @return 指定字节下的所有子节点
+     * @param rpcServiceName rpc service name eg:github.javaguide.HelloServicetest2version1
+     * @return All child nodes under the specified node
      */
-    public static List<String> getChildrenNodes(CuratorFramework zkClient, String serviceName) {
-        if (SERVICE_ADDRESS_MAP.containsKey(serviceName)) {
-            return SERVICE_ADDRESS_MAP.get(serviceName);
+    public static List<String> getChildrenNodes(CuratorFramework zkClient, String rpcServiceName) {
+        if (SERVICE_ADDRESS_MAP.containsKey(rpcServiceName)) {
+            return SERVICE_ADDRESS_MAP.get(rpcServiceName);
         }
         List<String> result;
-        String servicePath = ZK_REGISTER_ROOT_PATH + "/" + serviceName;
+        String servicePath = ZK_REGISTER_ROOT_PATH + "/" + rpcServiceName;
         try {
             result = zkClient.getChildren().forPath(servicePath);
-            SERVICE_ADDRESS_MAP.put(serviceName, result);
-            registerWatcher(serviceName, zkClient);
+            SERVICE_ADDRESS_MAP.put(rpcServiceName, result);
+            registerWatcher(rpcServiceName, zkClient);
         } catch (Exception e) {
             throw new RpcException(e.getMessage(), e.getCause());
         }
@@ -82,7 +82,7 @@ public final class CuratorUtils {
     }
 
     /**
-     * 清空注册中心的数据
+     * Empty the registry of data
      */
     public static void clearRegistry(CuratorFramework zkClient) {
         REGISTERED_PATH_SET.stream().parallel().forEach(p -> {
@@ -92,14 +92,14 @@ public final class CuratorUtils {
                 throw new RpcException(e.getMessage(), e.getCause());
             }
         });
-        log.info("服务端（Provider）所有注册的服务都被清空:[{}]", REGISTERED_PATH_SET.toString());
+        log.info("All registered services on the server are cleared:[{}]", REGISTERED_PATH_SET.toString());
     }
 
     public static CuratorFramework getZkClient() {
         // check if user has set zk address
-        Properties properties = PropertiesFileUtils.readPropertiesFile(RpcProperties.RPC_CONFIG_PATH.getPropertyValue());
+        Properties properties = PropertiesFileUtils.readPropertiesFile(RpcConfigProperties.RPC_CONFIG_PATH.getPropertyValue());
         if (properties != null) {
-            defaultZookeeperAddress = properties.getProperty(RpcProperties.ZK_ADDRESS.getPropertyValue());
+            defaultZookeeperAddress = properties.getProperty(RpcConfigProperties.ZK_ADDRESS.getPropertyValue());
         }
         // if zkClient has been started, return directly
         if (zkClient != null && zkClient.getState() == CuratorFrameworkState.STARTED) {
@@ -118,16 +118,16 @@ public final class CuratorUtils {
     }
 
     /**
-     * 注册监听指定节点。
+     * Registers to listen for changes to the specified node
      *
-     * @param serviceName 服务对象接口名 eg:github.javaguide.HelloService
+     * @param rpcServiceName rpc service name eg:github.javaguide.HelloServicetest2version
      */
-    private static void registerWatcher(String serviceName, CuratorFramework zkClient) {
-        String servicePath = ZK_REGISTER_ROOT_PATH + "/" + serviceName;
+    private static void registerWatcher(String rpcServiceName, CuratorFramework zkClient) {
+        String servicePath = ZK_REGISTER_ROOT_PATH + "/" + rpcServiceName;
         PathChildrenCache pathChildrenCache = new PathChildrenCache(zkClient, servicePath, true);
         PathChildrenCacheListener pathChildrenCacheListener = (curatorFramework, pathChildrenCacheEvent) -> {
             List<String> serviceAddresses = curatorFramework.getChildren().forPath(servicePath);
-            SERVICE_ADDRESS_MAP.put(serviceName, serviceAddresses);
+            SERVICE_ADDRESS_MAP.put(rpcServiceName, serviceAddresses);
         };
         pathChildrenCache.getListenable().addListener(pathChildrenCacheListener);
         try {
