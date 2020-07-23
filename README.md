@@ -1,44 +1,51 @@
-如访问速度不佳，可放在 Gitee 地址：https://gitee.com/SnailClimb/guide-rpc-framework 。如果要提交 issue 或者 pr 的话，请在 Github 提交：[https://github.com/Snailclimb/guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 。
-
 # guide-rpc-framework
 
-欢迎关注我的公众号获取手写 RPC 框架的最新教程。
+本着开源精神，本项目README已经同步了英文版本。另外，项目的源代码的注释大部分也修改为了英文。
 
-![我的公众号](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/167598cd2e17b8ec.png)
+如访问速度不佳，可放在 Gitee 地址：https://gitee.com/SnailClimb/guide-rpc-framework 。如果要提交 issue 或者 pr 的话，请在 Github 提交：[https://github.com/Snailclimb/guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 。
 
 ## 前言
 
-大概 2 个月前，我说过要利用业余时间写一个简单的 RPC 框架，今天（2020-06-05）总算将其开源出来，希望对小伙伴们有帮助。
+虽说 RPC 的原理实际不难，但是，自己在实现的过程中自己也遇到了很多问题。[guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 目前只实现了 RPC 框架最基本的功能，一些可优化点都在下面提到了，有兴趣的小伙伴可以自行完善。
 
-虽说 RPC 的原理实际不难，但是，自己在实现的过程中自己也遇到了很多问题。Guide-rpc-framework 目前只实现了 RPC 框架最基本的功能，一些可优化点都在下面提到了，有兴趣的小伙伴可以自行完善。
+通过这个简易的轮子，你可以学到 RPC 的底层原理和原理以及各种 Java 编码实践的运用。
 
-## 代办
+你甚至可以把 [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 当做你的毕设/项目经验的选择，这是非常不错！对比其他求职者的项目经验都是各种系统，造轮子肯定是更加能赢得面试官的青睐。
 
-- [x] 代码注释修改为英文（大部分应该完成）
-- [ ] REAMDE文档增加英文版
-- [ ] REAMDE文档完善
-- [ ] 知识星球更新 **《从零开始手把手教你实现一个简单的RPC框架》** ，微信搜“JavaGuide”，关注公众号后，后台回复“**星球**”即可获取星球专属优惠券。
+如果你要将 [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 当做你的毕设/项目经验的话，我希望你一定要搞懂，而不是直接复制粘贴我的思想。你可以 fork 我的项目，然后进行优化。如果你觉得的优化是有价值的话，你可以提交 PR 给我，我会尽快处理。
 
 ## 介绍
 
-guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。代码注释详细，结构清晰，并且集成了 Check Style 规范代码结构，非常适合阅读和学习。
+ [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。代码注释详细，结构清晰，并且集成了 Check Style 规范代码结构，非常适合阅读和学习。
 
-由于 Guide 哥自身精力和能力有限，如果大家觉得有需要改进和完善的地方的话，欢迎将本项目 clone 到自己本地，在本地修改后提交 PR 给我，我会在第一时间 Review 你的代码。
+由于 Guide哥自身精力和能力有限，如果大家觉得有需要改进和完善的地方的话，欢迎 fork 本项目，然后 clone 到本地，在本地修改后提交 PR 给我，我会在第一时间 Review 你的代码。
 
 **我们先从一个基本的 RPC 框架设计思路说起！**
 
 ### 一个基本的 RPC 框架设计思路
 
-一个典型的使用 RPC 的场景如下，一般情况下 RPC 框架不仅要提供服务发现功能，还要提供负载均衡、容错等功能，这个的 RPC 框架才算真正合格。
+> **注意** ：我们这里说的 RPC 框架指的是：可以让客户端直接调用服务端方法就像调用本地方法一样简单的框架，比如我前面介绍的 Dubbo、Motan、gRPC 这些。 如果需要和 HTTP 协议打交道，解析和封装 HTTP 请求和响应。这类框架并不能算是“RPC 框架”，比如 Feign。
 
-![一个完整的RPC框架使用示意图](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-11/一个完整的rpc框架.jpg)
+一个最简单的 RPC 框架使用示意图如下图所示,这也是 [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 目前的架构 ：
 
-简单说一下设计一个最基本的 RPC 框架的思路：
+![](./images/rpc-architure.png)
 
-1. **注册中心** ：注册中心首先是要有的，推荐使用 Zookeeper。注册中心主要用来保存相关的信息比如远程方法的地址。
+服务提供端 Server 向注册中心注册服务，服务消费者 Client 通过注册中心拿到服务相关信息，然后再通过网络请求服务提供端 Server。
+
+作为 RPC 框架领域的佼佼者[Dubbo](https://github.com/apache/dubbo)的架构如下图所示,和我们上面画的大体也是差不多的。
+
+<img src="./images/dubbo-architure.jpg" style="zoom:80%;" />
+
+**一般情况下， RPC 框架不仅要提供服务发现功能，还要提供负载均衡、容错等功能，这样的 RPC 框架才算真正合格的。**
+
+**简单说一下设计一个最基本的 RPC 框架的思路：**
+
+![](./images/rpc-architure-detail.png)
+
+1. **注册中心** ：注册中心首先是要有的，推荐使用 Zookeeper。注册中心负责服务地址的注册与查找，相当于目录服务。服务端启动的时候将服务名称及其对应的地址(ip+port)注册到注册中心，服务消费端根据服务名称找到对应的服务地址。有了服务地址之后，服务消费端就可以通过网络请求服务端了。
 2. **网络传输** ：既然要调用远程的方法就要发请求，请求中至少要包含你调用的类名、方法名以及相关参数吧！推荐基于 NIO 的 Netty 框架。
 3. **序列化** ：既然涉及到网络传输就一定涉及到序列化，你不可能直接使用 JDK 自带的序列化吧！JDK 自带的序列化效率低并且有安全漏洞。 所以，你还要考虑使用哪种序列化协议，比较常用的有 hession2、kyro、protostuff。
-4. **动态代理** ： 另外，动态代理也是需要的。因为 RPC 的主要目的就是让我们调用远程方法像调用本地方法一样简单，使用动态代理屏蔽远程接口调用的细节比如网络传输。
+4. **动态代理** ： 另外，动态代理也是需要的。因为 RPC 的主要目的就是让我们调用远程方法像调用本地方法一样简单，使用动态代理可以屏蔽远程方法调用的细节比如网络传输。也就是说当你调用远程方法的时候，实际会通过代理对象来传输网络请求，不然的话，怎么可能直接就调用到远程方法呢？
 5. **负载均衡** ：负载均衡也是需要的。为啥？举个例子我们的系统中的某个服务的访问量特别大，我们将这个服务部署在了多台服务器上，当客户端发起请求的时候，多台服务器都可以处理这个请求。那么，如何正确选择处理该请求的服务器就很关键。假如，你就要一台服务器来处理该服务的请求，那该服务部署在多台服务器的意义就不复存在了。负载均衡就是为了避免单个服务器响应同一请求，容易造成服务器宕机、崩溃等问题，我们从负载均衡的这四个字就能明显感受到它的意义。
 6. ......
 
@@ -76,13 +83,11 @@ guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。
 
 ## 运行项目
 
-### 1.导入项目
+### 导入项目
 
-克隆项目到自己的本地：`git clone git@github.com:Snailclimb/guide-rpc-framework.git`
+fork 项目到自己的仓库，然后克隆项目到自己的本地：`git clone git@github.com:username/guide-rpc-framework.git`，使用 IDEA 打开，等待项目初始化完成。
 
-然后使用 IDEA 打开，等待项目初始化完成。
-
-### 2.初始化 git hooks
+### 初始化 git hooks
 
 **这一步主要是为了在 commit 代码之前，跑 Check Style，保证代码格式没问题，如果有问题的话就不能提交。**
 
@@ -95,32 +100,9 @@ guide-rpc-framework 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。
 ➜  guide-rpc-framework git:(master) ✗ ./init.sh
 ```
 
-**简单介绍一下是怎么做的！**
-
 `init.sh` 这个脚本的主要作用是将 git commit 钩子拷贝到项目下的 `.git/hooks/` 目录，这样你每次 commit 的时候就会执行了。
 
-```shell
-cp config/git-hooks/pre-commit .git/hooks/
-chmod +x .git/hooks/pre-commit
-```
-
-> 抱怨：项目上一直用的 Gradle，很久没用 Maven 了，感觉 Gradle 很多方面都比 Maven 要更好用!比如 Gradle 的项目依赖文件`build.gradle` 比 Maven 的`pom.xml`更加清晰简洁（Maven 是因为 xml 的锅）、Gradel 还可以使用 groovy 语言......
-
-`pre-commit` 的内容如下，主要作用是在提交代码前运行 `Check Style`检查代码格式问题。
-
-```shell
-#!/bin/sh
-#set -x
-
-echo "begin to execute hook"
-mvn checkstyle:check
-
-RESULT=$?
-
-exit $RESULT
-```
-
-### 3.CheckStyle 插件下载和配置
+### CheckStyle 插件下载和配置
 
 IntelliJ IDEA-> Preferences->Plugins->搜索下载 CheckStyle 插件，然后按照如下方式进行配置。
 
@@ -130,7 +112,7 @@ IntelliJ IDEA-> Preferences->Plugins->搜索下载 CheckStyle 插件，然后按
 
 ![插件使用方式](./images/run-check-style.png)
 
-### 4.下载运行 zookeeper
+### 下载运行 zookeeper
 
 这里使用 Docker 来下载安装。
 
@@ -213,6 +195,10 @@ String hello = helloService.hello(new Hello("111", "222"));
 2. 数据结构；
 3. 如何使用 Netflix 公司开源的 zookeeper 客户端框架 Curator 进行增删改查；
 
+## 教程
 
+Guide 的星球正在更新《从零开始手把手教你实现一个简单的 RPC 框架》。扫描下方二维码关注“**JavaGuide**”后回复 “**星球**”即可。
+
+![我的公众号](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/167598cd2e17b8ec.png)
 
 
