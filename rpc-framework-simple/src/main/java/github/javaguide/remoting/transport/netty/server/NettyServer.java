@@ -1,6 +1,10 @@
 package github.javaguide.remoting.transport.netty.server;
 
 import github.javaguide.config.CustomShutdownHook;
+import github.javaguide.entity.RpcServiceProperties;
+import github.javaguide.factory.SingletonFactory;
+import github.javaguide.provider.ServiceProvider;
+import github.javaguide.provider.ServiceProviderImpl;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoDecoder;
@@ -38,6 +42,16 @@ public class NettyServer implements InitializingBean {
 
     private final KryoSerializer kryoSerializer = new KryoSerializer();
     public static final int PORT = 9998;
+
+    private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
+
+    public void registerService(Object service) {
+        serviceProvider.publishService(service);
+    }
+
+    public void registerService(Object service, RpcServiceProperties rpcServiceProperties) {
+        serviceProvider.publishService(service, rpcServiceProperties);
+    }
 
     @SneakyThrows
     public void start() {

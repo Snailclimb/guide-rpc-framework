@@ -1,5 +1,9 @@
 # guide-rpc-framework
 
+[中文](./README.md)|English
+
+Sorry, I did not fully translate the Chinese readme. I have translated the important parts. You can translate the rest by yourself through Google.
+
 ## Preface
 
 Although the principle of RPC is not difficult, I encountered many problems in the process of implementation. [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework)  implements only the most basic features of the RPC framework, and some of the optimizations are mentioned below for those interested.
@@ -17,8 +21,6 @@ If you're going to use the  [guide-rpc-framework](https://github.com/Snailclimb/
 Due to the limited energy and ability of me, if you think there is something to be improved and perfected, welcome to fork this project, then clone it to local, and submit PR to me after local modification, I will Review your code as soon as possible.
 
 Let's start with a basic RPC framework design idea!
-
-### A basic implementation of a RPC framework
 
 > **note** ：The RPC framework we mentioned here refers to a framework that allows clients to directly call server-side methods as simple as calling local methods, similar to the Dubbo, Motan, and gRPC I introduced earlier. If you need to deal with the HTTP protocol, parse and encapsulate HTTP requests and responses. Type frameworks are not considered "RPC frameworks", such as Feign.
 
@@ -43,3 +45,126 @@ As a leader in the field of RPC framework [Dubbo](https://github.com/apache/dubb
 3. **Serialization**: Since network transmission is involved, serialization must be involved. You can't directly use the serialization that comes with JDK! The serialization that comes with the JDK is inefficient and has security vulnerabilities. Therefore, you have to consider which serialization protocol to use. The more commonly used ones are hession2, kyro, and protostuff.
 4. **Dynamic Proxy**: In addition, a dynamic proxy is also required. Because the main purpose of RPC is to allow us to call remote methods as easy as calling local methods, the use of dynamic proxy can shield the details of remote method calls such as network transmission. That is to say, when you call a remote method, the network request will actually be transmitted through the proxy object. Otherwise, how could it be possible to call the remote method directly?
 2. **Load Balancing**: Load balancing is also required. Why? For example, a certain service in our system has very high traffic. We deploy this service on multiple servers. When a client initiates a request, multiple servers can handle the request. Then, how to correctly select the server that processes the request is critical. If you need one server to handle requests for the service, the meaning of deploying the service on multiple servers no longer exists. Load balancing is to avoid a single server responding to the same request, which is likely to cause server downtime, crashes and other problems. We can clearly feel its meaning from the four words of load balancing.
+
+## Run the project
+
+### Import the project
+
+Fork the project to your own repository, then clone the project to its own locale: `git clone git@github.com:username/guide-rpc-framework.git`  use java IDE such as IDEA to open and wait for the project initialization to complete.
+
+### Initialize git hooks
+
+**This step is mainly to run Check Style before submitting the code to ensure that the code format is correct. If there is a problem, it cannot be submitted. **
+
+>The following demonstrates the operation corresponding to Mac/Linux. Window users need to manually copy the `pre-commit` file under the `config/git-hooks` directory to the `.git/hooks/` directory under the project.
+
+Execute these commands:
+
+```bash
+➜guide-rpc-framework git: (master)✗chmod + x ./init.sh
+➜guide-rpc-framework git: (master)✗./init.sh
+```
+
+The main function of the `init.sh` script is to copy the git commit hook to the `.git/hooks/` directory under the project so that it will be executed every time you commit.
+
+### CheckStyle plug-in download and configuration
+
+IntelliJ IDEA-> Preferences->Plugins-> search to download CheckStyle plug-in, and then configure it as follows.
+
+![CheckStyle plug-in download and configuration](./images/setting-check-style.png)
+
+After the configuration is complete, use this plugin as follows!
+
+![How to use the plug-in](./images/run-check-style.png)
+
+### Download and run zookeeper
+
+Docker is used here to download and install.
+
+download:
+
+```shell
+docker pull zookeeper:3.4.14
+```
+
+run:
+
+```shell
+docker run -d --name zookeeper -p 2181:2181 zookeeper:3.4.14
+```
+
+## Use
+
+### Server(service provider)
+
+Implementing the interface：
+
+```java
+@Slf4j
+@RpcService(group = "test1", version = "version1")
+public class HelloServiceImpl implements HelloService {
+    static {
+        System.out.println("HelloServiceImpl被创建");
+    }
+
+    @Override
+    public String hello(Hello hello) {
+        log.info("HelloServiceImpl收到: {}.", hello.getMessage());
+        String result = "Hello description is " + hello.getDescription();
+        log.info("HelloServiceImpl返回: {}.", result);
+        return result;
+    }
+}
+	
+@Slf4j
+public class HelloServiceImpl2 implements HelloService {
+
+    static {
+        System.out.println("HelloServiceImpl2被创建");
+    }
+
+    @Override
+    public String hello(Hello hello) {
+        log.info("HelloServiceImpl2收到: {}.", hello.getMessage());
+        String result = "Hello description is " + hello.getDescription();
+        log.info("HelloServiceImpl2返回: {}.", result);
+        return result;
+    }
+}
+```
+
+Publish services (transport using Netty) :
+
+```java
+/**
+ * Server: Automatic registration service via @RpcService annotation
+ *
+ * @author shuang.kou
+ * @createTime 2020年05月10日 07:25:00
+ */
+@ComponentScan("github.javaguide")
+public class NettyServerMain {
+    public static void main(String[] args) {
+        // Register service via annotation（通过注解注册服务 HelloServiceImpl ）
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(NettyServerMain.class);
+        NettyServer nettyServer = applicationContext.getBean(NettyServer.class);
+        // Register service manually（手动注册服务 HelloServiceImpl2）
+        HelloService helloService2 = new HelloServiceImpl2();
+        RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
+                .group("test2").version("version2").build();
+        nettyServer.registerService(helloService2, rpcServiceProperties);
+        nettyServer.start();
+    }
+}
+```
+
+### Client(srvice consumer)
+
+```java
+ClientTransport rpcClient = new NettyClientTransport();
+RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
+  .group("test1").version("version1").build();
+RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient, rpcServiceProperties);
+HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
+String hello = helloService.hello(new Hello("111", "222"));
+```

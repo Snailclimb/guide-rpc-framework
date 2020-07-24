@@ -1,7 +1,7 @@
 package github.javaguide;
 
-import github.javaguide.remoting.transport.ClientTransport;
 import github.javaguide.proxy.RpcClientProxy;
+import github.javaguide.remoting.transport.ClientTransport;
 import github.javaguide.remoting.transport.socket.SocketRpcClient;
 
 /**

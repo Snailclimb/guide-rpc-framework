@@ -13,7 +13,7 @@ public class NettyClientMain2 {
     public static void main(String[] args) throws InterruptedException {
         ClientTransport rpcClient = new NettyClientTransport();
         RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
-                .group("test2").version("version1").build();
+                .group("test2").version("version2").build();
         RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient, rpcServiceProperties);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
         String hello = helloService.hello(new Hello("111", "222"));

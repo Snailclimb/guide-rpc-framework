@@ -1,5 +1,7 @@
 # guide-rpc-framework
 
+中文|[English](./README-EN.md)
+
 本着开源精神，本项目README已经同步了英文版本。另外，项目的源代码的注释大部分也修改为了英文。
 
 如访问速度不佳，可放在 Gitee 地址：https://gitee.com/SnailClimb/guide-rpc-framework 。如果要提交 issue 或者 pr 的话，请在 Github 提交：[https://github.com/Snailclimb/guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 。
@@ -51,11 +53,9 @@
 
 ### 项目基本情况和可优化点
 
-为了循序渐进，最初的是时候，我是基于传统的 **BIO** 的方式 **Socket** 进行网络传输，然后利用 **JDK 自带的序列化机制** 以及内存直接存储相关服务相关信息来实现这个 RPC 框架的。
+为了循序渐进，最初的是时候，我是基于传统的 **BIO** 的方式 **Socket** 进行网络传输，然后利用 **JDK 自带的序列化机制** 来实现这个 RPC 框架的。后面，我对原始版本进行了优化，已完成的优化点和可以完成的优化点我都列在了下面 👇。
 
-后面，我对原始版本进行了优化，已完成的优化点和可以完成的优化点我都列在了下面 👇。
-
-**为什么要把可优化点列出来？** 主要是想给哪些希望优化这个 RPC 框架的小伙伴一点思路。欢迎大家 Clone 本仓库，然后自己进行优化。
+**为什么要把可优化点列出来？** 主要是想给哪些希望优化这个 RPC 框架的小伙伴一点思路。欢迎大家 fork 本仓库，然后自己进行优化。
 
 - [x] **使用 Netty（基于 NIO）替代 BIO 实现网络传输；**
 - [x] **使用开源的序列化机制 Kyro（也可以用其它的）替代 JDK 自带的序列化机制；**
@@ -135,10 +135,35 @@ docker run -d --name zookeeper -p 2181:2181 zookeeper:3.4.14
 实现接口：
 
 ```java
+@Slf4j
+@RpcService(group = "test1", version = "version1")
 public class HelloServiceImpl implements HelloService {
-   @Override
+    static {
+        System.out.println("HelloServiceImpl被创建");
+    }
+
+    @Override
     public String hello(Hello hello) {
-      ......
+        log.info("HelloServiceImpl收到: {}.", hello.getMessage());
+        String result = "Hello description is " + hello.getDescription();
+        log.info("HelloServiceImpl返回: {}.", result);
+        return result;
+    }
+}
+	
+@Slf4j
+public class HelloServiceImpl2 implements HelloService {
+
+    static {
+        System.out.println("HelloServiceImpl2被创建");
+    }
+
+    @Override
+    public String hello(Hello hello) {
+        log.info("HelloServiceImpl2收到: {}.", hello.getMessage());
+        String result = "Hello description is " + hello.getDescription();
+        log.info("HelloServiceImpl2返回: {}.", result);
+        return result;
     }
 }
 ```
@@ -146,16 +171,37 @@ public class HelloServiceImpl implements HelloService {
 发布服务(使用 Netty 进行传输)：
 
 ```java
-HelloService helloService = new HelloServiceImpl();
-NettyServer nettyServer = new NettyServer("127.0.0.1", 9999);
-nettyServer.publishService(helloService, HelloService.class);
+/**
+ * Server: Automatic registration service via @RpcService annotation
+ *
+ * @author shuang.kou
+ * @createTime 2020年05月10日 07:25:00
+ */
+@ComponentScan("github.javaguide")
+public class NettyServerMain {
+    public static void main(String[] args) {
+        // Register service via annotation（通过注解注册服务 HelloServiceImpl ）
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(NettyServerMain.class);
+        NettyServer nettyServer = applicationContext.getBean(NettyServer.class);
+        nettyServer.start();
+        // Register service manually（手动注册服务 HelloServiceImpl2）
+        HelloService helloService2 = new HelloServiceImpl2();
+        ServiceProvider serviceProvider = new ServiceProviderImpl();
+        RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
+                .group("test2").version("test2").build();
+        serviceProvider.publishService(helloService2, rpcServiceProperties);
+
+    }
+}
 ```
 
 ### 服务消费端
 
 ```java
 ClientTransport rpcClient = new NettyClientTransport();
-RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient);
+RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
+  .group("test1").version("version1").build();
+RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient, rpcServiceProperties);
 HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
 String hello = helloService.hello(new Hello("111", "222"));
 ```
