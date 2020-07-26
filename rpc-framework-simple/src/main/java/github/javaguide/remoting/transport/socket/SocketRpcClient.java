@@ -2,8 +2,8 @@ package github.javaguide.remoting.transport.socket;
 
 import github.javaguide.entity.RpcServiceProperties;
 import github.javaguide.exception.RpcException;
+import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.registry.ServiceDiscovery;
-import github.javaguide.registry.zk.ZkServiceDiscovery;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.transport.ClientTransport;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,7 @@ public class SocketRpcClient implements ClientTransport {
     private final ServiceDiscovery serviceDiscovery;
 
     public SocketRpcClient() {
-        this.serviceDiscovery = new ZkServiceDiscovery();
+        this.serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
     }
 
     @Override

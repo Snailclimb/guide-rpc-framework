@@ -1,8 +1,8 @@
 package github.javaguide.remoting.transport.netty.client;
 
+import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.registry.ServiceDiscovery;
-import github.javaguide.registry.zk.ZkServiceDiscovery;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.transport.ClientTransport;
@@ -26,7 +26,7 @@ public class NettyClientTransport implements ClientTransport {
     private final ChannelProvider channelProvider;
 
     public NettyClientTransport() {
-        this.serviceDiscovery = new ZkServiceDiscovery();
+        this.serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
         this.channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
     }
