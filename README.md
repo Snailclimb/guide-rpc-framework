@@ -123,13 +123,13 @@ IntelliJ IDEA-> Preferences->Plugins->搜索下载 CheckStyle 插件，然后按
 下载：
 
 ```shell
-docker pull zookeeper:3.4.14
+docker pull zookeeper:3.5.8
 ```
 
 运行：
 
 ```shell
-docker run -d --name zookeeper -p 2181:2181 zookeeper:3.4.14
+docker run -d --name zookeeper -p 2181:2181 zookeeper:3.5.8
 ```
 
 ## 使用
