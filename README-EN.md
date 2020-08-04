@@ -84,13 +84,13 @@ Docker is used here to download and install.
 download:
 
 ```shell
-docker pull zookeeper:3.4.14
+docker pull zookeeper:3.5.8
 ```
 
-run:
+运行：
 
 ```shell
-docker run -d --name zookeeper -p 2181:2181 zookeeper:3.4.14
+docker run -d --name zookeeper -p 2181:2181 zookeeper:3.5.8
 ```
 
 ## Use
