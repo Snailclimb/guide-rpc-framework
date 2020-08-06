@@ -8,7 +8,7 @@
 
 相关项目：
 
-1. [Netty 从入门到实战](https://github.com/Snailclimb/netty-practical-tutorial)
+1. [Netty 从入门到实战](https://github.com/Snailclimb/netty-practical-tutorial)(正在更新中...)
 
 ## 前言
 
