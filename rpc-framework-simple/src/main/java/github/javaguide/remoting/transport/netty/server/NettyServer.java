@@ -23,7 +23,6 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
@@ -38,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class NettyServer implements InitializingBean {
+public class NettyServer {
 
     private final KryoSerializer kryoSerializer = new KryoSerializer();
     public static final int PORT = 9998;
@@ -55,6 +54,7 @@ public class NettyServer implements InitializingBean {
 
     @SneakyThrows
     public void start() {
+        CustomShutdownHook.getCustomShutdownHook().clearAll();
         String host = InetAddress.getLocalHost().getHostAddress();
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -94,12 +94,5 @@ public class NettyServer implements InitializingBean {
         }
     }
 
-    /**
-     * Called after setting all bean properties
-     */
-    @Override
-    public void afterPropertiesSet() {
-        CustomShutdownHook.getCustomShutdownHook().clearAll();
-    }
 
 }

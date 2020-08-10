@@ -1,5 +1,6 @@
 package github.javaguide;
 
+import github.javaguide.entity.RpcServiceProperties;
 import github.javaguide.proxy.RpcClientProxy;
 import github.javaguide.remoting.transport.ClientTransport;
 import github.javaguide.remoting.transport.socket.SocketRpcClient;
@@ -11,7 +12,9 @@ import github.javaguide.remoting.transport.socket.SocketRpcClient;
 public class RpcFrameworkSimpleClientMain {
     public static void main(String[] args) {
         ClientTransport clientTransport = new SocketRpcClient();
-        RpcClientProxy rpcClientProxy = new RpcClientProxy(clientTransport);
+        RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
+                .group("test2").version("version2").build();
+        RpcClientProxy rpcClientProxy = new RpcClientProxy(clientTransport, rpcServiceProperties);
         HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
         String hello = helloService.hello(new Hello("111", "222"));
         System.out.println(hello);

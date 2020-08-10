@@ -17,10 +17,9 @@ import org.springframework.stereotype.Component;
  * @author shuang.kou
  * @createTime 2020年07月14日 16:42:00
  */
-@Component
 @Slf4j
+@Component
 public class SpringBeanPostProcessor implements BeanPostProcessor {
-
 
     private final ServiceProvider serviceProvider;
 

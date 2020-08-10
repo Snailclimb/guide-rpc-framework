@@ -3,17 +3,17 @@ package github.javaguide.remoting.transport;
 import github.javaguide.remoting.dto.RpcRequest;
 
 /**
- * 传输 RpcRequest。
+ * send RpcRequest。
  *
  * @author shuang.kou
  * @createTime 2020年05月29日 13:26:00
  */
 public interface ClientTransport {
     /**
-     * 发送消息到服务端
+     * send rpc request to server and get result
      *
-     * @param rpcRequest 消息体
-     * @return 服务端返回的数据
+     * @param rpcRequest message body
+     * @return data from server
      */
     Object sendRpcRequest(RpcRequest rpcRequest);
 }
