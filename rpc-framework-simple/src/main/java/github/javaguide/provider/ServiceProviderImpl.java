@@ -3,8 +3,8 @@ package github.javaguide.provider;
 import github.javaguide.entity.RpcServiceProperties;
 import github.javaguide.enumeration.RpcErrorMessage;
 import github.javaguide.exception.RpcException;
+import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.registry.ServiceRegistry;
-import github.javaguide.registry.zk.ZkServiceRegistry;
 import github.javaguide.remoting.transport.netty.server.NettyServer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +34,7 @@ public class ServiceProviderImpl implements ServiceProvider {
     public ServiceProviderImpl() {
         serviceMap = new ConcurrentHashMap<>();
         registeredService = ConcurrentHashMap.newKeySet();
-        serviceRegistry = new ZkServiceRegistry();
+        serviceRegistry = ExtensionLoader.getExtensionLoader(ServiceRegistry.class).getExtension("zk");
     }
 
     @Override
