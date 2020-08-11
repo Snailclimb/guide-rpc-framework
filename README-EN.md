@@ -142,13 +142,13 @@ Publish services (transport using Netty) :
  * @author shuang.kou
  * @createTime 2020年05月10日 07:25:00
  */
-@ComponentScan("github.javaguide")
+@RpcScan(basePackage = {"github.javaguide.serviceimpl"})
 public class NettyServerMain {
     public static void main(String[] args) {
-        // Register service via annotation（通过注解注册服务 HelloServiceImpl ）
-        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(NettyServerMain.class);
-        NettyServer nettyServer = applicationContext.getBean(NettyServer.class);
-        // Register service manually（手动注册服务 HelloServiceImpl2）
+        // Register service via annotation
+        new AnnotationConfigApplicationContext(NettyServerMain.class);
+        NettyServer nettyServer = new NettyServer();
+        // Register service manually
         HelloService helloService2 = new HelloServiceImpl2();
         RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
                 .group("test2").version("version2").build();

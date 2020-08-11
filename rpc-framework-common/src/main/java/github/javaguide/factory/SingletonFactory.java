@@ -1,5 +1,6 @@
 package github.javaguide.factory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,10 +22,12 @@ public final class SingletonFactory {
         synchronized (c) {
             if (instance == null) {
                 try {
-                    instance = c.newInstance();
+                    instance = c.getDeclaredConstructor().newInstance();
                     OBJECT_MAP.put(key, instance);
                 } catch (IllegalAccessException | InstantiationException e) {
                     throw new RuntimeException(e.getMessage(), e);
+                } catch (NoSuchMethodException | InvocationTargetException e) {
+                    e.printStackTrace();
                 }
             }
         }

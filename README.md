@@ -71,7 +71,7 @@
 - [x] **处理一个接口有多个类实现的情况** ：对服务分组，发布服务的时候增加一个 group 参数即可。
 - [x] **集成 Spring 通过注解注册服务**
 - [x] **增加服务版本号** ：建议使用两位数字版本，如：1.0，通常在接口不兼容时版本号才需要升级。为什么要增加服务版本号？为后续不兼容升级提供可能，比如服务接口增加方法，或服务模型增加字段，可向后兼容，删除方法或删除字段，将不兼容，枚举类型新增字段也不兼容，需通过变更版本号升级。
-- [ ] **对 SPI 机制的运用** 
+- [x] **对 SPI 机制的运用** 
 - [ ] **增加可配置比如序列化方式、注册中心的实现方式,避免硬编码** ：通过 API 配置，后续集成 Spring 的话建议使用配置文件的方式进行配置
 - [ ] **使用注解进行服务消费**
 - [ ] **客户端与服务端通信协议（数据包结构）重新设计** ，可以将原有的 `RpcRequest`和 `RpcReuqest` 对象作为消息体，然后增加如下字段（可以参考：《Netty 入门实战小册》和 Dubbo 框架对这块的设计）：
@@ -181,20 +181,18 @@ public class HelloServiceImpl2 implements HelloService {
  * @author shuang.kou
  * @createTime 2020年05月10日 07:25:00
  */
-@ComponentScan("github.javaguide")
+@RpcScan(basePackage = {"github.javaguide.serviceimpl"})
 public class NettyServerMain {
     public static void main(String[] args) {
-        // Register service via annotation（通过注解注册服务 HelloServiceImpl ）
-        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(NettyServerMain.class);
-        NettyServer nettyServer = applicationContext.getBean(NettyServer.class);
-        nettyServer.start();
-        // Register service manually（手动注册服务 HelloServiceImpl2）
+        // Register service via annotation
+        new AnnotationConfigApplicationContext(NettyServerMain.class);
+        NettyServer nettyServer = new NettyServer();
+        // Register service manually
         HelloService helloService2 = new HelloServiceImpl2();
-        ServiceProvider serviceProvider = new ServiceProviderImpl();
         RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
-                .group("test2").version("test2").build();
-        serviceProvider.publishService(helloService2, rpcServiceProperties);
-
+                .group("test2").version("version2").build();
+        nettyServer.registerService(helloService2, rpcServiceProperties);
+        nettyServer.start();
     }
 }
 ```
