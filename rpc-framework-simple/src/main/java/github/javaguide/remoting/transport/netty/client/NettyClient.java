@@ -1,9 +1,12 @@
 package github.javaguide.remoting.transport.netty.client;
 
+import github.javaguide.extension.ExtensionLoader;
+import github.javaguide.registry.ServiceDiscovery;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoDecoder;
 import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoEncoder;
+import github.javaguide.serialize.Serializer;
 import github.javaguide.serialize.kyro.KryoSerializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -20,6 +23,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +43,7 @@ public final class NettyClient {
     public NettyClient() {
         eventLoopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
-        KryoSerializer kryoSerializer = new KryoSerializer();
+        Serializer kryoSerializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension("kyro");
         bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))

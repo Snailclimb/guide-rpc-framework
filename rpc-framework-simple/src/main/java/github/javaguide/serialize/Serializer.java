@@ -1,11 +1,14 @@
 package github.javaguide.serialize;
 
+import github.javaguide.extension.SPI;
+
 /**
  * 序列化接口，所有序列化类都要实现这个接口
  *
  * @author shuang.kou
  * @createTime 2020年05月13日 19:29:00
  */
+@SPI
 public interface Serializer {
     /**
      * 序列化
