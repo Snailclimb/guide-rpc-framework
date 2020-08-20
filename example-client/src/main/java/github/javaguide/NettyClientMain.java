@@ -1,27 +1,24 @@
 package github.javaguide;
 
+import github.javaguide.annotation.RpcScan;
 import github.javaguide.entity.RpcServiceProperties;
 import github.javaguide.proxy.RpcClientProxy;
 import github.javaguide.remoting.transport.ClientTransport;
 import github.javaguide.remoting.transport.netty.client.NettyClientTransport;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author shuang.kou
  * @createTime 2020年05月10日 07:25:00
  */
+@RpcScan(basePackage = {"github.javaguide"})
 public class NettyClientMain {
     public static void main(String[] args) throws InterruptedException {
-        ClientTransport rpcClient = new NettyClientTransport();
-        RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
-                .group("test1").version("version1").build();
-        RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient, rpcServiceProperties);
-        HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
-        String hello = helloService.hello(new Hello("111", "222"));
-        //如需使用 assert 断言，需要在 VM options 添加参数：-ea
-        assert "Hello description is 222".equals(hello);
-        Thread.sleep(12000);
-        for (int i = 0; i < 10; i++) {
-            helloService.hello(new Hello("111", "222"));
-        }
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(NettyClientMain.class);
+        HelloController helloController = (HelloController) applicationContext.getBean("helloController");
+
+        helloController.test();
     }
 }

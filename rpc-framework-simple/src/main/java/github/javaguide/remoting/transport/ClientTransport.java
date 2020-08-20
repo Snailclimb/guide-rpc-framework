@@ -1,5 +1,6 @@
 package github.javaguide.remoting.transport;
 
+import github.javaguide.extension.SPI;
 import github.javaguide.remoting.dto.RpcRequest;
 
 /**
@@ -8,6 +9,7 @@ import github.javaguide.remoting.dto.RpcRequest;
  * @author shuang.kou
  * @createTime 2020年05月29日 13:26:00
  */
+@SPI
 public interface ClientTransport {
     /**
      * send rpc request to server and get result

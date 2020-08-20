@@ -1,0 +1,2 @@
+nettyClientTransport=github.javaguide.remoting.transport.netty.client.NettyClientTransport
+socketRpcClient=github.javaguide.remoting.transport.socket.SocketRpcClient
