@@ -1,16 +1,3 @@
-# guide-rpc-framework
-
-中文|[English](./README-EN.md)
-
-本着开源精神，本项目README已经同步了英文版本。另外，项目的源代码的注释大部分也修改为了英文。
-
-如访问速度不佳，可放在 Gitee 地址：https://gitee.com/SnailClimb/guide-rpc-framework 。如果要提交 issue 或者 pr 的话，请在 Github 提交：[https://github.com/Snailclimb/guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 。
-
-相关项目：
-
-1. [Netty 从入门到实战](https://github.com/Snailclimb/netty-practical-tutorial)(正在更新中...)
-2. [「Java学习+面试指南」一份涵盖大部分Java程序员所需要掌握的核心知识。](https://github.com/Snailclimb/JavaGuide)
-
 ## 前言
 
 虽说 RPC 的原理实际不难，但是，自己在实现的过程中自己也遇到了很多问题。[guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 目前只实现了 RPC 框架最基本的功能，一些可优化点都在下面提到了，有兴趣的小伙伴可以自行完善。
@@ -23,7 +10,7 @@
 
 ## 介绍
 
- [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。代码注释详细，结构清晰，并且集成了 Check Style 规范代码结构，非常适合阅读和学习。
+[guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 是一款基于 Netty+Kyro+Zookeeper 实现的 RPC 框架。代码注释详细，结构清晰，并且集成了 Check Style 规范代码结构，非常适合阅读和学习。
 
 由于 Guide哥自身精力和能力有限，如果大家觉得有需要改进和完善的地方的话，欢迎 fork 本项目，然后 clone 到本地，在本地修改后提交 PR 给我，我会在第一时间 Review 你的代码。
 
@@ -35,19 +22,19 @@
 
 一个最简单的 RPC 框架使用示意图如下图所示,这也是 [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 目前的架构 ：
 
-![](./images/rpc-architure.png)
+![img](https://gitee.com/SnailClimb/guide-rpc-framework/raw/master/images/rpc-architure.png)
 
 服务提供端 Server 向注册中心注册服务，服务消费者 Client 通过注册中心拿到服务相关信息，然后再通过网络请求服务提供端 Server。
 
 作为 RPC 框架领域的佼佼者[Dubbo](https://github.com/apache/dubbo)的架构如下图所示,和我们上面画的大体也是差不多的。
 
-<img src="./images/dubbo-architure.jpg" style="zoom:80%;" />
+![img](https://gitee.com/SnailClimb/guide-rpc-framework/raw/master/images/dubbo-architure.jpg)
 
 **一般情况下， RPC 框架不仅要提供服务发现功能，还要提供负载均衡、容错等功能，这样的 RPC 框架才算真正合格的。**
 
 **简单说一下设计一个最基本的 RPC 框架的思路：**
 
-![](./images/rpc-architure-detail.png)
+![img](https://gitee.com/SnailClimb/guide-rpc-framework/raw/master/images/rpc-architure-detail.png)
 
 1. **注册中心** ：注册中心首先是要有的，推荐使用 Zookeeper。注册中心负责服务地址的注册与查找，相当于目录服务。服务端启动的时候将服务名称及其对应的地址(ip+port)注册到注册中心，服务消费端根据服务名称找到对应的服务地址。有了服务地址之后，服务消费端就可以通过网络请求服务端了。
 2. **网络传输** ：既然要调用远程的方法就要发请求，请求中至少要包含你调用的类名、方法名以及相关参数吧！推荐基于 NIO 的 Netty 框架。
@@ -84,7 +71,7 @@
 
 ### 项目模块概览
 
-![](./images/RPC框架各个模块介绍.png)
+![img](https://gitee.com/SnailClimb/guide-rpc-framework/raw/master/images/RPC%E6%A1%86%E6%9E%B6%E5%90%84%E4%B8%AA%E6%A8%A1%E5%9D%97%E4%BB%8B%E7%BB%8D.png)
 
 ## 运行项目
 
@@ -100,7 +87,7 @@ fork 项目到自己的仓库，然后克隆项目到自己的本地：`git clon
 
 执行下面这些命令：
 
-```shell
+```
 ➜  guide-rpc-framework git:(master) ✗ chmod +x ./init.sh
 ➜  guide-rpc-framework git:(master) ✗ ./init.sh
 ```
@@ -111,11 +98,11 @@ fork 项目到自己的仓库，然后克隆项目到自己的本地：`git clon
 
 IntelliJ IDEA-> Preferences->Plugins->搜索下载 CheckStyle 插件，然后按照如下方式进行配置。
 
-![CheckStyle 插件下载和配置](./images/setting-check-style.png)
+![CheckStyle 插件下载和配置](https://gitee.com/SnailClimb/guide-rpc-framework/raw/master/images/setting-check-style.png)
 
 配置完成之后，按照如下方式使用这个插件！
 
-![插件使用方式](./images/run-check-style.png)
+![插件使用方式](https://gitee.com/SnailClimb/guide-rpc-framework/raw/master/images/run-check-style.png)
 
 ### 下载运行 zookeeper
 
@@ -123,13 +110,13 @@ IntelliJ IDEA-> Preferences->Plugins->搜索下载 CheckStyle 插件，然后按
 
 下载：
 
-```shell
+```
 docker pull zookeeper:3.5.8
 ```
 
 运行：
 
-```shell
+```
 docker run -d --name zookeeper -p 2181:2181 zookeeper:3.5.8
 ```
 
@@ -249,5 +236,3 @@ String hello = helloService.hello(new Hello("111", "222"));
 Guide 的星球正在更新《从零开始手把手教你实现一个简单的 RPC 框架》。扫描下方二维码关注“**JavaGuide**”后回复 “**星球**”即可。
 
 ![我的公众号](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/167598cd2e17b8ec.png)
-
-
