@@ -160,11 +160,32 @@ public class NettyServerMain {
 
 ### Client(srvice consumer)
 
+
 ```java
-ClientTransport rpcClient = new NettyClientTransport();
+@Component
+public class HelloController {
+
+    @RpcReference(version = "version1", group = "test1")
+    private HelloService helloService;
+
+    public void test() throws InterruptedException {
+        String hello = this.helloService.hello(new Hello("111", "222"));
+        //如需使用 assert 断言，需要在 VM options 添加参数：-ea
+        assert "Hello description is 222".equals(hello);
+        Thread.sleep(12000);
+        for (int i = 0; i < 10; i++) {
+            System.out.println(helloService.hello(new Hello("111", "222")));
+        }
+    }
+}
+```
+
+```java
+ClientTransport clientTransport = new SocketRpcClient();
 RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
-  .group("test1").version("version1").build();
-RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient, rpcServiceProperties);
+        .group("test2").version("version2").build();
+RpcClientProxy rpcClientProxy = new RpcClientProxy(clientTransport, rpcServiceProperties);
 HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
 String hello = helloService.hello(new Hello("111", "222"));
+System.out.println(hello);
 ```

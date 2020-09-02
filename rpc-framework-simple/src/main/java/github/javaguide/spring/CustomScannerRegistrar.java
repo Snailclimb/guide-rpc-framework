@@ -3,14 +3,9 @@ package github.javaguide.spring;
 import github.javaguide.annotation.RpcScan;
 import github.javaguide.annotation.RpcService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
-import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
@@ -57,11 +52,9 @@ public class CustomScannerRegistrar implements ImportBeanDefinitionRegistrar, Re
         }
         int springBeanAmount = springBeanScanner.scan(SPRING_BEAN_BASE_PACKAGE);
         log.info("springBeanScanner扫描的数量 [{}]", springBeanAmount);
-        int scanCount = rpcServiceScanner.scan(rpcScanBasePackages);
-        log.info("rpcServiceScanner扫描的数量 [{}]", scanCount);
+        int rpcServiceCount = rpcServiceScanner.scan(rpcScanBasePackages);
+        log.info("rpcServiceScanner扫描的数量 [{}]", rpcServiceCount);
 
-        beanDefinitionRegistry.registerBeanDefinition(ReferenceAnnotationBeanPostProcessor.BEAN_NAME,
-                new RootBeanDefinition(ReferenceAnnotationBeanPostProcessor.class));
     }
 
 }
