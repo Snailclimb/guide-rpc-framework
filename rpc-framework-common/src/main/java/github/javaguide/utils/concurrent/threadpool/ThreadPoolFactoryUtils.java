@@ -63,7 +63,9 @@ public final class ThreadPoolFactoryUtils {
             executorService.shutdown();
             log.info("shut down thread pool [{}] [{}]", entry.getKey(), executorService.isTerminated());
             try {
-                executorService.awaitTermination(10, TimeUnit.SECONDS);
+                if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+                    executorService.shutdownNow();
+                }
             } catch (InterruptedException e) {
                 log.error("Thread pool never terminated");
                 executorService.shutdownNow();
