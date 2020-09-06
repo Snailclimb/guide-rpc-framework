@@ -32,7 +32,7 @@ public class SocketRpcClient implements ClientTransport {
 
     @Override
     public Object sendRpcRequest(RpcRequest rpcRequest) {
-        // build rpc service name by ppcRequest
+        // build rpc service name by rpcRequest
         String rpcServiceName = RpcServiceProperties.builder().serviceName(rpcRequest.getInterfaceName())
                 .group(rpcRequest.getGroup()).version(rpcRequest.getVersion()).build().toRpcServiceName();
         InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcServiceName);
