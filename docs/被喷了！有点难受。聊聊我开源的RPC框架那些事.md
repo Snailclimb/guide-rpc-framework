@@ -6,7 +6,7 @@
 
 ## 01 我的自定义 RPC 框架近况
 
-关注我的大部分小伙伴应该都知道，3个月前，我利用业余时间手写一个简单的 RPC 框架（*玩具*），名字叫做 [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework)。
+关注我的大部分小伙伴应该都知道，3个月前，我利用业余时间手写一个简单的 RPC 框架（*玩具*），名字叫做 guide-rpc-framework。
 
 目前的话，这个项目已经有 0.5k 的 star。感谢小伙伴们的支持！
 
@@ -20,7 +20,7 @@
 
 这里点名表扬一下Github用户名为 **[sakuragi1111](https://github.com/sakuragi1111)**  和 **[smile2coder](https://github.com/smile2coder)**  这两位老哥。
 
-[sakuragi1111](https://github.com/sakuragi1111) 这位老哥通过参考 Dubbo 源码实现了 SPI 机制。
+sakuragi1111 这位老哥通过参考 Dubbo 源码实现了 SPI 机制。
 
 ![](https://gitee.com/SnailClimb/blog-images/raw/master/2020-08//image-20200904140045964.png)
 
