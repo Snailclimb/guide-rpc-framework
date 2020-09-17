@@ -16,17 +16,17 @@ import java.util.List;
 
 /**
  * 自定义解码器。负责处理"入站"消息，将消息格式转换为我们需要的业务对象
- * 協議格式
+ * 协议格式：
+ * <p>
+ * | length | serializable id | body length | body data |
+ * |    1   |        2        |       3     |      4    |
+ * <p>
+ * 1、大端4字节整数，等于2、3、4长度总和
+ * 2、大端4字节整数，序列化方法的序号
+ * 3、body 长度  大端4字节整数，具体为4的长度
+ * 4、body 內容
  *
- *    | length | serializable id | body length | body data |
- *    |    1   |        2        |       3     |      4    |
- *
- *    1、大端4字節整數，等于2、3、4长度总和
- *    2、大端4字節整數，序列化方法的序號
- *    3、body 長度  大端4字節整數，具體為4的長度
- *    4、body 內容
- * @author shuang.kou
- * @author: tydhot (583125614@qq.com)
+ * @author shuang.kou & tydhot(583125614@qq.com)
  * @createTime 2020年05月25日 19:42:00
  */
 @AllArgsConstructor
@@ -76,7 +76,7 @@ public class DefaultDecoder extends ByteToMessageDecoder {
                 in.resetReaderIndex();
                 return;
             }
-            // 6.讀取選擇序列化方式
+            // 6.读取选择序列化方式
             int serializableId = in.readInt();
             String serializerKey = SERIALIZABLE_MAP.get(serializableId);
             // 7.不支持的序列化方式，返回
@@ -84,11 +84,11 @@ public class DefaultDecoder extends ByteToMessageDecoder {
                 in.resetReaderIndex();
                 return;
             }
-            // 8.選擇序列化器
+            // 8.选择序列化器
             Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension(serializerKey);
-            // 9.開始讀取body長度
+            // 9.开始读取body長度
             int dataLength = in.readInt();
-            // 10.開始序列化
+            // 10.开始序列化
             byte[] body = new byte[dataLength];
             in.readBytes(body);
             // 将bytes数组转换为我们需要的对象
