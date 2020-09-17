@@ -1,13 +1,11 @@
 package github.javaguide.remoting.transport.netty.client;
 
 import github.javaguide.extension.ExtensionLoader;
-import github.javaguide.registry.ServiceDiscovery;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
-import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoDecoder;
+import github.javaguide.remoting.transport.netty.codec.DefaultDecoder;
 import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoEncoder;
 import github.javaguide.serialize.Serializer;
-import github.javaguide.serialize.kyro.KryoSerializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -23,7 +21,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +56,7 @@ public final class NettyClient {
                          config custom serialization codec
                          */
                         // RpcResponse -> ByteBuf
-                        ch.pipeline().addLast(new NettyKryoDecoder(kryoSerializer, RpcResponse.class));
+                        ch.pipeline().addLast(new DefaultDecoder(RpcResponse.class));
                         // ByteBuf -> RpcRequest
                         ch.pipeline().addLast(new NettyKryoEncoder(kryoSerializer, RpcRequest.class));
                         ch.pipeline().addLast(new NettyClientHandler());
