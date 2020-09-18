@@ -9,7 +9,7 @@ import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.ServiceProviderImpl;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
-import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoDecoder;
+import github.javaguide.remoting.transport.netty.codec.DefaultDecoder;
 import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoEncoder;
 import github.javaguide.serialize.Serializer;
 import github.javaguide.utils.RuntimeUtil;
@@ -83,7 +83,7 @@ public class NettyServer {
                         protected void initChannel(SocketChannel ch) {
                             // 30 秒之内没有收到客户端请求的话就关闭连接
                             ch.pipeline().addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));
-                            ch.pipeline().addLast(new NettyKryoDecoder(kryoSerializer, RpcRequest.class));
+                            ch.pipeline().addLast(new DefaultDecoder(RpcRequest.class));
                             ch.pipeline().addLast(new NettyKryoEncoder(kryoSerializer, RpcResponse.class));
                             ch.pipeline().addLast(serviceHandlerGroup, new NettyServerHandler());
                         }
