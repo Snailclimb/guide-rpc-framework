@@ -85,7 +85,7 @@ public final class ThreadPoolFactoryUtils {
      * @param daemon           指定是否为 Daemon Thread(守护线程)
      * @return ThreadFactory
      */
-    private static ThreadFactory createThreadFactory(String threadNamePrefix, Boolean daemon) {
+    public static ThreadFactory createThreadFactory(String threadNamePrefix, Boolean daemon) {
         if (threadNamePrefix != null) {
             if (daemon != null) {
                 return new ThreadFactoryBuilder()

@@ -3,7 +3,6 @@ package github.javaguide.remoting.transport.netty.server;
 import github.javaguide.config.CustomShutdownHook;
 import github.javaguide.entity.RpcServiceProperties;
 import github.javaguide.extension.ExtensionLoader;
-import github.javaguide.factory.NamedThreadFactory;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.ServiceProviderImpl;
@@ -13,6 +12,7 @@ import github.javaguide.remoting.transport.netty.codec.DefaultDecoder;
 import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoEncoder;
 import github.javaguide.serialize.Serializer;
 import github.javaguide.utils.RuntimeUtil;
+import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -62,9 +62,9 @@ public class NettyServer {
         String host = InetAddress.getLocalHost().getHostAddress();
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
-        final DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
+        DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
                 RuntimeUtil.cpus() * 2,
-                new NamedThreadFactory("ServiceHandler")
+                ThreadPoolFactoryUtils.createThreadFactory("service-handler-group", false)
         );
         try {
             ServerBootstrap b = new ServerBootstrap();
