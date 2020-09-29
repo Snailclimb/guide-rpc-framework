@@ -18,8 +18,9 @@ public final class SingletonFactory {
 
     public static <T> T getInstance(Class<T> c) {
         String key = c.toString();
-        Object instance = OBJECT_MAP.get(key);
+        Object instance = null;
         synchronized (c) {
+            instance =  OBJECT_MAP.get(key);
             if (instance == null) {
                 try {
                     instance = c.getDeclaredConstructor().newInstance();
