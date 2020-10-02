@@ -26,8 +26,7 @@ public final class PropertiesFileUtils {
         }
         Properties properties = null;
         try (InputStreamReader inputStreamReader = new InputStreamReader(
-                new FileInputStream(rpcConfigPath)
-                , StandardCharsets.UTF_8)) {
+                new FileInputStream(rpcConfigPath), StandardCharsets.UTF_8)) {
             properties = new Properties();
             properties.load(inputStreamReader);
         } catch (IOException e) {
