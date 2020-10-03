@@ -1,7 +1,12 @@
 package github.javaguide.remoting.dto;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author wangtao
@@ -15,17 +20,13 @@ import lombok.*;
 @ToString
 public class RpcMessage {
 
-    //消息类型
+    //rpc message type
     private byte messageType;
-
-    //序列化类型
+    //serialization type
     private byte codec;
-
-    //请求id
+    //request id
     private int requestId;
-
-    //数据内容
+    //request data
     private Object data;
-
 
 }

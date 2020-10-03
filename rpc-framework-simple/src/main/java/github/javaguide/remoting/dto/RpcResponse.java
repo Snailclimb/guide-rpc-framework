@@ -1,6 +1,6 @@
 package github.javaguide.remoting.dto;
 
-import github.javaguide.enumeration.RpcResponseCode;
+import github.javaguide.enums.RpcResponseCodeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,8 +39,8 @@ public class RpcResponse<T> implements Serializable {
 
     public static <T> RpcResponse<T> success(T data, String requestId) {
         RpcResponse<T> response = new RpcResponse<>();
-        response.setCode(RpcResponseCode.SUCCESS.getCode());
-        response.setMessage(RpcResponseCode.SUCCESS.getMessage());
+        response.setCode(RpcResponseCodeEnum.SUCCESS.getCode());
+        response.setMessage(RpcResponseCodeEnum.SUCCESS.getMessage());
         response.setRequestId(requestId);
         if (null != data) {
             response.setData(data);
@@ -48,10 +48,10 @@ public class RpcResponse<T> implements Serializable {
         return response;
     }
 
-    public static <T> RpcResponse<T> fail(RpcResponseCode rpcResponseCode) {
+    public static <T> RpcResponse<T> fail(RpcResponseCodeEnum rpcResponseCodeEnum) {
         RpcResponse<T> response = new RpcResponse<>();
-        response.setCode(rpcResponseCode.getCode());
-        response.setMessage(rpcResponseCode.getMessage());
+        response.setCode(rpcResponseCodeEnum.getCode());
+        response.setMessage(rpcResponseCodeEnum.getMessage());
         return response;
     }
 

@@ -4,8 +4,12 @@ import github.javaguide.factory.SingletonFactory;
 import github.javaguide.remoting.constants.RpcConstants;
 import github.javaguide.remoting.dto.RpcMessage;
 import github.javaguide.remoting.dto.RpcResponse;
-import github.javaguide.remoting.transport.netty.codec.enums.MySerializableEnum;
-import io.netty.channel.*;
+import github.javaguide.enums.SerializationTypeEnum;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleState;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.ReferenceCountUtil;
@@ -43,9 +47,9 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
             if (msg instanceof RpcMessage) {
                 RpcMessage tmp = (RpcMessage) msg;
                 byte messageType = tmp.getMessageType();
-                if (messageType == RpcConstants.MSGTYPE_HEARTBEAT_RESPONSE) {
+                if (messageType == RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
                     log.info("heart [{}]", tmp.getData());
-                } else if (messageType == RpcConstants.MSGTYPE_RESPONSE) {
+                } else if (messageType == RpcConstants.RESPONSE_TYPE) {
                     RpcResponse<Object> rpcResponse = (RpcResponse<Object>) tmp.getData();
                     unprocessedRequests.complete(rpcResponse);
                 }
@@ -63,8 +67,8 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
                 log.info("write idle happen [{}]", ctx.channel().remoteAddress());
                 Channel channel = channelProvider.get((InetSocketAddress) ctx.channel().remoteAddress());
                 RpcMessage rpcMessage = new RpcMessage();
-                rpcMessage.setCodec(MySerializableEnum.KYRO.getCode());
-                rpcMessage.setMessageType(RpcConstants.MSGTYPE_HEARTBEAT_REQUEST);
+                rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+                rpcMessage.setMessageType(RpcConstants.HEARTBEAT_REQUEST_TYPE);
                 rpcMessage.setData(RpcConstants.PING);
                 channel.writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
             }

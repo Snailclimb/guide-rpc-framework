@@ -8,7 +8,7 @@ import github.javaguide.remoting.dto.RpcMessage;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.transport.ClientTransport;
-import github.javaguide.remoting.transport.netty.codec.enums.MySerializableEnum;
+import github.javaguide.enums.SerializationTypeEnum;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
@@ -49,8 +49,8 @@ public class NettyClientTransport implements ClientTransport {
             unprocessedRequests.put(rpcRequest.getRequestId(), resultFuture);
             RpcMessage rpcMessage = new RpcMessage();
             rpcMessage.setData(rpcRequest);
-            rpcMessage.setCodec(MySerializableEnum.KYRO.getCode());
-            rpcMessage.setMessageType(RpcConstants.MSGTYPE_RESQUEST);
+            rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+            rpcMessage.setMessageType(RpcConstants.REQUEST_TYPE);
             channel.writeAndFlush(rpcMessage).addListener((ChannelFutureListener) future -> {
                 if (future.isSuccess()) {
                     log.info("client send message: [{}]", rpcMessage);
