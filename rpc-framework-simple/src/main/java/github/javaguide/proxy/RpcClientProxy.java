@@ -1,7 +1,9 @@
 package github.javaguide.proxy;
 
 import github.javaguide.entity.RpcServiceProperties;
-import github.javaguide.remoting.dto.RpcMessageChecker;
+import github.javaguide.enums.RpcErrorMessageEnum;
+import github.javaguide.enums.RpcResponseCodeEnum;
+import github.javaguide.exception.RpcException;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.transport.ClientTransport;
@@ -26,6 +28,9 @@ import java.util.concurrent.CompletableFuture;
  */
 @Slf4j
 public class RpcClientProxy implements InvocationHandler {
+
+    private static final String INTERFACE_NAME = "interfaceName";
+
     /**
      * Used to send requests to the server.And there are two implementations: socket and netty
      */
@@ -82,7 +87,21 @@ public class RpcClientProxy implements InvocationHandler {
         if (clientTransport instanceof SocketRpcClient) {
             rpcResponse = (RpcResponse<Object>) clientTransport.sendRpcRequest(rpcRequest);
         }
-        RpcMessageChecker.check(rpcResponse, rpcRequest);
+        this.check(rpcResponse, rpcRequest);
         return rpcResponse.getData();
+    }
+
+    private void check(RpcResponse<Object> rpcResponse, RpcRequest rpcRequest) {
+        if (rpcResponse == null) {
+            throw new RpcException(RpcErrorMessageEnum.SERVICE_INVOCATION_FAILURE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
+        }
+
+        if (!rpcRequest.getRequestId().equals(rpcResponse.getRequestId())) {
+            throw new RpcException(RpcErrorMessageEnum.REQUEST_NOT_MATCH_RESPONSE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
+        }
+
+        if (rpcResponse.getCode() == null || !rpcResponse.getCode().equals(RpcResponseCodeEnum.SUCCESS.getCode())) {
+            throw new RpcException(RpcErrorMessageEnum.SERVICE_INVOCATION_FAILURE, INTERFACE_NAME + ":" + rpcRequest.getInterfaceName());
+        }
     }
 }

@@ -7,14 +7,21 @@ import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.ServiceProviderImpl;
 import github.javaguide.remoting.transport.netty.codec.RpcMessageDecoder;
 import github.javaguide.remoting.transport.netty.codec.RpcMessageEncoder;
+import github.javaguide.utils.RuntimeUtil;
+import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtils;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -37,10 +44,6 @@ public class NettyServer {
 
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
 
-    public void registerService(Object service) {
-        serviceProvider.publishService(service);
-    }
-
     public void registerService(Object service, RpcServiceProperties rpcServiceProperties) {
         serviceProvider.publishService(service, rpcServiceProperties);
     }
@@ -51,6 +54,10 @@ public class NettyServer {
         String host = InetAddress.getLocalHost().getHostAddress();
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
+        DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
+                RuntimeUtil.cpus() * 2,
+                ThreadPoolFactoryUtils.createThreadFactory("service-handler-group", false)
+        );
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
@@ -71,7 +78,7 @@ public class NettyServer {
                             p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));
                             p.addLast(new RpcMessageEncoder());
                             p.addLast(new RpcMessageDecoder());
-                            p.addLast(new NettyServerHandler());
+                            p.addLast(serviceHandlerGroup, new NettyServerHandler());
                         }
                     });
 
@@ -85,6 +92,7 @@ public class NettyServer {
             log.error("shutdown bossGroup and workerGroup");
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
+            serviceHandlerGroup.shutdownGracefully();
         }
     }
 

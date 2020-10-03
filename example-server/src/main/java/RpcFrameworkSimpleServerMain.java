@@ -2,7 +2,6 @@ import github.javaguide.HelloService;
 import github.javaguide.entity.RpcServiceProperties;
 import github.javaguide.remoting.transport.socket.SocketRpcServer;
 import github.javaguide.serviceimpl.HelloServiceImpl;
-import github.javaguide.serviceimpl.HelloServiceImpl2;
 
 /**
  * @author shuang.kou

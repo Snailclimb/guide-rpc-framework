@@ -21,7 +21,7 @@ public final class SingletonFactory {
         Object instance = null;
         if (instance == null) {
             synchronized (SingletonFactory.class) {
-                instance =  OBJECT_MAP.get(key);
+                instance = OBJECT_MAP.get(key);
                 if (instance == null) {
                     try {
                         instance = c.getDeclaredConstructor().newInstance();

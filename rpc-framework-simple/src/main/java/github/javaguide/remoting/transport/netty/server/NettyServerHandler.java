@@ -1,13 +1,13 @@
 package github.javaguide.remoting.transport.netty.server;
 
-import github.javaguide.enumeration.RpcResponseCode;
+import github.javaguide.enums.RpcResponseCodeEnum;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.remoting.constants.RpcConstants;
 import github.javaguide.remoting.dto.RpcMessage;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.handler.RpcRequestHandler;
-import github.javaguide.remoting.transport.netty.codec.enums.MySerializableEnum;
+import github.javaguide.enums.SerializationTypeEnum;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -41,10 +41,10 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
             if (msg instanceof RpcMessage) {
                 log.info("server receive msg: [{}] ", msg);
                 byte messageType = ((RpcMessage) msg).getMessageType();
-                if (messageType == RpcConstants.MSGTYPE_HEARTBEAT_REQUEST) {
+                if (messageType == RpcConstants.HEARTBEAT_REQUEST_TYPE) {
                     RpcMessage rpcMessage = new RpcMessage();
-                    rpcMessage.setCodec(MySerializableEnum.KYRO.getCode());
-                    rpcMessage.setMessageType(RpcConstants.MSGTYPE_HEARTBEAT_RESPONSE);
+                    rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+                    rpcMessage.setMessageType(RpcConstants.HEARTBEAT_RESPONSE_TYPE);
                     rpcMessage.setData(RpcConstants.PONG);
                     ctx.writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
                 } else {
@@ -55,15 +55,15 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
                     if (ctx.channel().isActive() && ctx.channel().isWritable()) {
                         RpcResponse<Object> rpcResponse = RpcResponse.success(result, rpcRequest.getRequestId());
                         RpcMessage rpcMessage = new RpcMessage();
-                        rpcMessage.setCodec(MySerializableEnum.KYRO.getCode());
-                        rpcMessage.setMessageType(RpcConstants.MSGTYPE_RESPONSE);
+                        rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+                        rpcMessage.setMessageType(RpcConstants.RESPONSE_TYPE);
                         rpcMessage.setData(rpcResponse);
                         ctx.writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
                     } else {
-                        RpcResponse<Object> rpcResponse = RpcResponse.fail(RpcResponseCode.FAIL);
+                        RpcResponse<Object> rpcResponse = RpcResponse.fail(RpcResponseCodeEnum.FAIL);
                         RpcMessage rpcMessage = new RpcMessage();
-                        rpcMessage.setCodec(MySerializableEnum.KYRO.getCode());
-                        rpcMessage.setMessageType(RpcConstants.MSGTYPE_RESPONSE);
+                        rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+                        rpcMessage.setMessageType(RpcConstants.RESPONSE_TYPE);
                         rpcMessage.setData(rpcResponse);
                         ctx.writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
                         log.error("not writable now, message dropped");
