@@ -1,7 +1,7 @@
 package github.javaguide.provider;
 
 import github.javaguide.entity.RpcServiceProperties;
-import github.javaguide.enumeration.RpcErrorMessage;
+import github.javaguide.enums.RpcErrorMessageEnum;
 import github.javaguide.exception.RpcException;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.registry.ServiceRegistry;
@@ -52,7 +52,7 @@ public class ServiceProviderImpl implements ServiceProvider {
     public Object getService(RpcServiceProperties rpcServiceProperties) {
         Object service = serviceMap.get(rpcServiceProperties.toRpcServiceName());
         if (null == service) {
-            throw new RpcException(RpcErrorMessage.SERVICE_CAN_NOT_BE_FOUND);
+            throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND);
         }
         return service;
     }

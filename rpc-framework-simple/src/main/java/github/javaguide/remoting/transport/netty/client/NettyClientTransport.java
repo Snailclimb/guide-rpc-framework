@@ -3,9 +3,12 @@ package github.javaguide.remoting.transport.netty.client;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.registry.ServiceDiscovery;
+import github.javaguide.remoting.constants.RpcConstants;
+import github.javaguide.remoting.dto.RpcMessage;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.transport.ClientTransport;
+import github.javaguide.enums.SerializationTypeEnum;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
@@ -44,9 +47,13 @@ public class NettyClientTransport implements ClientTransport {
         if (channel != null && channel.isActive()) {
             // put unprocessed request
             unprocessedRequests.put(rpcRequest.getRequestId(), resultFuture);
-            channel.writeAndFlush(rpcRequest).addListener((ChannelFutureListener) future -> {
+            RpcMessage rpcMessage = new RpcMessage();
+            rpcMessage.setData(rpcRequest);
+            rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+            rpcMessage.setMessageType(RpcConstants.REQUEST_TYPE);
+            channel.writeAndFlush(rpcMessage).addListener((ChannelFutureListener) future -> {
                 if (future.isSuccess()) {
-                    log.info("client send message: [{}]", rpcRequest);
+                    log.info("client send message: [{}]", rpcMessage);
                 } else {
                     future.channel().close();
                     resultFuture.completeExceptionally(future.cause());

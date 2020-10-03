@@ -1,16 +1,14 @@
 package github.javaguide.remoting.transport.netty.client;
 
-import github.javaguide.extension.ExtensionLoader;
-import github.javaguide.remoting.dto.RpcRequest;
-import github.javaguide.remoting.dto.RpcResponse;
-import github.javaguide.remoting.transport.netty.codec.DefaultDecoder;
-import github.javaguide.remoting.transport.netty.codec.kyro.NettyKryoEncoder;
-import github.javaguide.serialize.Serializer;
+
+import github.javaguide.remoting.transport.netty.codec.RpcMessageDecoder;
+import github.javaguide.remoting.transport.netty.codec.RpcMessageEncoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -40,7 +38,6 @@ public final class NettyClient {
     public NettyClient() {
         eventLoopGroup = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
-        Serializer kryoSerializer = ExtensionLoader.getExtensionLoader(Serializer.class).getExtension("kyro");
         bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
                 .handler(new LoggingHandler(LogLevel.INFO))
@@ -50,15 +47,11 @@ public final class NettyClient {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) {
+                        ChannelPipeline p = ch.pipeline();
                         // If no data is sent to the server within 15 seconds, a heartbeat request is sent
-                        ch.pipeline().addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));
-                        /*
-                         config custom serialization codec
-                         */
-                        // RpcResponse -> ByteBuf
-                        ch.pipeline().addLast(new DefaultDecoder(RpcResponse.class));
-                        // ByteBuf -> RpcRequest
-                        ch.pipeline().addLast(new NettyKryoEncoder(kryoSerializer, RpcRequest.class));
+                        p.addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));
+                        p.addLast(new RpcMessageEncoder());
+                        p.addLast(new RpcMessageDecoder());
                         ch.pipeline().addLast(new NettyClientHandler());
                     }
                 });

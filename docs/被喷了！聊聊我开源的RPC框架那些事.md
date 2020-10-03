@@ -2,7 +2,7 @@
 
 简单吐槽一波，给大家聊聊关于  [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 的一些事情。
 
-![我踏马直接踢](https://gitee.com/SnailClimb/blog-images/raw/master/2020-08//006APoFYly1ghq7u1xl7rj30hs0hs0ty.jpg)
+![我踏马直接踢](../images/beipenle/006APoFYly1ghq7u1xl7rj30hs0hs0ty.png)
 
 ## 01 我的自定义 RPC 框架近况
 
@@ -10,7 +10,7 @@
 
 目前的话，这个项目已经有 0.5k 的 star。感谢小伙伴们的支持！
 
-![](https://gitee.com/SnailClimb/blog-images/raw/master/2020-08//image-20200904135138501.png)
+![](../images/beipenle/image-20200904135138501.png)
 
 **写这个 RPC 框架的主要目的是为了个人学习，开源出来的目的主要是想帮助到更多人。**
 
@@ -22,11 +22,11 @@
 
 sakuragi1111 这位老哥通过参考 Dubbo 源码实现了 SPI 机制。
 
-![](https://gitee.com/SnailClimb/blog-images/raw/master/2020-08//image-20200904140045964.png)
+![](../images/beipenle/image-20200904140045964.png)
 
 [smile2coder](https://github.com/smile2coder) 这位老哥为  [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 添加了通过注解实现服务消费的功能。
 
-![](https://gitee.com/SnailClimb/blog-images/raw/master/2020-08//image-20200904140604371.png)
+![](../images/beipenle/image-20200904140604371.png)
 
 目前的话， **[guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 已经支持通过注解进行服务消费和注册。**
 
@@ -58,7 +58,7 @@ Netty 比 NIO 更好用、更完善，我为啥还要直接使用 NIO呢？我�
 
 我在项目的 README  中明确说明了：**写这个 RPC 框架主要是为了通过造轮子的方式来学习，检验自己对于自己所掌握的知识的运用。**
 
-![](https://gitee.com/SnailClimb/blog-images/raw/master/2020-08//image-20200904144336571.png)
+![](../images/beipenle/image-20200904144336571.png)
 
 **4.重复造轮子没意义**
 
@@ -74,7 +74,7 @@ Netty 比 NIO 更好用、更完善，我为啥还要直接使用 NIO呢？我�
 
 你可以在 Github 分享很多东西，你的学习笔记、自己做的实战项目、自己造的轮子......（资源类的不太推荐，太容易侵权）。
 
-![](https://gitee.com/SnailClimb/blog-images/raw/master/2020-08//640.png)
+![](../images/beipenle/640.png)
 
 虽然，现在 Github 被很多人单纯玩成了引流工具。但是，**整体来说 Github 整体技术环境和氛围还是很不错的！** 
 
@@ -82,5 +82,5 @@ Netty 比 NIO 更好用、更完善，我为啥还要直接使用 NIO呢？我�
 
 如果你想让自己的开源项目被更多人知道的话，你可以在下面技术平台宣传（**不宣传的话，开源的东西很难被别人知道，不要让好东西被埋没**）：
 
-![](https://gitee.com/SnailClimb/blog-images/raw/master/2020-08//640-20200904150730507.png)
+![](../images/beipenle/640-20200904150730507.png)
 

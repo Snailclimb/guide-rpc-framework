@@ -1,6 +1,6 @@
 package github.javaguide.registry.zk;
 
-import github.javaguide.enumeration.RpcErrorMessage;
+import github.javaguide.enums.RpcErrorMessageEnum;
 import github.javaguide.exception.RpcException;
 import github.javaguide.loadbalance.LoadBalance;
 import github.javaguide.loadbalance.RandomLoadBalance;
@@ -31,7 +31,7 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);
         if (serviceUrlList.size() == 0) {
-            throw new RpcException(RpcErrorMessage.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);
+            throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);
         }
         // load balancing
         String targetServiceUrl = loadBalance.selectServiceAddress(serviceUrlList);
