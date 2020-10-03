@@ -7,6 +7,8 @@ import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.ServiceProviderImpl;
 import github.javaguide.remoting.transport.netty.codec.RpcMessageDecoder;
 import github.javaguide.remoting.transport.netty.codec.RpcMessageEncoder;
+import github.javaguide.utils.RuntimeUtil;
+import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtils;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -41,10 +43,6 @@ public class NettyServer {
     public static final int PORT = 9998;
 
     private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
-
-    public void registerService(Object service) {
-        serviceProvider.publishService(service);
-    }
 
     public void registerService(Object service, RpcServiceProperties rpcServiceProperties) {
         serviceProvider.publishService(service, rpcServiceProperties);
