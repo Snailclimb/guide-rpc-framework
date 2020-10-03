@@ -1,5 +1,6 @@
 package github.javaguide.remoting.transport.netty.server;
 
+import github.javaguide.enums.CompressTypeEnum;
 import github.javaguide.enums.RpcResponseCodeEnum;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.remoting.constants.RpcConstants;
@@ -44,6 +45,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
                 if (messageType == RpcConstants.HEARTBEAT_REQUEST_TYPE) {
                     RpcMessage rpcMessage = new RpcMessage();
                     rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+                    rpcMessage.setCompress(CompressTypeEnum.GZIP.getCode());
                     rpcMessage.setMessageType(RpcConstants.HEARTBEAT_RESPONSE_TYPE);
                     rpcMessage.setData(RpcConstants.PONG);
                     ctx.writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
@@ -56,6 +58,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
                         RpcResponse<Object> rpcResponse = RpcResponse.success(result, rpcRequest.getRequestId());
                         RpcMessage rpcMessage = new RpcMessage();
                         rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+                        rpcMessage.setCompress(CompressTypeEnum.GZIP.getCode());
                         rpcMessage.setMessageType(RpcConstants.RESPONSE_TYPE);
                         rpcMessage.setData(rpcResponse);
                         ctx.writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
@@ -63,6 +66,7 @@ public class NettyServerHandler extends ChannelInboundHandlerAdapter {
                         RpcResponse<Object> rpcResponse = RpcResponse.fail(RpcResponseCodeEnum.FAIL);
                         RpcMessage rpcMessage = new RpcMessage();
                         rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+                        rpcMessage.setCompress(CompressTypeEnum.GZIP.getCode());
                         rpcMessage.setMessageType(RpcConstants.RESPONSE_TYPE);
                         rpcMessage.setData(rpcResponse);
                         ctx.writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);

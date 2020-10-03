@@ -1,5 +1,7 @@
 package github.javaguide.remoting.transport.netty.client;
 
+import github.javaguide.compress.Compress;
+import github.javaguide.enums.CompressTypeEnum;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.remoting.constants.RpcConstants;
 import github.javaguide.remoting.dto.RpcMessage;
@@ -68,6 +70,7 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
                 Channel channel = channelProvider.get((InetSocketAddress) ctx.channel().remoteAddress());
                 RpcMessage rpcMessage = new RpcMessage();
                 rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+                rpcMessage.setCompress(CompressTypeEnum.GZIP.getCode());
                 rpcMessage.setMessageType(RpcConstants.HEARTBEAT_REQUEST_TYPE);
                 rpcMessage.setData(RpcConstants.PING);
                 channel.writeAndFlush(rpcMessage).addListener(ChannelFutureListener.CLOSE_ON_FAILURE);

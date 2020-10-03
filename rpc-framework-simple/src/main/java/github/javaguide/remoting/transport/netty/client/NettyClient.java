@@ -52,7 +52,7 @@ public final class NettyClient {
                         p.addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));
                         p.addLast(new RpcMessageEncoder());
                         p.addLast(new RpcMessageDecoder());
-                        ch.pipeline().addLast(new NettyClientHandler());
+                        p.addLast(new NettyClientHandler());
                     }
                 });
     }
