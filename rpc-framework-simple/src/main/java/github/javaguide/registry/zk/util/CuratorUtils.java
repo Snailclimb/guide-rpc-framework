@@ -1,6 +1,6 @@
 package github.javaguide.registry.zk.util;
 
-import github.javaguide.enums.RpcConfigPropertiesEnum;
+import github.javaguide.enums.RpcConfigEnum;
 import github.javaguide.exception.RpcException;
 import github.javaguide.utils.file.PropertiesFileUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -97,9 +97,9 @@ public final class CuratorUtils {
 
     public static CuratorFramework getZkClient() {
         // check if user has set zk address
-        Properties properties = PropertiesFileUtils.readPropertiesFile(RpcConfigPropertiesEnum.RPC_CONFIG_PATH.getPropertyValue());
+        Properties properties = PropertiesFileUtils.readPropertiesFile(RpcConfigEnum.RPC_CONFIG_PATH.getPropertyValue());
         if (properties != null) {
-            defaultZookeeperAddress = properties.getProperty(RpcConfigPropertiesEnum.ZK_ADDRESS.getPropertyValue());
+            defaultZookeeperAddress = properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyValue());
         }
         // if zkClient has been started, return directly
         if (zkClient != null && zkClient.getState() == CuratorFrameworkState.STARTED) {
