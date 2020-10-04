@@ -24,6 +24,8 @@ public class RpcMessage {
     private byte messageType;
     //serialization type
     private byte codec;
+    //compress type
+    private byte compress;
     //request id
     private int requestId;
     //request data

@@ -1,6 +1,8 @@
 package github.javaguide.remoting.transport.netty.codec;
 
 
+import github.javaguide.compress.Compress;
+import github.javaguide.enums.CompressTypeEnum;
 import github.javaguide.enums.SerializationTypeEnum;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.remoting.constants.RpcConstants;
@@ -19,9 +21,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * custom protocol decoder
  * <p>
  * <pre>
- *   0     1     2     3     4        5     6     7     8     9          10       11     12    13    14   15
- *   +-----+-----+-----+-----+--------+----+----+----+------+-----------+-------+-----------+-----+-----+-----+
- *   |   magic   code        |version | full length         | messageType| codec| RequestId                   |
+ *   0     1     2     3     4        5     6     7     8         9          10      11     12  13  14   15 16
+ *   +-----+-----+-----+-----+--------+----+----+----+------+-----------+-------+----- --+-----+-----+-------+
+ *   |   magic   code        |version | full length         | messageType| codec|compress|    RequestId       |
  *   +-----------------------+--------+---------------------+-----------+-----------+-----------+------------+
  *   |                                                                                                       |
  *   |                                         body                                                          |
@@ -29,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *   |                                        ... ...                                                        |
  *   +-------------------------------------------------------------------------------------------------------+
  * 4B  magic code（魔法数）   1B version（版本）   4B full length（消息长度）    1B messageType（消息类型）
- * 1B codec（序列化类型）    4B  requestId（请求的Id）
+ * 1B compress（压缩类型） 1B codec（序列化类型）    4B  requestId（请求的Id）
  * body（object类型数据）
  * </pre>
  *
@@ -52,7 +54,8 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
             byte messageType = rpcMessage.getMessageType();
             out.writeByte(messageType);
             out.writeByte(rpcMessage.getCodec());
-            out.writeInt(ATOMIC_INTEGER.getAndDecrement());
+            out.writeByte(CompressTypeEnum.GZIP.getCode());
+            out.writeInt(ATOMIC_INTEGER.getAndIncrement());
             // build full length
             byte[] bodyBytes = null;
             int fullLength = RpcConstants.HEAD_LENGTH;
@@ -63,6 +66,10 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
                 Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class)
                         .getExtension(codecName);
                 bodyBytes = serializer.serialize(rpcMessage.getData());
+                String compressName = CompressTypeEnum.getName(rpcMessage.getCompress());
+                Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)
+                        .getExtension(compressName);
+                bodyBytes = compress.compress(bodyBytes);
                 fullLength += bodyBytes.length;
             }
 

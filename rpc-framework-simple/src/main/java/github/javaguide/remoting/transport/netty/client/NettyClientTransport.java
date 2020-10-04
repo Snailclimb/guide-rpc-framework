@@ -1,5 +1,6 @@
 package github.javaguide.remoting.transport.netty.client;
 
+import github.javaguide.enums.CompressTypeEnum;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.registry.ServiceDiscovery;
@@ -50,6 +51,7 @@ public class NettyClientTransport implements ClientTransport {
             RpcMessage rpcMessage = new RpcMessage();
             rpcMessage.setData(rpcRequest);
             rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+            rpcMessage.setCompress(CompressTypeEnum.GZIP.getCode());
             rpcMessage.setMessageType(RpcConstants.REQUEST_TYPE);
             channel.writeAndFlush(rpcMessage).addListener((ChannelFutureListener) future -> {
                 if (future.isSuccess()) {

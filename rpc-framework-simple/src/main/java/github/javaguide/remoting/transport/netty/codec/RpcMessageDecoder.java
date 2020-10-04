@@ -1,5 +1,7 @@
 package github.javaguide.remoting.transport.netty.codec;
 
+import github.javaguide.compress.Compress;
+import github.javaguide.enums.CompressTypeEnum;
 import github.javaguide.enums.SerializationTypeEnum;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.remoting.constants.RpcConstants;
@@ -104,6 +106,7 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
         // build RpcMessage object
         byte messageType = in.readByte();
         byte codecType = in.readByte();
+        byte compressType = in.readByte();
         int requestId = in.readInt();
         RpcMessage rpcMessage = RpcMessage.builder()
                 .codec(codecType)
@@ -121,6 +124,10 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
                 String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());
                 Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class)
                         .getExtension(codecName);
+                String compressName = CompressTypeEnum.getName(compressType);
+                Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)
+                        .getExtension(compressName);
+                bs = compress.decompress(bs);
                 if (messageType == RpcConstants.REQUEST_TYPE) {
                     RpcRequest tmpValue = serializer.deserialize(bs, RpcRequest.class);
                     rpcMessage.setData(tmpValue);
