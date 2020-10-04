@@ -62,10 +62,12 @@ public class RpcMessageEncoder extends MessageToByteEncoder<RpcMessage> {
             // if messageType is not heartbeat message,fullLength = head length + body length
             if (messageType != RpcConstants.HEARTBEAT_REQUEST_TYPE
                     && messageType != RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
+                // serialize the object
                 String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());
                 Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class)
                         .getExtension(codecName);
                 bodyBytes = serializer.serialize(rpcMessage.getData());
+                // compress the bytes
                 String compressName = CompressTypeEnum.getName(rpcMessage.getCompress());
                 Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)
                         .getExtension(compressName);
