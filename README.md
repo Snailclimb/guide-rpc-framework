@@ -1,6 +1,8 @@
 # guide-rpc-framework
 
 > 最近被一些不友好的人"喷"了，简单写了一篇记录一下：[被喷了！聊聊我开源的RPC框架那些事](/docs/被喷了！聊聊我开源的RPC框架那些事.md)
+>
+> [该 RPC 框架配套教程已经更新在我的星球，点击此链接了解详情。](https://t.zsxq.com/Ea6YVVn)
 
 中文|[English](./README-EN.md)
 
