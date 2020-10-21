@@ -1,5 +1,7 @@
 package github.javaguide.loadbalance;
 
+import github.javaguide.extension.SPI;
+
 import java.util.List;
 
 /**
@@ -8,6 +10,7 @@ import java.util.List;
  * @author shuang.kou
  * @createTime 2020年06月21日 07:44:00
  */
+@SPI
 public interface LoadBalance {
     /**
      * Choose one from the list of existing service addresses list
@@ -15,5 +18,5 @@ public interface LoadBalance {
      * @param serviceAddresses Service address list
      * @return target service address
      */
-    String selectServiceAddress(List<String> serviceAddresses);
+    String selectServiceAddress(List<String> serviceAddresses, String rpcServiceName);
 }
