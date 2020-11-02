@@ -1,4 +1,4 @@
-package github.javaguide.utils;
+package github.javaguide.extension;
 
 public class Holder<T> {
 

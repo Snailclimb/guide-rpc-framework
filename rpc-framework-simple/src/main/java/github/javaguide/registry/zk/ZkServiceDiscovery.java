@@ -30,7 +30,7 @@ public class ZkServiceDiscovery implements ServiceDiscovery {
     public InetSocketAddress lookupService(String rpcServiceName) {
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);
-        if (serviceUrlList.size() == 0) {
+        if (serviceUrlList == null || serviceUrlList.size() == 0) {
             throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);
         }
         // load balancing

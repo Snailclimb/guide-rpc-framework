@@ -1,8 +1,7 @@
 package github.javaguide.registry.zk.util;
 
 import github.javaguide.enums.RpcConfigEnum;
-import github.javaguide.exception.RpcException;
-import github.javaguide.utils.file.PropertiesFileUtils;
+import github.javaguide.utils.PropertiesFileUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -55,7 +54,7 @@ public final class CuratorUtils {
             }
             REGISTERED_PATH_SET.add(path);
         } catch (Exception e) {
-            throw new RpcException(e.getMessage(), e.getCause());
+            log.error("create persistent node for path [{}] fail", path);
         }
     }
 
@@ -69,14 +68,14 @@ public final class CuratorUtils {
         if (SERVICE_ADDRESS_MAP.containsKey(rpcServiceName)) {
             return SERVICE_ADDRESS_MAP.get(rpcServiceName);
         }
-        List<String> result;
+        List<String> result = null;
         String servicePath = ZK_REGISTER_ROOT_PATH + "/" + rpcServiceName;
         try {
             result = zkClient.getChildren().forPath(servicePath);
             SERVICE_ADDRESS_MAP.put(rpcServiceName, result);
             registerWatcher(rpcServiceName, zkClient);
         } catch (Exception e) {
-            throw new RpcException(e.getMessage(), e.getCause());
+            log.error("get children nodes for path [{}] fail", servicePath);
         }
         return result;
     }
@@ -89,7 +88,7 @@ public final class CuratorUtils {
             try {
                 zkClient.delete().forPath(p);
             } catch (Exception e) {
-                throw new RpcException(e.getMessage(), e.getCause());
+                log.error("clear registry for path [{}] fail", p);
             }
         });
         log.info("All registered services on the server are cleared:[{}]", REGISTERED_PATH_SET.toString());
@@ -97,7 +96,7 @@ public final class CuratorUtils {
 
     public static CuratorFramework getZkClient() {
         // check if user has set zk address
-        Properties properties = PropertiesFileUtils.readPropertiesFile(RpcConfigEnum.RPC_CONFIG_PATH.getPropertyValue());
+        Properties properties = PropertiesFileUtil.readPropertiesFile(RpcConfigEnum.RPC_CONFIG_PATH.getPropertyValue());
         if (properties != null) {
             defaultZookeeperAddress = properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyValue());
         }
@@ -121,7 +120,7 @@ public final class CuratorUtils {
      *
      * @param rpcServiceName rpc service name eg:github.javaguide.HelloServicetest2version
      */
-    private static void registerWatcher(String rpcServiceName, CuratorFramework zkClient) {
+    private static void registerWatcher(String rpcServiceName, CuratorFramework zkClient) throws Exception {
         String servicePath = ZK_REGISTER_ROOT_PATH + "/" + rpcServiceName;
         PathChildrenCache pathChildrenCache = new PathChildrenCache(zkClient, servicePath, true);
         PathChildrenCacheListener pathChildrenCacheListener = (curatorFramework, pathChildrenCacheEvent) -> {
@@ -129,11 +128,7 @@ public final class CuratorUtils {
             SERVICE_ADDRESS_MAP.put(rpcServiceName, serviceAddresses);
         };
         pathChildrenCache.getListenable().addListener(pathChildrenCacheListener);
-        try {
-            pathChildrenCache.start();
-        } catch (Exception e) {
-            throw new RpcException(e.getMessage(), e.getCause());
-        }
+        pathChildrenCache.start();
     }
 
 }

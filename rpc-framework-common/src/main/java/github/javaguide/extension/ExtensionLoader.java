@@ -1,6 +1,5 @@
 package github.javaguide.extension;
 
-import github.javaguide.utils.Holder;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -88,7 +87,6 @@ public final class ExtensionLoader<T> {
                 instance = (T) EXTENSION_INSTANCES.get(clazz);
             } catch (Exception e) {
                 log.error(e.getMessage());
-                throw new RuntimeException("Fail to create an instance of the extension class " + clazz);
             }
         }
         return instance;

@@ -1,4 +1,4 @@
-package github.javaguide.utils.file;
+package github.javaguide.utils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,8 +14,8 @@ import java.util.Properties;
  * @createTime 2020年07月21日 14:25:00
  **/
 @Slf4j
-public final class PropertiesFileUtils {
-    private PropertiesFileUtils() {
+public final class PropertiesFileUtil {
+    private PropertiesFileUtil() {
     }
 
     public static Properties readPropertiesFile(String fileName) {
