@@ -23,6 +23,8 @@
         <junit.platform.version>1.5.2</junit.platform.version>
         <!--logging-->
         <slf4j.version>1.7.25</slf4j.version>
+        <!-- protostuff -->
+        <protostuff.version>1.7.2</protostuff.version>
     </properties>
     <modules>
         <module>rpc-framework-simple</module>
