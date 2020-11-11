@@ -1,6 +1,5 @@
 package github.javaguide.serialize.protostuff;
 
-import github.javaguide.remoting.dto.RpcMessage;
 import github.javaguide.serialize.Serializer;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
@@ -16,18 +15,17 @@ public class ProtostuffSerializer implements Serializer {
     /**
      * Avoid re applying buffer space every time serialization
      */
-    private static LinkedBuffer buffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE);
+    private static final LinkedBuffer BUFFER = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE);
 
-    @SuppressWarnings("unchecked")
     @Override
     public byte[] serialize(Object obj) {
         Class<?> clazz = obj.getClass();
         Schema schema = RuntimeSchema.getSchema(clazz);
         byte[] bytes;
         try {
-            bytes = ProtostuffIOUtil.toByteArray(obj, schema, buffer);
+            bytes = ProtostuffIOUtil.toByteArray(obj, schema, BUFFER);
         } finally {
-            buffer.clear();
+            BUFFER.clear();
         }
         return bytes;
     }

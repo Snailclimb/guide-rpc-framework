@@ -128,6 +128,7 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
                 bs = compress.decompress(bs);
                 // deserialize the object
                 String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());
+                log.info("codec name: [{}] ", codecName);
                 Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class)
                         .getExtension(codecName);
                 if (messageType == RpcConstants.REQUEST_TYPE) {

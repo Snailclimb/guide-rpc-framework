@@ -50,7 +50,7 @@ public class NettyClientTransport implements ClientTransport {
             unprocessedRequests.put(rpcRequest.getRequestId(), resultFuture);
             RpcMessage rpcMessage = new RpcMessage();
             rpcMessage.setData(rpcRequest);
-            rpcMessage.setCodec(SerializationTypeEnum.KYRO.getCode());
+            rpcMessage.setCodec(SerializationTypeEnum.PROTOSTUFF.getCode());
             rpcMessage.setCompress(CompressTypeEnum.GZIP.getCode());
             rpcMessage.setMessageType(RpcConstants.REQUEST_TYPE);
             channel.writeAndFlush(rpcMessage).addListener((ChannelFutureListener) future -> {
