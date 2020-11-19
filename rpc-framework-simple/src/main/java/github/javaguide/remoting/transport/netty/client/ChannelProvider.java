@@ -1,6 +1,5 @@
 package github.javaguide.remoting.transport.netty.client;
 
-import github.javaguide.factory.SingletonFactory;
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,11 +17,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ChannelProvider {
 
     private final Map<String, Channel> channelMap;
-    private final NettyClient nettyClient;
 
     public ChannelProvider() {
         channelMap = new ConcurrentHashMap<>();
-        nettyClient = SingletonFactory.getInstance(NettyClient.class);
     }
 
     public Channel get(InetSocketAddress inetSocketAddress) {
@@ -37,10 +34,12 @@ public class ChannelProvider {
                 channelMap.remove(key);
             }
         }
-        // otherwise, reconnect to get the Channel
-        Channel channel = nettyClient.doConnect(inetSocketAddress);
+        return null;
+    }
+
+    public void set(InetSocketAddress inetSocketAddress, Channel channel) {
+        String key = inetSocketAddress.toString();
         channelMap.put(key, channel);
-        return channel;
     }
 
     public void remove(InetSocketAddress inetSocketAddress) {

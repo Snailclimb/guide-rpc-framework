@@ -33,7 +33,7 @@ public final class CuratorUtils {
     private static final Map<String, List<String>> SERVICE_ADDRESS_MAP = new ConcurrentHashMap<>();
     private static final Set<String> REGISTERED_PATH_SET = ConcurrentHashMap.newKeySet();
     private static CuratorFramework zkClient;
-    private static String defaultZookeeperAddress = "127.0.0.1:2181";
+    private static final String DEFAULT_ZOOKEEPER_ADDRESS = "127.0.0.1:2181";
 
     private CuratorUtils() {
     }
@@ -97,9 +97,7 @@ public final class CuratorUtils {
     public static CuratorFramework getZkClient() {
         // check if user has set zk address
         Properties properties = PropertiesFileUtil.readPropertiesFile(RpcConfigEnum.RPC_CONFIG_PATH.getPropertyValue());
-        if (properties != null) {
-            defaultZookeeperAddress = properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyValue());
-        }
+        String zookeeperAddress = properties != null && properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyValue()) != null ? properties.getProperty(RpcConfigEnum.ZK_ADDRESS.getPropertyValue()) : DEFAULT_ZOOKEEPER_ADDRESS;
         // if zkClient has been started, return directly
         if (zkClient != null && zkClient.getState() == CuratorFrameworkState.STARTED) {
             return zkClient;
@@ -108,7 +106,7 @@ public final class CuratorUtils {
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(BASE_SLEEP_TIME, MAX_RETRIES);
         zkClient = CuratorFrameworkFactory.builder()
                 // the server to connect to (can be a server list)
-                .connectString(defaultZookeeperAddress)
+                .connectString(zookeeperAddress)
                 .retryPolicy(retryPolicy)
                 .build();
         zkClient.start();

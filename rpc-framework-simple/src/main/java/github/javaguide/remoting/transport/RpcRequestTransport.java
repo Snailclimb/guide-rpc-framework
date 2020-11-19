@@ -10,7 +10,7 @@ import github.javaguide.remoting.dto.RpcRequest;
  * @createTime 2020年05月29日 13:26:00
  */
 @SPI
-public interface ClientTransport {
+public interface RpcRequestTransport {
     /**
      * send rpc request to server and get result
      *

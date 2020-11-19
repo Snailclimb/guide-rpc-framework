@@ -6,8 +6,8 @@ import github.javaguide.enums.RpcResponseCodeEnum;
 import github.javaguide.exception.RpcException;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
-import github.javaguide.remoting.transport.ClientTransport;
-import github.javaguide.remoting.transport.netty.client.NettyClientTransport;
+import github.javaguide.remoting.transport.RpcRequestTransport;
+import github.javaguide.remoting.transport.netty.client.NettyRpcClient;
 import github.javaguide.remoting.transport.socket.SocketRpcClient;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -34,11 +34,11 @@ public class RpcClientProxy implements InvocationHandler {
     /**
      * Used to send requests to the server.And there are two implementations: socket and netty
      */
-    private final ClientTransport clientTransport;
+    private final RpcRequestTransport rpcRequestTransport;
     private final RpcServiceProperties rpcServiceProperties;
 
-    public RpcClientProxy(ClientTransport clientTransport, RpcServiceProperties rpcServiceProperties) {
-        this.clientTransport = clientTransport;
+    public RpcClientProxy(RpcRequestTransport rpcRequestTransport, RpcServiceProperties rpcServiceProperties) {
+        this.rpcRequestTransport = rpcRequestTransport;
         if (rpcServiceProperties.getGroup() == null) {
             rpcServiceProperties.setGroup("");
         }
@@ -49,8 +49,8 @@ public class RpcClientProxy implements InvocationHandler {
     }
 
 
-    public RpcClientProxy(ClientTransport clientTransport) {
-        this.clientTransport = clientTransport;
+    public RpcClientProxy(RpcRequestTransport rpcRequestTransport) {
+        this.rpcRequestTransport = rpcRequestTransport;
         this.rpcServiceProperties = RpcServiceProperties.builder().group("").version("").build();
     }
 
@@ -80,12 +80,12 @@ public class RpcClientProxy implements InvocationHandler {
                 .version(rpcServiceProperties.getVersion())
                 .build();
         RpcResponse<Object> rpcResponse = null;
-        if (clientTransport instanceof NettyClientTransport) {
-            CompletableFuture<RpcResponse<Object>> completableFuture = (CompletableFuture<RpcResponse<Object>>) clientTransport.sendRpcRequest(rpcRequest);
+        if (rpcRequestTransport instanceof NettyRpcClient) {
+            CompletableFuture<RpcResponse<Object>> completableFuture = (CompletableFuture<RpcResponse<Object>>) rpcRequestTransport.sendRpcRequest(rpcRequest);
             rpcResponse = completableFuture.get();
         }
-        if (clientTransport instanceof SocketRpcClient) {
-            rpcResponse = (RpcResponse<Object>) clientTransport.sendRpcRequest(rpcRequest);
+        if (rpcRequestTransport instanceof SocketRpcClient) {
+            rpcResponse = (RpcResponse<Object>) rpcRequestTransport.sendRpcRequest(rpcRequest);
         }
         this.check(rpcResponse, rpcRequest);
         return rpcResponse.getData();

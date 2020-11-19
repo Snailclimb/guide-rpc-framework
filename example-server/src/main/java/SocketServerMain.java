@@ -7,7 +7,7 @@ import github.javaguide.serviceimpl.HelloServiceImpl;
  * @author shuang.kou
  * @createTime 2020年05月10日 07:25:00
  */
-public class RpcFrameworkSimpleServerMain {
+public class SocketServerMain {
     public static void main(String[] args) {
         HelloService helloService = new HelloServiceImpl();
         SocketRpcServer socketRpcServer = new SocketRpcServer();

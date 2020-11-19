@@ -28,11 +28,11 @@ import lombok.extern.slf4j.Slf4j;
  * @createTime 2020年05月25日 20:44:00
  */
 @Slf4j
-public class NettyServerHandler extends ChannelInboundHandlerAdapter {
+public class NettyRpcServerHandler extends ChannelInboundHandlerAdapter {
 
     private final RpcRequestHandler rpcRequestHandler;
 
-    public NettyServerHandler() {
+    public NettyRpcServerHandler() {
         this.rpcRequestHandler = SingletonFactory.getInstance(RpcRequestHandler.class);
     }
 

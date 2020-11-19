@@ -5,7 +5,7 @@ import github.javaguide.enums.RpcErrorMessageEnum;
 import github.javaguide.exception.RpcException;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.registry.ServiceRegistry;
-import github.javaguide.remoting.transport.netty.server.NettyServer;
+import github.javaguide.remoting.transport.netty.server.NettyRpcServer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
@@ -70,7 +70,7 @@ public class ServiceProviderImpl implements ServiceProvider {
             String serviceName = serviceRelatedInterface.getCanonicalName();
             rpcServiceProperties.setServiceName(serviceName);
             this.addService(service, serviceRelatedInterface, rpcServiceProperties);
-            serviceRegistry.registerService(rpcServiceProperties.toRpcServiceName(), new InetSocketAddress(host, NettyServer.PORT));
+            serviceRegistry.registerService(rpcServiceProperties.toRpcServiceName(), new InetSocketAddress(host, NettyRpcServer.PORT));
         } catch (UnknownHostException e) {
             log.error("occur exception when getHostAddress", e);
         }

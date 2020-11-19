@@ -33,7 +33,7 @@
 现在，在你只需要通过下面的方式就能成功接收到客户端返回的结果：
 
 ```java
-CompletableFuture<RpcResponse> completableFuture = (CompletableFuture<RpcResponse>) clientTransport.sendRpcRequest(rpcRequest);
+CompletableFuture<RpcResponse> completableFuture = (CompletableFuture<RpcResponse>) rpcRequestTransport.sendRpcRequest(rpcRequest);
 rpcResponse = completableFuture.get();
 ```
 

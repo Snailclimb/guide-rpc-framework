@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-public class NettyServer {
+public class NettyRpcServer {
 
     public static final int PORT = 9998;
 
@@ -78,7 +78,7 @@ public class NettyServer {
                             p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));
                             p.addLast(new RpcMessageEncoder());
                             p.addLast(new RpcMessageDecoder());
-                            p.addLast(serviceHandlerGroup, new NettyServerHandler());
+                            p.addLast(serviceHandlerGroup, new NettyRpcServerHandler());
                         }
                     });
 

@@ -15,7 +15,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 
-import static github.javaguide.remoting.transport.netty.server.NettyServer.PORT;
+import static github.javaguide.remoting.transport.netty.server.NettyRpcServer.PORT;
 
 /**
  * @author shuang.kou
@@ -33,7 +33,6 @@ public class SocketRpcServer {
         SingletonFactory.getInstance(ServiceProviderImpl.class);
         serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
     }
-
 
     public void registerService(Object service) {
         serviceProvider.publishService(service);

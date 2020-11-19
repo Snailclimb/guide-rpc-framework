@@ -5,7 +5,7 @@ import github.javaguide.exception.RpcException;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.registry.ServiceDiscovery;
 import github.javaguide.remoting.dto.RpcRequest;
-import github.javaguide.remoting.transport.ClientTransport;
+import github.javaguide.remoting.transport.RpcRequestTransport;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +23,7 @@ import java.net.Socket;
  */
 @AllArgsConstructor
 @Slf4j
-public class SocketRpcClient implements ClientTransport {
+public class SocketRpcClient implements RpcRequestTransport {
     private final ServiceDiscovery serviceDiscovery;
 
     public SocketRpcClient() {

@@ -8,7 +8,7 @@ import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.ServiceProviderImpl;
 import github.javaguide.proxy.RpcClientProxy;
-import github.javaguide.remoting.transport.ClientTransport;
+import github.javaguide.remoting.transport.RpcRequestTransport;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -28,11 +28,11 @@ import java.lang.reflect.Field;
 public class SpringBeanPostProcessor implements BeanPostProcessor {
 
     private final ServiceProvider serviceProvider;
-    private final ClientTransport rpcClient;
+    private final RpcRequestTransport rpcClient;
 
     public SpringBeanPostProcessor() {
         this.serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
-        this.rpcClient = ExtensionLoader.getExtensionLoader(ClientTransport.class).getExtension("nettyClientTransport");
+        this.rpcClient = ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension("netty");
     }
 
     @SneakyThrows
