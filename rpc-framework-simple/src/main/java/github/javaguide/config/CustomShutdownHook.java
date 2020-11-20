@@ -1,8 +1,13 @@
 package github.javaguide.config;
 
 import github.javaguide.registry.zk.util.CuratorUtils;
+import github.javaguide.remoting.transport.netty.server.NettyRpcServer;
 import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtils;
 import lombok.extern.slf4j.Slf4j;
+
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
 
 /**
  * When the server  is closed, do something such as unregister all services
@@ -21,7 +26,11 @@ public class CustomShutdownHook {
     public void clearAll() {
         log.info("addShutdownHook for clearAll");
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            CuratorUtils.clearRegistry(CuratorUtils.getZkClient());
+            try {
+                InetSocketAddress inetSocketAddress = new InetSocketAddress(InetAddress.getLocalHost().getHostAddress(), NettyRpcServer.PORT);
+                CuratorUtils.clearRegistry(CuratorUtils.getZkClient(), inetSocketAddress);
+            } catch (UnknownHostException ignored) {
+            }
             ThreadPoolFactoryUtils.shutDownAllThreadPool();
         }));
     }

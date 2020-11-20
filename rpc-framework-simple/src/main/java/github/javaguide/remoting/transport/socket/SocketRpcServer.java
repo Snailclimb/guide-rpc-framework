@@ -30,7 +30,6 @@ public class SocketRpcServer {
 
     public SocketRpcServer() {
         threadPool = ThreadPoolFactoryUtils.createCustomThreadPoolIfAbsent("socket-server-rpc-pool");
-        SingletonFactory.getInstance(ServiceProviderImpl.class);
         serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
     }
 
