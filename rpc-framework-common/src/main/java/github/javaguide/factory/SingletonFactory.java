@@ -11,14 +11,14 @@ import java.util.Map;
  * @createTime 2020年06月03日 15:04:00
  */
 public final class SingletonFactory {
-    private static final Map<String, Object> OBJECT_MAP = new HashMap<>();
+    private static volatile Map<String, Object> OBJECT_MAP = new HashMap<>();
 
     private SingletonFactory() {
     }
 
     public static <T> T getInstance(Class<T> c) {
         String key = c.toString();
-        Object instance = null;
+        Object instance = OBJECT_MAP.get(key);
         if (instance == null) {
             synchronized (SingletonFactory.class) {
                 instance = OBJECT_MAP.get(key);
