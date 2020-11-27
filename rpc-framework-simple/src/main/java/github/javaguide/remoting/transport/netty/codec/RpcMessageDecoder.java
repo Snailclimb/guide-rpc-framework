@@ -88,20 +88,8 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
 
     private Object decodeFrame(ByteBuf in) {
         // note: must read ByteBuf in order
-        // read the first 4 bit, which is the magic number, and compare
-        int len = RpcConstants.MAGIC_NUMBER.length;
-        byte[] tmp = new byte[len];
-        in.readBytes(tmp);
-        for (int i = 0; i < len; i++) {
-            if (tmp[i] != RpcConstants.MAGIC_NUMBER[i]) {
-                throw new IllegalArgumentException("Unknown magic code: " + Arrays.toString(tmp));
-            }
-        }
-        // read the version and compare
-        byte version = in.readByte();
-        if (version != RpcConstants.VERSION) {
-            throw new RuntimeException("version isn't compatible" + version);
-        }
+        checkMagicNumber(in);
+        checkVersion(in);
         int fullLength = in.readInt();
         // build RpcMessage object
         byte messageType = in.readByte();
@@ -114,34 +102,56 @@ public class RpcMessageDecoder extends LengthFieldBasedFrameDecoder {
                 .messageType(messageType).build();
         if (messageType == RpcConstants.HEARTBEAT_REQUEST_TYPE) {
             rpcMessage.setData(RpcConstants.PING);
-        } else if (messageType == RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
+            return rpcMessage;
+        }
+        if (messageType == RpcConstants.HEARTBEAT_RESPONSE_TYPE) {
             rpcMessage.setData(RpcConstants.PONG);
-        } else {
-            int bodyLength = fullLength - RpcConstants.HEAD_LENGTH;
-            if (bodyLength > 0) {
-                byte[] bs = new byte[bodyLength];
-                in.readBytes(bs);
-                // decompress the bytes
-                String compressName = CompressTypeEnum.getName(compressType);
-                Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)
-                        .getExtension(compressName);
-                bs = compress.decompress(bs);
-                // deserialize the object
-                String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());
-                log.info("codec name: [{}] ", codecName);
-                Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class)
-                        .getExtension(codecName);
-                if (messageType == RpcConstants.REQUEST_TYPE) {
-                    RpcRequest tmpValue = serializer.deserialize(bs, RpcRequest.class);
-                    rpcMessage.setData(tmpValue);
-                } else {
-                    RpcResponse tmpValue = serializer.deserialize(bs, RpcResponse.class);
-                    rpcMessage.setData(tmpValue);
-                }
+            return rpcMessage;
+        }
+        int bodyLength = fullLength - RpcConstants.HEAD_LENGTH;
+        if (bodyLength > 0) {
+            byte[] bs = new byte[bodyLength];
+            in.readBytes(bs);
+            // decompress the bytes
+            String compressName = CompressTypeEnum.getName(compressType);
+            Compress compress = ExtensionLoader.getExtensionLoader(Compress.class)
+                    .getExtension(compressName);
+            bs = compress.decompress(bs);
+            // deserialize the object
+            String codecName = SerializationTypeEnum.getName(rpcMessage.getCodec());
+            log.info("codec name: [{}] ", codecName);
+            Serializer serializer = ExtensionLoader.getExtensionLoader(Serializer.class)
+                    .getExtension(codecName);
+            if (messageType == RpcConstants.REQUEST_TYPE) {
+                RpcRequest tmpValue = serializer.deserialize(bs, RpcRequest.class);
+                rpcMessage.setData(tmpValue);
+            } else {
+                RpcResponse tmpValue = serializer.deserialize(bs, RpcResponse.class);
+                rpcMessage.setData(tmpValue);
             }
         }
         return rpcMessage;
 
+    }
+
+    private void checkVersion(ByteBuf in) {
+        // read the version and compare
+        byte version = in.readByte();
+        if (version != RpcConstants.VERSION) {
+            throw new RuntimeException("version isn't compatible" + version);
+        }
+    }
+
+    private void checkMagicNumber(ByteBuf in) {
+        // read the first 4 bit, which is the magic number, and compare
+        int len = RpcConstants.MAGIC_NUMBER.length;
+        byte[] tmp = new byte[len];
+        in.readBytes(tmp);
+        for (int i = 0; i < len; i++) {
+            if (tmp[i] != RpcConstants.MAGIC_NUMBER[i]) {
+                throw new IllegalArgumentException("Unknown magic code: " + Arrays.toString(tmp));
+            }
+        }
     }
 
 }
