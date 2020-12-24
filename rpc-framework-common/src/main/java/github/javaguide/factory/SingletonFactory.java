@@ -11,21 +11,21 @@ import java.util.Map;
  * @createTime 2020年06月03日 15:04:00
  */
 public final class SingletonFactory {
-    private static volatile Map<String, Object> OBJECT_MAP = new HashMap<>();
+    private static volatile Map<String, Object> objectMap = new HashMap<>();
 
     private SingletonFactory() {
     }
 
     public static <T> T getInstance(Class<T> c) {
         String key = c.toString();
-        Object instance = OBJECT_MAP.get(key);
+        Object instance = objectMap.get(key);
         if (instance == null) {
             synchronized (SingletonFactory.class) {
-                instance = OBJECT_MAP.get(key);
+                instance = objectMap.get(key);
                 if (instance == null) {
                     try {
                         instance = c.getDeclaredConstructor().newInstance();
-                        OBJECT_MAP.put(key, instance);
+                        objectMap.put(key, instance);
                     } catch (IllegalAccessException | InstantiationException e) {
                         throw new RuntimeException(e.getMessage(), e);
                     } catch (NoSuchMethodException | InvocationTargetException e) {

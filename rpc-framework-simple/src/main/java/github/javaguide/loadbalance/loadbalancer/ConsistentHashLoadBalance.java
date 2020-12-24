@@ -12,7 +12,8 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * refer to dubbo consistent hash load balance: http://dubbo.apache.org/zh-cn/blog/dubbo-consistent-hash-implementation.html
+ * refer to dubbo consistent hash load balance: https://github.com/apache/dubbo/blob/2d9583adf26a2d8bd6fb646243a9fe80a77e65d5/dubbo-cluster/src/main/java/org/apache/dubbo/rpc/cluster/loadbalance/ConsistentHashLoadBalance.java
+ *
  * @author RicardoZ
  * @createTime 2020年10月20日 18:15:20
  */
@@ -56,15 +57,13 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
         }
 
         static byte[] md5(String key) {
-            MessageDigest md = null;
-
+            MessageDigest md;
             try {
-                md = MessageDigest.getInstance("md5");
+                md = MessageDigest.getInstance("MD5");
                 byte[] bytes = key.getBytes(StandardCharsets.UTF_8);
                 md.update(bytes);
             } catch (NoSuchAlgorithmException e) {
-                log.error("An encryption algorithm that does not exist is used: ", e);
-                e.printStackTrace();
+                throw new IllegalStateException(e.getMessage(), e);
             }
 
             return md.digest();
@@ -75,7 +74,7 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
         }
 
         public String select(String rpcServiceName) {
-            byte[] digest  = md5(rpcServiceName);
+            byte[] digest = md5(rpcServiceName);
             return selectForKey(hash(digest, 0));
         }
 
