@@ -2,7 +2,6 @@ package github.javaguide.registry.zk.util;
 
 import github.javaguide.enums.RpcConfigEnum;
 import github.javaguide.utils.PropertiesFileUtil;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
@@ -13,7 +12,6 @@ import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +116,7 @@ public final class CuratorUtils {
         zkClient.start();
         try {
             // wait 30s until connect to the zookeeper
-            if (! zkClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
+            if (!zkClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
                 throw new RuntimeException("Time out waiting to connect to ZK!");
             }
         } catch (InterruptedException e) {
