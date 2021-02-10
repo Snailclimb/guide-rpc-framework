@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Curator(zookeeper client) utils
@@ -115,6 +116,14 @@ public final class CuratorUtils {
                 .retryPolicy(retryPolicy)
                 .build();
         zkClient.start();
+        try {
+            // wait 30s until connect to the zookeeper
+            if (! zkClient.blockUntilConnected(30, TimeUnit.SECONDS)) {
+                throw new RuntimeException("Time out waiting to connect to ZK!");
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return zkClient;
     }
 
