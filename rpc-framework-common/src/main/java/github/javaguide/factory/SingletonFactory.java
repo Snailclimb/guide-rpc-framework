@@ -13,8 +13,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class SingletonFactory {
     private static final Map<String, Object> OBJECT_MAP = new ConcurrentHashMap<>();
-    private static final Map<Class<?>, Object> LOCK_MAP = new ConcurrentHashMap<>();
-
     private SingletonFactory() {
     }
 
@@ -26,7 +24,7 @@ public final class SingletonFactory {
         Object instance = OBJECT_MAP.get(key);
         
         if (instance == null) {
-            synchronized (LOCK_MAP.computeIfAbsent(c, k -> new Object())) {
+            synchronized (c) {
                 instance = OBJECT_MAP.get(key);
                 if (instance == null) {
                     try {
