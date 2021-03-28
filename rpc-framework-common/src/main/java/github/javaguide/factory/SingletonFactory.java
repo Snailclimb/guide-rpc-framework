@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class SingletonFactory {
     private static final Map<String, Object> OBJECT_MAP = new ConcurrentHashMap<>();
+
     private SingletonFactory() {
     }
 
@@ -21,24 +22,16 @@ public final class SingletonFactory {
             throw new IllegalArgumentException();
         }
         String key = c.toString();
-        Object instance = OBJECT_MAP.get(key);
-        
-        if (instance == null) {
-            synchronized (c) {
-                instance = OBJECT_MAP.get(key);
-                if (instance == null) {
-                    try {
-                        instance = c.getDeclaredConstructor().newInstance();
-                        OBJECT_MAP.put(key, instance);
-                    } catch (IllegalAccessException
-                            | InstantiationException
-                            | NoSuchMethodException
-                            | InvocationTargetException e) {
-                        throw new RuntimeException(e.getMessage(), e);
-                    }
+        if (OBJECT_MAP.containsKey(key)) {
+            return c.cast(OBJECT_MAP.get(key));
+        } else {
+            return c.cast(OBJECT_MAP.computeIfAbsent(key, k -> {
+                try {
+                    return c.getDeclaredConstructor().newInstance();
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                    throw new RuntimeException(e.getMessage(), e);
                 }
-            }
+            }));
         }
-        return c.cast(instance);
     }
 }
