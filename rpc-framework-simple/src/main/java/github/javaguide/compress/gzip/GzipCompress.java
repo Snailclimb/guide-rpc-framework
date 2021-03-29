@@ -13,7 +13,7 @@ import java.util.zip.GZIPOutputStream;
  * @createTime on 2020/10/3
  */
 
-public class GzipCompress  implements Compress {
+public class GzipCompress implements Compress {
 
 
     private static final int BUFFER_SIZE = 1024 * 4;
@@ -23,8 +23,8 @@ public class GzipCompress  implements Compress {
         if (bytes == null) {
             throw new NullPointerException("bytes is null");
         }
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try (GZIPOutputStream gzip = new GZIPOutputStream(out)) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream();
+                GZIPOutputStream gzip = new GZIPOutputStream(out)) {
             gzip.write(bytes);
             gzip.flush();
             gzip.finish();
@@ -39,9 +39,8 @@ public class GzipCompress  implements Compress {
         if (bytes == null) {
             throw new NullPointerException("bytes is null");
         }
-
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try (GZIPInputStream gunzip = new GZIPInputStream(new ByteArrayInputStream(bytes))) {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream();
+                GZIPInputStream gunzip = new GZIPInputStream(new ByteArrayInputStream(bytes))) {
             byte[] buffer = new byte[BUFFER_SIZE];
             int n;
             while ((n = gunzip.read(buffer)) > -1) {
