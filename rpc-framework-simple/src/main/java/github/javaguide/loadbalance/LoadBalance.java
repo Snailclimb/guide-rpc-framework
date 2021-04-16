@@ -1,6 +1,7 @@
 package github.javaguide.loadbalance;
 
 import github.javaguide.extension.SPI;
+import github.javaguide.remoting.dto.RpcRequest;
 
 import java.util.List;
 
@@ -18,5 +19,5 @@ public interface LoadBalance {
      * @param serviceAddresses Service address list
      * @return target service address
      */
-    String selectServiceAddress(List<String> serviceAddresses, String rpcServiceName);
+    String selectServiceAddress(List<String> serviceAddresses, RpcRequest rpcRequest);
 }

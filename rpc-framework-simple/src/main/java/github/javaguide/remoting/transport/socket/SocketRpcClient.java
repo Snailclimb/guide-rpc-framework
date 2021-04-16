@@ -35,7 +35,7 @@ public class SocketRpcClient implements RpcRequestTransport {
         // build rpc service name by rpcRequest
         String rpcServiceName = RpcServiceProperties.builder().serviceName(rpcRequest.getInterfaceName())
                 .group(rpcRequest.getGroup()).version(rpcRequest.getVersion()).build().toRpcServiceName();
-        InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcServiceName);
+        InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest);
         try (Socket socket = new Socket()) {
             socket.connect(inetSocketAddress);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
