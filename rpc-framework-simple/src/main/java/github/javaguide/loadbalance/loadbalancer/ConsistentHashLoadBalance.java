@@ -1,11 +1,13 @@
 package github.javaguide.loadbalance.loadbalancer;
 
 import github.javaguide.loadbalance.AbstractLoadBalance;
+import github.javaguide.remoting.dto.RpcRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -22,8 +24,10 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
     private final ConcurrentHashMap<String, ConsistentHashSelector> selectors = new ConcurrentHashMap<>();
 
     @Override
-    protected String doSelect(List<String> serviceAddresses, String rpcServiceName) {
+    protected String doSelect(List<String> serviceAddresses, RpcRequest rpcRequest) {
         int identityHashCode = System.identityHashCode(serviceAddresses);
+        // build rpc service name by rpcRequest
+        String rpcServiceName = rpcRequest.toRpcProperties().toRpcServiceName();
 
         ConsistentHashSelector selector = selectors.get(rpcServiceName);
 
@@ -33,7 +37,7 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
             selector = selectors.get(rpcServiceName);
         }
 
-        return selector.select(rpcServiceName);
+        return selector.select(rpcServiceName+ Arrays.stream(rpcRequest.getParameters()));
     }
 
     static class ConsistentHashSelector {
@@ -73,8 +77,8 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
             return ((long) (digest[3 + idx * 4] & 255) << 24 | (long) (digest[2 + idx * 4] & 255) << 16 | (long) (digest[1 + idx * 4] & 255) << 8 | (long) (digest[idx * 4] & 255)) & 4294967295L;
         }
 
-        public String select(String rpcServiceName) {
-            byte[] digest = md5(rpcServiceName);
+        public String select(String rpcServiceKey) {
+            byte[] digest = md5(rpcServiceKey);
             return selectForKey(hash(digest, 0));
         }
 

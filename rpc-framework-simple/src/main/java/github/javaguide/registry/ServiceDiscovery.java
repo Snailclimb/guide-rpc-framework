@@ -1,6 +1,7 @@
 package github.javaguide.registry;
 
 import github.javaguide.extension.SPI;
+import github.javaguide.remoting.dto.RpcRequest;
 
 import java.net.InetSocketAddress;
 
@@ -15,8 +16,8 @@ public interface ServiceDiscovery {
     /**
      * lookup service by rpcServiceName
      *
-     * @param rpcServiceName rpc service name
+     * @param rpcRequest rpc service pojo
      * @return service address
      */
-    InetSocketAddress lookupService(String rpcServiceName);
+    InetSocketAddress lookupService(RpcRequest rpcRequest);
 }
