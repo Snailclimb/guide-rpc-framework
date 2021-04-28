@@ -1,6 +1,6 @@
 package github.javaguide.provider;
 
-import github.javaguide.entity.RpcServiceProperties;
+import github.javaguide.config.RpcServiceConfig;
 
 /**
  * store and provide service object.
@@ -11,26 +11,19 @@ import github.javaguide.entity.RpcServiceProperties;
 public interface ServiceProvider {
 
     /**
-     * @param service              service object
-     * @param serviceClass         the interface class implemented by the service instance object
-     * @param rpcServiceProperties service related attributes
+     * @param rpcServiceConfig rpc service related attributes
      */
-    void addService(Object service, Class<?> serviceClass, RpcServiceProperties rpcServiceProperties);
+    void addService(RpcServiceConfig rpcServiceConfig);
 
     /**
-     * @param rpcServiceProperties service related attributes
+     * @param rpcServiceName rpc service name
      * @return service object
      */
-    Object getService(RpcServiceProperties rpcServiceProperties);
+    Object getService(String rpcServiceName);
 
     /**
-     * @param service              service object
-     * @param rpcServiceProperties service related attributes
+     * @param rpcServiceConfig rpc service related attributes
      */
-    void publishService(Object service, RpcServiceProperties rpcServiceProperties);
+    void publishService(RpcServiceConfig rpcServiceConfig);
 
-    /**
-     * @param service service object
-     */
-    void publishService(Object service);
 }

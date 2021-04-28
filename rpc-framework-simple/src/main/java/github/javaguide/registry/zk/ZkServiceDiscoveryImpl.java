@@ -20,16 +20,16 @@ import java.util.List;
  * @createTime 2020年06月01日 15:16:00
  */
 @Slf4j
-public class ZkServiceDiscovery implements ServiceDiscovery {
+public class ZkServiceDiscoveryImpl implements ServiceDiscovery {
     private final LoadBalance loadBalance;
 
-    public ZkServiceDiscovery() {
+    public ZkServiceDiscoveryImpl() {
         this.loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension("loadBalance");
     }
 
     @Override
     public InetSocketAddress lookupService(RpcRequest rpcRequest) {
-        String rpcServiceName = rpcRequest.toRpcProperties().toRpcServiceName();
+        String rpcServiceName = rpcRequest.getRpcServiceName();
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);
         if (serviceUrlList == null || serviceUrlList.size() == 0) {

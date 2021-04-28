@@ -1,4 +1,4 @@
-package github.javaguide.entity;
+package github.javaguide.config;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,18 +17,26 @@ import lombok.ToString;
 @Setter
 @Builder
 @ToString
-public class RpcServiceProperties {
+public class RpcServiceConfig {
     /**
      * service version
      */
-    private String version;
+    private String version = "";
     /**
      * when the interface has multiple implementation classes, distinguish by group
      */
-    private String group;
-    private String serviceName;
+    private String group = "";
 
-    public String toRpcServiceName() {
+    /**
+     * target service
+     */
+    private Object service;
+
+    public String getRpcServiceName() {
         return this.getServiceName() + this.getGroup() + this.getVersion();
+    }
+
+    public String getServiceName() {
+        return this.service.getClass().getInterfaces()[0].getCanonicalName();
     }
 }

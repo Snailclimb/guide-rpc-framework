@@ -1,6 +1,5 @@
 package github.javaguide.remoting.transport.socket;
 
-import github.javaguide.entity.RpcServiceProperties;
 import github.javaguide.exception.RpcException;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.registry.ServiceDiscovery;
@@ -32,9 +31,6 @@ public class SocketRpcClient implements RpcRequestTransport {
 
     @Override
     public Object sendRpcRequest(RpcRequest rpcRequest) {
-        // build rpc service name by rpcRequest
-        String rpcServiceName = RpcServiceProperties.builder().serviceName(rpcRequest.getInterfaceName())
-                .group(rpcRequest.getGroup()).version(rpcRequest.getVersion()).build().toRpcServiceName();
         InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest);
         try (Socket socket = new Socket()) {
             socket.connect(inetSocketAddress);

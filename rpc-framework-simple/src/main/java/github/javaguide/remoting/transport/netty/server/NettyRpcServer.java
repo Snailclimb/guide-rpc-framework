@@ -1,10 +1,10 @@
 package github.javaguide.remoting.transport.netty.server;
 
 import github.javaguide.config.CustomShutdownHook;
-import github.javaguide.entity.RpcServiceProperties;
+import github.javaguide.config.RpcServiceConfig;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
-import github.javaguide.provider.ServiceProviderImpl;
+import github.javaguide.provider.impl.ZkServiceProviderImpl;
 import github.javaguide.remoting.transport.netty.codec.RpcMessageDecoder;
 import github.javaguide.remoting.transport.netty.codec.RpcMessageEncoder;
 import github.javaguide.utils.RuntimeUtil;
@@ -42,10 +42,10 @@ public class NettyRpcServer {
 
     public static final int PORT = 9998;
 
-    private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
+    private final ServiceProvider serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
 
-    public void registerService(Object service, RpcServiceProperties rpcServiceProperties) {
-        serviceProvider.publishService(service, rpcServiceProperties);
+    public void registerService(RpcServiceConfig rpcServiceConfig) {
+        serviceProvider.publishService(rpcServiceConfig);
     }
 
     @SneakyThrows

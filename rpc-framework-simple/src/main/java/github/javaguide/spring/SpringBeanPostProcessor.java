@@ -2,11 +2,11 @@ package github.javaguide.spring;
 
 import github.javaguide.annotation.RpcReference;
 import github.javaguide.annotation.RpcService;
-import github.javaguide.entity.RpcServiceProperties;
+import github.javaguide.config.RpcServiceConfig;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
-import github.javaguide.provider.ServiceProviderImpl;
+import github.javaguide.provider.impl.ZkServiceProviderImpl;
 import github.javaguide.proxy.RpcClientProxy;
 import github.javaguide.remoting.transport.RpcRequestTransport;
 import lombok.SneakyThrows;
@@ -31,7 +31,7 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
     private final RpcRequestTransport rpcClient;
 
     public SpringBeanPostProcessor() {
-        this.serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
+        this.serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
         this.rpcClient = ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension("netty");
     }
 
@@ -43,9 +43,11 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
             // get RpcService annotation
             RpcService rpcService = bean.getClass().getAnnotation(RpcService.class);
             // build RpcServiceProperties
-            RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
-                    .group(rpcService.group()).version(rpcService.version()).build();
-            serviceProvider.publishService(bean, rpcServiceProperties);
+            RpcServiceConfig rpcServiceConfig = RpcServiceConfig.builder()
+                    .group(rpcService.group())
+                    .version(rpcService.version())
+                    .service(bean).build();
+            serviceProvider.publishService(rpcServiceConfig);
         }
         return bean;
     }
@@ -57,9 +59,10 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
         for (Field declaredField : declaredFields) {
             RpcReference rpcReference = declaredField.getAnnotation(RpcReference.class);
             if (rpcReference != null) {
-                RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
-                        .group(rpcReference.group()).version(rpcReference.version()).build();
-                RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient, rpcServiceProperties);
+                RpcServiceConfig rpcServiceConfig = RpcServiceConfig.builder()
+                        .group(rpcReference.group())
+                        .version(rpcReference.version()).build();
+                RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcClient, rpcServiceConfig);
                 Object clientProxy = rpcClientProxy.getProxy(declaredField.getType());
                 declaredField.setAccessible(true);
                 try {

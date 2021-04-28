@@ -111,10 +111,10 @@ public @interface RpcService {
 
 ```java
 import github.javaguide.annotation.RpcService;
-import github.javaguide.entity.RpcServiceProperties;
+import github.javaguide.config.RpcServiceConfig;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
-import github.javaguide.provider.ServiceProviderImpl;
+import github.javaguide.provider.impl.ZkServiceProviderImpl;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -145,10 +145,10 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
             log.info("[{}] is annotated with  [{}]", bean.getClass().getName(), RpcService.class.getCanonicalName());
             // 获取注解
             RpcService rpcService = bean.getClass().getAnnotation(RpcService.class);
-            RpcServiceProperties rpcServiceProperties = RpcServiceProperties.builder()
+            RpcServiceProperties rpcServiceConfig = RpcServiceProperties.builder()
                     .group(rpcService.group()).version(rpcService.version()).build();
             // 发布服务
-            serviceProvider.publishService(bean, rpcServiceProperties);
+            serviceProvider.publishService(bean, rpcServiceConfig);
         }
         return bean;
     }

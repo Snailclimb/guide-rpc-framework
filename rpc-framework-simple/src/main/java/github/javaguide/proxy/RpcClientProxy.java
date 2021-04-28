@@ -1,6 +1,6 @@
 package github.javaguide.proxy;
 
-import github.javaguide.entity.RpcServiceProperties;
+import github.javaguide.config.RpcServiceConfig;
 import github.javaguide.enums.RpcErrorMessageEnum;
 import github.javaguide.enums.RpcResponseCodeEnum;
 import github.javaguide.exception.RpcException;
@@ -35,23 +35,17 @@ public class RpcClientProxy implements InvocationHandler {
      * Used to send requests to the server.And there are two implementations: socket and netty
      */
     private final RpcRequestTransport rpcRequestTransport;
-    private final RpcServiceProperties rpcServiceProperties;
+    private final RpcServiceConfig rpcServiceConfig;
 
-    public RpcClientProxy(RpcRequestTransport rpcRequestTransport, RpcServiceProperties rpcServiceProperties) {
+    public RpcClientProxy(RpcRequestTransport rpcRequestTransport, RpcServiceConfig rpcServiceConfig) {
         this.rpcRequestTransport = rpcRequestTransport;
-        if (rpcServiceProperties.getGroup() == null) {
-            rpcServiceProperties.setGroup("");
-        }
-        if (rpcServiceProperties.getVersion() == null) {
-            rpcServiceProperties.setVersion("");
-        }
-        this.rpcServiceProperties = rpcServiceProperties;
+        this.rpcServiceConfig = rpcServiceConfig;
     }
 
 
     public RpcClientProxy(RpcRequestTransport rpcRequestTransport) {
         this.rpcRequestTransport = rpcRequestTransport;
-        this.rpcServiceProperties = RpcServiceProperties.builder().group("").version("").build();
+        this.rpcServiceConfig = new RpcServiceConfig();
     }
 
     /**
@@ -76,8 +70,8 @@ public class RpcClientProxy implements InvocationHandler {
                 .interfaceName(method.getDeclaringClass().getName())
                 .paramTypes(method.getParameterTypes())
                 .requestId(UUID.randomUUID().toString())
-                .group(rpcServiceProperties.getGroup())
-                .version(rpcServiceProperties.getVersion())
+                .group(rpcServiceConfig.getGroup())
+                .version(rpcServiceConfig.getVersion())
                 .build();
         RpcResponse<Object> rpcResponse = null;
         if (rpcRequestTransport instanceof NettyRpcClient) {

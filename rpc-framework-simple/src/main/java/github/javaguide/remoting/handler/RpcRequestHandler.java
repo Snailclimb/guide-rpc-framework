@@ -3,7 +3,7 @@ package github.javaguide.remoting.handler;
 import github.javaguide.exception.RpcException;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
-import github.javaguide.provider.ServiceProviderImpl;
+import github.javaguide.provider.impl.ZkServiceProviderImpl;
 import github.javaguide.remoting.dto.RpcRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,14 +21,14 @@ public class RpcRequestHandler {
     private final ServiceProvider serviceProvider;
 
     public RpcRequestHandler() {
-        serviceProvider = SingletonFactory.getInstance(ServiceProviderImpl.class);
+        serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
     }
 
     /**
      * Processing rpcRequest: call the corresponding method, and then return the method
      */
     public Object handle(RpcRequest rpcRequest) {
-        Object service = serviceProvider.getService(rpcRequest.toRpcProperties());
+        Object service = serviceProvider.getService(rpcRequest.getRpcServiceName());
         return invokeTargetMethod(rpcRequest, service);
     }
 

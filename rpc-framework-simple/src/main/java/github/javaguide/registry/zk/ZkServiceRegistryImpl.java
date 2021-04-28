@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
  * @createTime 2020年05月31日 10:56:00
  */
 @Slf4j
-public class ZkServiceRegistry implements ServiceRegistry {
+public class ZkServiceRegistryImpl implements ServiceRegistry {
 
     @Override
     public void registerService(String rpcServiceName, InetSocketAddress inetSocketAddress) {

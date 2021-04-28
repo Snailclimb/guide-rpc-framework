@@ -1,12 +1,11 @@
 package github.javaguide.remoting.transport.netty.client;
 
-import github.javaguide.compress.Compress;
 import github.javaguide.enums.CompressTypeEnum;
+import github.javaguide.enums.SerializationTypeEnum;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.remoting.constants.RpcConstants;
 import github.javaguide.remoting.dto.RpcMessage;
 import github.javaguide.remoting.dto.RpcResponse;
-import github.javaguide.enums.SerializationTypeEnum;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;

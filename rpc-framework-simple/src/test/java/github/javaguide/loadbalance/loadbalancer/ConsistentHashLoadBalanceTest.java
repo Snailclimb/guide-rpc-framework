@@ -1,5 +1,8 @@
 package github.javaguide.loadbalance.loadbalancer;
 
+import github.javaguide.DemoRpcService;
+import github.javaguide.DemoRpcServiceImpl;
+import github.javaguide.config.RpcServiceConfig;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.loadbalance.LoadBalance;
 import github.javaguide.remoting.dto.RpcRequest;
@@ -18,30 +21,19 @@ class ConsistentHashLoadBalanceTest {
     void TestConsistentHashLoadBalance() {
         LoadBalance loadBalance = ExtensionLoader.getExtensionLoader(LoadBalance.class).getExtension("loadBalance");
         List<String> serviceUrlList = new ArrayList<>(Arrays.asList("127.0.0.1:9997", "127.0.0.1:9998", "127.0.0.1:9999"));
-        String userRpcServiceName = "github.javaguide.UserServicetest1version1";
-        //build rpcCall
+
+        DemoRpcService demoRpcService = new DemoRpcServiceImpl();
+        RpcServiceConfig rpcServiceConfig = RpcServiceConfig.builder()
+                .group("test2").version("version2").service(demoRpcService).build();
+
         RpcRequest rpcRequest = RpcRequest.builder()
-//                .parameters(args)
-                .interfaceName(userRpcServiceName)
-//                .paramTypes(method.getParameterTypes())
+                .parameters(demoRpcService.getClass().getTypeParameters())
+                .interfaceName(rpcServiceConfig.getServiceName())
                 .requestId(UUID.randomUUID().toString())
-                .group("test2")
-                .version("version2")
+                .group(rpcServiceConfig.getGroup())
+                .version(rpcServiceConfig.getVersion())
                 .build();
         String userServiceAddress = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);
-        assertEquals("127.0.0.1:9999",userServiceAddress);
-
-
-        String schoolRpcServiceName = "github.javaguide.SchoolServicetest1version1";
-        rpcRequest = RpcRequest.builder()
-//                .parameters(args)
-                .interfaceName(userRpcServiceName)
-//                .paramTypes(method.getParameterTypes())
-                .requestId(UUID.randomUUID().toString())
-                .group("test2")
-                .version("version2")
-                .build();
-        String schoolServiceAddress = loadBalance.selectServiceAddress(serviceUrlList, rpcRequest);
-        assertEquals("127.0.0.1:9997",schoolServiceAddress);
+        assertEquals("127.0.0.1:9998", userServiceAddress);
     }
 }
