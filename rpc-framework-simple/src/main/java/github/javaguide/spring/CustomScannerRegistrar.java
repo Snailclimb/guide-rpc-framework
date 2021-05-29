@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 public class CustomScannerRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
-    private static final String SPRING_BEAN_BASE_PACKAGE = "github.javaguide.spring";
+    private static final String SPRING_BEAN_BASE_PACKAGE = "github.javaguide";
     private static final String BASE_PACKAGE_ATTRIBUTE_NAME = "basePackage";
     private ResourceLoader resourceLoader;
 
