@@ -1,11 +1,13 @@
 package github.javaguide;
 
 import github.javaguide.annotation.RpcReference;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
  * @author smile2coder
  */
+@Slf4j
 @Component
 public class HelloController {
 
@@ -15,6 +17,7 @@ public class HelloController {
     public void test() throws InterruptedException {
         String hello = this.helloService.hello(new Hello("111", "222"));
         //如需使用 assert 断言，需要在 VM options 添加参数：-ea
+        log.debug("i am daddy");
         assert "Hello description is 222".equals(hello);
         Thread.sleep(12000);
         for (int i = 0; i < 10; i++) {
