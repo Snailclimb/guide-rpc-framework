@@ -21,4 +21,7 @@ public class HelloController {
             System.out.println(helloService.hello(new Hello("111", "222")));
         }
     }
+    public  void introduce(){
+
+    }
 }
