@@ -1,0 +1,2 @@
+apple=github.javaguide.compiler.service.impl.FruitApple
+banana=github.javaguide.compiler.service.impl.FruitBanana

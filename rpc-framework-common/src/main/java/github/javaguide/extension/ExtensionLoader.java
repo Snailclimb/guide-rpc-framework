@@ -1,14 +1,14 @@
 package github.javaguide.extension;
 
+import github.javaguide.compiler.RpcCompiler;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -26,6 +26,9 @@ public final class ExtensionLoader<T> {
     private final Class<?> type;
     private final Map<String, Holder<Object>> cachedInstances = new ConcurrentHashMap<>();
     private final Holder<Map<String, Class<?>>> cachedClasses = new Holder<>();
+    private final Holder<Object> cacheAdaptiveInstance = new Holder<>();
+    private volatile Throwable createAdaptiveInstanceError;
+    private volatile Class<?> cacheAdaptiveClass = null;
 
     private ExtensionLoader(Class<?> type) {
         this.type = type;
@@ -74,6 +77,67 @@ public final class ExtensionLoader<T> {
         return (T) instance;
     }
 
+    public T getAdaptiveExtension() {
+        Object instance = cacheAdaptiveInstance.get();
+        if (instance == null) {
+            if (createAdaptiveInstanceError != null) {
+                throw new IllegalStateException("Failed to create adaptive instance: " + createAdaptiveInstanceError.toString(),
+                        createAdaptiveInstanceError);
+            }
+        }
+
+        // double check
+        synchronized (cacheAdaptiveInstance) {
+            instance = cacheAdaptiveInstance.get();
+            if (instance == null) {
+                try {
+                    instance = createAdaptiveExtension();
+                    cacheAdaptiveInstance.set(instance);
+                } catch (Throwable t) {
+                    createAdaptiveInstanceError = t;
+                    throw new IllegalStateException("Failed to create adaptive instance: " + t.toString(), t);
+                }
+            }
+        }
+        return (T) instance;
+    }
+
+    /**
+     * 判断当前扩展名所包含的类型是否已经加载进来了
+     * 这个扩展名就是在META-INF/extensions里面所有文件 k，v 键值对的key
+     * @param name 扩展名
+     * @return 是否存在对应类型
+     */
+    public boolean hasExtension(String name) {
+        if (name == null || name.isEmpty()) {
+            throw new IllegalArgumentException("Extension name == null");
+        }
+        Class<?> c = this.cachedClasses.get().get(name);
+        return c != null;
+    }
+
+    public Set<String> getSupportedExtensions() {
+        Map<String, Class<?>> classes = getExtensionClasses();
+        return Collections.unmodifiableSet(new TreeSet<>(classes.keySet()));
+    }
+
+    /**
+     * 获取配置文件中所有可以使用的扩展实例，Dubbo中要根据优先级进行排序
+     * 这里为了方便描述流程，将排序部分删除，直接保留默认的问价读取顺序
+     *
+     * @return 所有实现类型的集合
+     */
+    public Set<T> getSupportedExtensionInstances() {
+        List<T> instances = new LinkedList<>();
+        Set<String> supportedExtensions = getSupportedExtensions();
+        if (CollectionUtils.isNotEmpty(supportedExtensions)) {
+            for (String name : supportedExtensions) {
+                instances.add(getExtension(name));
+            }
+        }
+        return new LinkedHashSet<>(instances);
+    }
+
     private T createExtension(String name) {
         // load all extension classes of type T from file and get specific one by name
         Class<?> clazz = getExtensionClasses().get(name);
@@ -83,13 +147,63 @@ public final class ExtensionLoader<T> {
         T instance = (T) EXTENSION_INSTANCES.get(clazz);
         if (instance == null) {
             try {
-                EXTENSION_INSTANCES.putIfAbsent(clazz, clazz.newInstance());
+                EXTENSION_INSTANCES.putIfAbsent(clazz, clazz.getConstructor().newInstance());
                 instance = (T) EXTENSION_INSTANCES.get(clazz);
             } catch (Exception e) {
                 log.error(e.getMessage());
             }
         }
         return instance;
+    }
+
+    private T createAdaptiveExtension() {
+        try {
+            return (T) getAdaptiveExtensionClass().getConstructor().newInstance();
+        } catch (Exception e) {
+            throw new IllegalStateException("Can't create adaptive extension " + type + ", cause: " + e.getMessage(), e);
+        }
+    }
+
+    private Class<?> getAdaptiveExtensionClass() {
+        getExtensionClasses();
+        if (cacheAdaptiveClass != null) {
+            return cacheAdaptiveClass;
+        }
+        cacheAdaptiveClass = createAdaptiveExtensionClass();
+        return cacheAdaptiveClass;
+    }
+
+    /**
+     * 创建自适应扩展类，先判断是否为本地加载的类，通过配置的系统属性判断，如果是则选用手工实现自适应部分的代码填充工作
+     * 选择Compiler上有变化，这里查看所有Compiler子类型的实例，如果一个子类型都没有，使用javassist实现，不过如果一个
+     * 子类型都没有的话，会抛出异常
+     *
+     * @see AdaptiveClassCodeGenerator#generate
+     * @return 生成的类的类型对象
+     */
+    private Class<?> createAdaptiveExtensionClass() {
+        ClassLoader loader = type.getClassLoader();
+        try {
+            if (Boolean.parseBoolean(System.getProperty("native", "false"))) {
+                return loader.loadClass(type.getName() + "$Adaptive");
+            }
+        } catch (Throwable ignore) {
+
+        }
+        String code = new AdaptiveClassCodeGenerator(type).generate();
+        ExtensionLoader<RpcCompiler> extensionLoader = ExtensionLoader.getExtensionLoader(RpcCompiler.class);
+        Set<RpcCompiler> set = extensionLoader.getSupportedExtensionInstances();
+        RpcCompiler compiler;
+        if (!set.isEmpty()) {
+            compiler = set.stream().findFirst().get();
+            return compiler.compile(code, loader);
+        }
+        if (hasExtension("javassist")) {
+            compiler = ExtensionLoader.getExtensionLoader(RpcCompiler.class).getExtension("javassist");
+        } else {
+            throw new IllegalStateException("No such implement class");
+        }
+        return compiler.compile(code, loader);
     }
 
     private Map<String, Class<?>> getExtensionClasses() {
@@ -147,6 +261,9 @@ public final class ExtensionLoader<T> {
                         // our SPI use key-value pair so both of them must not be empty
                         if (name.length() > 0 && clazzName.length() > 0) {
                             Class<?> clazz = classLoader.loadClass(clazzName);
+                            if (clazz.isAnnotationPresent(Adaptive.class)) {
+                                cacheAdaptiveClass = clazz;
+                            }
                             extensionClasses.put(name, clazz);
                         }
                     } catch (ClassNotFoundException e) {
