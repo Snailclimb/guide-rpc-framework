@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class HessianSerializerTest {
 
     @Test
-    void hessianSerializerTest() {
+    public void hessianSerializerTest() {
         RpcRequest target = RpcRequest.builder().methodName("hello")
                 .parameters(new Object[]{"sayhelooloo", "sayhelooloosayhelooloo"})
                 .interfaceName("github.javaguide.HelloService")
