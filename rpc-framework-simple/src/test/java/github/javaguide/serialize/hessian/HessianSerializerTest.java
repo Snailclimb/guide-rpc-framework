@@ -1,7 +1,6 @@
 package github.javaguide.serialize.hessian;
 
 import github.javaguide.remoting.dto.RpcRequest;
-import github.javaguide.serialize.kyro.KryoSerializer;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -20,9 +19,9 @@ class HessianSerializerTest {
                 .group("group1")
                 .version("version1")
                 .build();
-        KryoSerializer kryoSerializer = new KryoSerializer();
-        byte[] bytes = kryoSerializer.serialize(target);
-        RpcRequest actual = kryoSerializer.deserialize(bytes, RpcRequest.class);
+        HessianSerializer hessianSerializer = new HessianSerializer();
+        byte[] bytes = hessianSerializer.serialize(target);
+        RpcRequest actual = hessianSerializer.deserialize(bytes, RpcRequest.class);
         assertEquals(target.getGroup(), actual.getGroup());
         assertEquals(target.getVersion(), actual.getVersion());
         assertEquals(target.getRequestId(), actual.getRequestId());
