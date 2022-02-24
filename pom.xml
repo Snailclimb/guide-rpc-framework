@@ -25,6 +25,8 @@
         <slf4j.version>1.7.25</slf4j.version>
         <!-- protostuff -->
         <protostuff.version>1.7.2</protostuff.version>
+        <!--hessian-->
+        <hessian.version>4.0.65</hessian.version>
     </properties>
     <modules>
         <module>rpc-framework-simple</module>
