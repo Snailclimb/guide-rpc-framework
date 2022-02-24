@@ -20,15 +20,25 @@ import lombok.ToString;
 @ToString
 public class RpcMessage {
 
-    //rpc message type
+    /**
+     * rpc message type
+     */
     private byte messageType;
-    //serialization type
+    /**
+     * serialization type
+     */
     private byte codec;
-    //compress type
+    /**
+     * compress type
+     */
     private byte compress;
-    //request id
+    /**
+     * request id
+     */
     private int requestId;
-    //request data
+    /**
+     * request data
+     */
     private Object data;
 
 }
