@@ -8,6 +8,7 @@ import github.javaguide.registry.ServiceDiscovery;
 import github.javaguide.registry.zk.util.CuratorUtils;
 import github.javaguide.remoting.dto.RpcRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.curator.framework.CuratorFramework;
 
 import java.net.InetSocketAddress;
@@ -32,7 +33,7 @@ public class ZkServiceDiscoveryImpl implements ServiceDiscovery {
         String rpcServiceName = rpcRequest.getRpcServiceName();
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         List<String> serviceUrlList = CuratorUtils.getChildrenNodes(zkClient, rpcServiceName);
-        if (serviceUrlList == null || serviceUrlList.size() == 0) {
+        if (CollectionUtils.isEmpty(serviceUrlList)) {
             throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND, rpcServiceName);
         }
         // load balancing

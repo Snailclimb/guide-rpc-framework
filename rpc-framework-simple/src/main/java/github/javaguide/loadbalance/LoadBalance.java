@@ -16,8 +16,9 @@ public interface LoadBalance {
     /**
      * Choose one from the list of existing service addresses list
      *
-     * @param serviceAddresses Service address list
+     * @param serviceUrlList Service address list
+     * @param rpcRequest
      * @return target service address
      */
-    String selectServiceAddress(List<String> serviceAddresses, RpcRequest rpcRequest);
+    String selectServiceAddress(List<String> serviceUrlList, RpcRequest rpcRequest);
 }

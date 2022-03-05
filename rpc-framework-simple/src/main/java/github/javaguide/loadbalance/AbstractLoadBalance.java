@@ -1,6 +1,7 @@
 package github.javaguide.loadbalance;
 
 import github.javaguide.remoting.dto.RpcRequest;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public abstract class AbstractLoadBalance implements LoadBalance {
     @Override
     public String selectServiceAddress(List<String> serviceAddresses, RpcRequest rpcRequest) {
-        if (serviceAddresses == null || serviceAddresses.size() == 0) {
+        if (CollectionUtils.isEmpty(serviceAddresses)) {
             return null;
         }
         if (serviceAddresses.size() == 1) {
