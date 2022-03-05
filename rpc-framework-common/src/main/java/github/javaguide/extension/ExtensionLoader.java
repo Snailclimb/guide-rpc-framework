@@ -1,5 +1,6 @@
 package github.javaguide.extension;
 
+import github.javaguide.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
@@ -51,7 +52,7 @@ public final class ExtensionLoader<T> {
     }
 
     public T getExtension(String name) {
-        if (name == null || name.isEmpty()) {
+        if (StringUtils.isBlank(name)) {
             throw new IllegalArgumentException("Extension name should not be null or empty.");
         }
         // firstly get from cache, if not hit, create one
