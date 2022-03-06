@@ -5,7 +5,7 @@ import github.javaguide.config.RpcServiceConfig;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.impl.ZkServiceProviderImpl;
-import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtils;
+import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class SocketRpcServer {
 
 
     public SocketRpcServer() {
-        threadPool = ThreadPoolFactoryUtils.createCustomThreadPoolIfAbsent("socket-server-rpc-pool");
+        threadPool = ThreadPoolFactoryUtil.createCustomThreadPoolIfAbsent("socket-server-rpc-pool");
         serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
     }
 

@@ -2,7 +2,7 @@ package github.javaguide.config;
 
 import github.javaguide.registry.zk.util.CuratorUtils;
 import github.javaguide.remoting.transport.netty.server.NettyRpcServer;
-import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtils;
+import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
@@ -31,7 +31,7 @@ public class CustomShutdownHook {
                 CuratorUtils.clearRegistry(CuratorUtils.getZkClient(), inetSocketAddress);
             } catch (UnknownHostException ignored) {
             }
-            ThreadPoolFactoryUtils.shutDownAllThreadPool();
+            ThreadPoolFactoryUtil.shutDownAllThreadPool();
         }));
     }
 }
