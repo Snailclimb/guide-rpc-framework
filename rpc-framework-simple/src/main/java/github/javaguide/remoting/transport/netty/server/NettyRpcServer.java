@@ -8,7 +8,7 @@ import github.javaguide.provider.impl.ZkServiceProviderImpl;
 import github.javaguide.remoting.transport.netty.codec.RpcMessageDecoder;
 import github.javaguide.remoting.transport.netty.codec.RpcMessageEncoder;
 import github.javaguide.utils.RuntimeUtil;
-import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtils;
+import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -56,7 +56,7 @@ public class NettyRpcServer {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         DefaultEventExecutorGroup serviceHandlerGroup = new DefaultEventExecutorGroup(
                 RuntimeUtil.cpus() * 2,
-                ThreadPoolFactoryUtils.createThreadFactory("service-handler-group", false)
+                ThreadPoolFactoryUtil.createThreadFactory("service-handler-group", false)
         );
         try {
             ServerBootstrap b = new ServerBootstrap();
