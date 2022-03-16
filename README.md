@@ -1,19 +1,14 @@
 # guide-rpc-framework
 
-> 最近被一些不友好的人"喷"了，简单写了一篇记录一下：[被喷了！聊聊我开源的RPC框架那些事](/docs/被喷了！聊聊我开源的RPC框架那些事.md)
->
-> [该 RPC 框架配套教程已经更新在我的星球，点击此链接了解详情。](https://t.zsxq.com/Ea6YVVn)
+> [该 RPC 框架配套教程已经更新在我的星球，点击此链接了解详情。](https://javaguide.cn/zhuanlan/handwritten-rpc-framework.html)
 
-中文|[English](./README-EN.md)
-
-本着开源精神，本项目README已经同步了英文版本。另外，项目的源代码的注释大部分也修改为了英文。
-
-如访问速度不佳，可放在 Gitee 地址：https://gitee.com/SnailClimb/guide-rpc-framework 。如果要提交 issue 或者 pr 的话，请在 Github 提交：[https://github.com/Snailclimb/guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) 。
-
-相关项目：
-
-1. [Netty 从入门到实战](https://github.com/Snailclimb/netty-practical-tutorial)(正在更新中...)
-2. [「Java学习+面试指南」一份涵盖大部分Java程序员所需要掌握的核心知识。](https://github.com/Snailclimb/JavaGuide)
+<div align="center">
+  <p> 中文| <a href="./README-EN.md">English</a>
+  </p>
+  <p>
+    <a href="https://github.com/Snailclimb/guide-rpc-framework">Github</a> | <a href="https://gitee.com/SnailClimb/guide-rpc-framework ">Gitee</a>
+  </p>
+</div>
 
 ## 前言
 
@@ -275,5 +270,4 @@ System.out.println(hello);
 Guide 的星球正在更新《从零开始手把手教你实现一个简单的 RPC 框架》。扫描下方二维码关注“**JavaGuide**”后回复 “**星球**”即可。
 
 ![我的公众号](https://my-blog-to-use.oss-cn-beijing.aliyuncs.com/2019-6/167598cd2e17b8ec.png)
-
 
