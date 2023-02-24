@@ -3,6 +3,7 @@ package github.javaguide.remoting.transport.netty.client;
 
 import github.javaguide.enums.CompressTypeEnum;
 import github.javaguide.enums.SerializationTypeEnum;
+import github.javaguide.enums.ServiceDiscoveryEnum;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.registry.ServiceDiscovery;
@@ -68,7 +69,7 @@ public final class NettyRpcClient implements RpcRequestTransport {
                         p.addLast(new NettyRpcClientHandler());
                     }
                 });
-        this.serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension("zk");
+        this.serviceDiscovery = ExtensionLoader.getExtensionLoader(ServiceDiscovery.class).getExtension(ServiceDiscoveryEnum.ZK.getName());
         this.unprocessedRequests = SingletonFactory.getInstance(UnprocessedRequests.class);
         this.channelProvider = SingletonFactory.getInstance(ChannelProvider.class);
     }
