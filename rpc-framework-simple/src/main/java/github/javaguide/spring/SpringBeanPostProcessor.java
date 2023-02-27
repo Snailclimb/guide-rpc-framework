@@ -3,6 +3,7 @@ package github.javaguide.spring;
 import github.javaguide.annotation.RpcReference;
 import github.javaguide.annotation.RpcService;
 import github.javaguide.config.RpcServiceConfig;
+import github.javaguide.enums.RpcRequestTransportEnum;
 import github.javaguide.extension.ExtensionLoader;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
@@ -32,7 +33,7 @@ public class SpringBeanPostProcessor implements BeanPostProcessor {
 
     public SpringBeanPostProcessor() {
         this.serviceProvider = SingletonFactory.getInstance(ZkServiceProviderImpl.class);
-        this.rpcClient = ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension("netty");
+        this.rpcClient = ExtensionLoader.getExtensionLoader(RpcRequestTransport.class).getExtension(RpcRequestTransportEnum.NETTY.getName());
     }
 
     @SneakyThrows
