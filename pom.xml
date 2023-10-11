@@ -14,7 +14,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <netty.version>4.1.42.Final</netty.version>
         <kryo.version>4.0.2</kryo.version>
-        <guava.version>30.1.1-jre</guava.version>
+        <guava.version>32.0.0-jre</guava.version>
         <checkstyle-maven-plugin.version>3.1.1</checkstyle-maven-plugin.version>
         <spring.version>5.2.7.RELEASE</spring.version>
         <curator-version>4.2.0</curator-version>
