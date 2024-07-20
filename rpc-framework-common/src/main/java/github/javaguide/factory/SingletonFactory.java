@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class SingletonFactory {
     private static final Map<String, Object> OBJECT_MAP = new ConcurrentHashMap<>();
+    private static final Object lock = new Object();
 
     private SingletonFactory() {
     }
@@ -24,13 +25,19 @@ public final class SingletonFactory {
         if (OBJECT_MAP.containsKey(key)) {
             return c.cast(OBJECT_MAP.get(key));
         } else {
-            return c.cast(OBJECT_MAP.computeIfAbsent(key, k -> {
-                try {
-                    return c.getDeclaredConstructor().newInstance();
-                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                    throw new RuntimeException(e.getMessage(), e);
+            synchronized (lock) {
+                if (!OBJECT_MAP.containsKey(key)) {
+                    try {
+                        T instance = c.getDeclaredConstructor().newInstance();
+                        OBJECT_MAP.put(key, instance);
+                        return instance;
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                        throw new RuntimeException(e.getMessage(), e);
+                    }
+                } else {
+                    return c.cast(OBJECT_MAP.get(key));
                 }
-            }));
+            }
         }
     }
 }
