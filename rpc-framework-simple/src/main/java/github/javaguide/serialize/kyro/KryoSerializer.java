@@ -38,10 +38,11 @@ public class KryoSerializer implements Serializer {
             Kryo kryo = kryoThreadLocal.get();
             // Object->byte:将对象序列化为byte数组
             kryo.writeObject(output, obj);
-            kryoThreadLocal.remove();
-            return output.toBytes();
+            output.flush();
+            return byteArrayOutputStream.toByteArray();
         } catch (Exception e) {
-            throw new SerializeException("Serialization failed");
+            log.error("Serialization failed", e);
+            throw new SerializeException("Serialization failed", e);
         }
     }
 
@@ -51,11 +52,20 @@ public class KryoSerializer implements Serializer {
              Input input = new Input(byteArrayInputStream)) {
             Kryo kryo = kryoThreadLocal.get();
             // byte->Object:从byte数组中反序列化出对对象
-            Object o = kryo.readObject(input, clazz);
-            kryoThreadLocal.remove();
-            return clazz.cast(o);
+            return kryo.readObject(input, clazz);
         } catch (Exception e) {
-            throw new SerializeException("Deserialization failed");
+            log.error("Deserialization failed", e);
+            throw new SerializeException("Deserialization failed", e);
+        }
+    }
+
+    public class SerializeException extends RuntimeException {
+        public SerializeException(String message) {
+            super(message);
+        }
+
+        public SerializeException(String message, Throwable cause) {
+            super(message, cause);
         }
     }
 
