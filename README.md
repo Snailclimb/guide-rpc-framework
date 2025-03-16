@@ -114,7 +114,7 @@ fork 项目到自己的仓库，然后克隆项目到自己的本地：`git clon
 
 ![CheckStyle 插件下载和配置](./images/setting-check-style.png)
 
-配置完成之后，按照如下方式使用这个插件！
+配置完成之后，按照如下方式使用这个插件。
 
 ![插件使用方式](./images/run-check-style.png)
 
