@@ -72,8 +72,8 @@ public class ConsistentHashLoadBalanceNew extends AbstractLoadBalance {
          * */
         private final TreeMap<Long, String> virtualNodes = new TreeMap<>();
         private final Set<String> physicalNodes = new HashSet<>();
-        private int virtualNodeCount;
-        private HashFunction hashFunction;
+        private final int virtualNodeCount;
+        private final HashFunction hashFunction;
 
         /**
          * 防止使用了没有初始化完成的选择器

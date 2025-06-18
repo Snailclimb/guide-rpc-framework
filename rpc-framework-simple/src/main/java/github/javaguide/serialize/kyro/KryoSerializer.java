@@ -3,7 +3,6 @@ package github.javaguide.serialize.kyro;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import github.javaguide.exception.SerializeException;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.serialize.Serializer;

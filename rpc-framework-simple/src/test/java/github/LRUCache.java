@@ -98,9 +98,9 @@ public class LRUCache<K, V> {
 
 
 
-    private Map<K, Node>mp;
-    private ListM list;
-    private int capacity;
+    private final Map<K, Node>mp;
+    private final ListM list;
+    private final int capacity;
 
     public LRUCache(int capacity) {
         this.capacity = capacity;

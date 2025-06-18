@@ -31,7 +31,7 @@ public class ExtentionTest {
 
 @SPI
 interface HelloServiceBean {
-    public void test();
+    void test();
 }
 
 @Slf4j

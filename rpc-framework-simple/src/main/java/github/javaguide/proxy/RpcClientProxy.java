@@ -7,8 +7,6 @@ import github.javaguide.exception.RpcException;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.transport.RpcRequestTransport;
-import github.javaguide.remoting.transport.netty.client.NettyRpcClient;
-import github.javaguide.remoting.transport.socket.SocketRpcClient;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,7 +14,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Dynamic proxy class.

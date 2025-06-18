@@ -17,7 +17,6 @@ import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -190,10 +189,9 @@ class ConsistentHashLoadBalanceTest {
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
-        ;
         InetSocketAddress inetSocketAddress = new InetSocketAddress(host, i);
 //        System.out.println(inetSocketAddress.toString());
-        String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + "/" + rpcRequest.getRpcServiceName() + inetSocketAddress.toString();
+        String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + "/" + rpcRequest.getRpcServiceName() + inetSocketAddress;
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         CuratorUtils.createEphemeralNode(zkClient, servicePath);
     }
@@ -222,12 +220,11 @@ class ConsistentHashLoadBalanceTest {
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
-        ;
         CuratorFramework zkClient = CuratorUtils.getZkClient();
         InetSocketAddress inetSocketAddress = new InetSocketAddress(host, i);
 //        System.out.println(inetSocketAddress);
-        log.info("删除结点:{}", inetSocketAddress.toString());
-        String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + "/" + rpcRequest.getRpcServiceName() + inetSocketAddress.toString();
+        log.info("删除结点:{}", inetSocketAddress);
+        String servicePath = CuratorUtils.ZK_REGISTER_ROOT_PATH + "/" + rpcRequest.getRpcServiceName() + inetSocketAddress;
         CuratorUtils.deleteEphemeralNode(zkClient, servicePath);
     }
 }
