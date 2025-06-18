@@ -1,0 +1,17 @@
+<configuration>
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 根日志级别：控制全局日志输出 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+<!--    &lt;!&ndash; 特定包的日志级别 &ndash;&gt;-->
+<!--    <logger name="com.example" level="DEBUG" />-->
+<!--    <logger name="org.springframework" level="WARN" />-->
+</configuration>

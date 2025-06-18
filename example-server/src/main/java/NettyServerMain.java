@@ -1,7 +1,9 @@
+import github.javaguide.Hello;
 import github.javaguide.HelloService;
 import github.javaguide.annotation.RpcScan;
 import github.javaguide.config.RpcServiceConfig;
 import github.javaguide.remoting.transport.netty.server.NettyRpcServer;
+import github.javaguide.serviceimpl.HelloServiceImpl;
 import github.javaguide.serviceimpl.HelloServiceImpl2;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -14,6 +16,10 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 @RpcScan(basePackage = {"github.javaguide"})
 public class NettyServerMain {
     public static void main(String[] args) {
+        autoRegistry();
+    }
+
+    public static void manuallyRegistry() {
         // Register service via annotation
         AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(NettyServerMain.class);
         NettyRpcServer nettyRpcServer = (NettyRpcServer) applicationContext.getBean("nettyRpcServer");
@@ -22,6 +28,15 @@ public class NettyServerMain {
         RpcServiceConfig rpcServiceConfig = RpcServiceConfig.builder()
                 .group("test2").version("version2").service(helloService2).build();
         nettyRpcServer.registerService(rpcServiceConfig);
+        nettyRpcServer.start();
+
+    }
+
+    public static void autoRegistry() {
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(NettyServerMain.class);
+        NettyRpcServer nettyRpcServer = (NettyRpcServer) applicationContext.getBean("nettyRpcServer");
+        HelloService helloService = applicationContext.getBean(HelloServiceImpl.class);
+        helloService.hello(new Hello("你好fzk", "你好服务端"));
         nettyRpcServer.start();
     }
 }

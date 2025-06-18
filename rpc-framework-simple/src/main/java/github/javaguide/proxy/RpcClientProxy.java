@@ -64,6 +64,7 @@ public class RpcClientProxy implements InvocationHandler {
     @SuppressWarnings("unchecked")
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
+        // 1. 创建一个PRC请求
         log.info("invoked method: [{}]", method.getName());
         RpcRequest rpcRequest = RpcRequest.builder().methodName(method.getName())
                 .parameters(args)
@@ -73,14 +74,9 @@ public class RpcClientProxy implements InvocationHandler {
                 .group(rpcServiceConfig.getGroup())
                 .version(rpcServiceConfig.getVersion())
                 .build();
-        RpcResponse<Object> rpcResponse = null;
-        if (rpcRequestTransport instanceof NettyRpcClient) {
-            CompletableFuture<RpcResponse<Object>> completableFuture = (CompletableFuture<RpcResponse<Object>>) rpcRequestTransport.sendRpcRequest(rpcRequest);
-            rpcResponse = completableFuture.get();
-        }
-        if (rpcRequestTransport instanceof SocketRpcClient) {
-            rpcResponse = (RpcResponse<Object>) rpcRequestTransport.sendRpcRequest(rpcRequest);
-        }
+        // 2. 发送RPC请求
+        RpcResponse<Object> rpcResponse =  (RpcResponse<Object>) rpcRequestTransport.sendRpcRequest(rpcRequest);
+
         this.check(rpcResponse, rpcRequest);
         return rpcResponse.getData();
     }

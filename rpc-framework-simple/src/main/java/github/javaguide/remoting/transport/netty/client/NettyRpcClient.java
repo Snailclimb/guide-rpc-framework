@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -96,14 +97,13 @@ public final class NettyRpcClient implements RpcRequestTransport {
 
     @Override
     public Object sendRpcRequest(RpcRequest rpcRequest) {
-        // build return value
         CompletableFuture<RpcResponse<Object>> resultFuture = new CompletableFuture<>();
-        // get server address
+        // 1. 获取服务的地址
         InetSocketAddress inetSocketAddress = serviceDiscovery.lookupService(rpcRequest);
-        // get  server address related channel
+        // 2. 获取channel
         Channel channel = getChannel(inetSocketAddress);
         if (channel.isActive()) {
-            // put unprocessed request
+            // 3.发送请求
             unprocessedRequests.put(rpcRequest.getRequestId(), resultFuture);
             RpcMessage rpcMessage = RpcMessage.builder().data(rpcRequest)
                     .codec(SerializationTypeEnum.HESSIAN.getCode())
@@ -121,8 +121,12 @@ public final class NettyRpcClient implements RpcRequestTransport {
         } else {
             throw new IllegalStateException();
         }
-
-        return resultFuture;
+        // 4. 得到响应的结果
+        try {
+            return resultFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException("rpc请求失败," + e.getMessage());
+        }
     }
 
     public Channel getChannel(InetSocketAddress inetSocketAddress) {
