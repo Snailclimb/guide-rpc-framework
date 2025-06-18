@@ -138,7 +138,7 @@ docker run -d --name zookeeper -p 2181:2181 zookeeper:3.5.8
 
 ### 服务提供端
 
-实现接口：
+**实现接口**：
 
 ```java
 @Slf4j
@@ -174,27 +174,21 @@ public class HelloServiceImpl2 implements HelloService {
 }
 ```
 
-发布服务(使用 Netty 进行传输)：
+**发布服务(使用 Netty 进行传输)**：
 
 ```java
-/**
- * Server: Automatic registration service via @RpcService annotation
- *
- * @author shuang.kou
- * @createTime 2020年05月10日 07:25:00
- */
-@RpcScan(basePackage = {"github.javaguide.serviceimpl"})
+@RpcScan(basePackage = {"github.javaguide"})
 public class NettyServerMain {
     public static void main(String[] args) {
-        // Register service via annotation
-        new AnnotationConfigApplicationContext(NettyServerMain.class);
-        NettyServer nettyServer = new NettyServer();
-        // Register service manually
-        HelloService helloService2 = new HelloServiceImpl2();
-        RpcServiceProperties rpcServiceConfig = RpcServiceProperties.builder()
-                .group("test2").version("version2").build();
-        nettyServer.registerService(helloService2, rpcServiceConfig);
-        nettyServer.start();
+        autoRegistry();
+    }
+
+    public static void autoRegistry() {
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(NettyServerMain.class);
+        NettyRpcServer nettyRpcServer = (NettyRpcServer) applicationContext.getBean("nettyRpcServer");
+        HelloService helloService = applicationContext.getBean(HelloServiceImpl.class);
+        helloService.hello(new Hello("你好fzk", "你好服务端"));
+        nettyRpcServer.start();
     }
 }
 ```
@@ -221,13 +215,14 @@ public class HelloController {
 ```
 
 ```java
-ClientTransport rpcRequestTransport = new SocketRpcClient();
-RpcServiceProperties rpcServiceConfig = RpcServiceProperties.builder()
-        .group("test2").version("version2").build();
-RpcClientProxy rpcClientProxy = new RpcClientProxy(rpcRequestTransport, rpcServiceConfig);
-HelloService helloService = rpcClientProxy.getProxy(HelloService.class);
-String hello = helloService.hello(new Hello("111", "222"));
-System.out.println(hello);
+@RpcScan(basePackage = {"github.javaguide"})
+public class NettyClientMain {
+    public static void main(String[] args) throws InterruptedException {
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(NettyClientMain.class);
+        HelloController helloController = (HelloController) applicationContext.getBean("helloController");
+        helloController.test();
+    }
+}
 ```
 
 ## 相关问题
