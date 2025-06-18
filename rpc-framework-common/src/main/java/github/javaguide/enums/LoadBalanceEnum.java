@@ -11,7 +11,9 @@ import lombok.Getter;
 @Getter
 public enum LoadBalanceEnum {
 
-    LOADBALANCE("loadBalance");
+    LOADBALANCE("loadBalance"),
+
+    LOADBALANCENEW("loadBalanceNew");
 
     private final String name;
 }

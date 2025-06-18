@@ -140,5 +140,27 @@ public final class CuratorUtils {
         pathChildrenCache.getListenable().addListener(pathChildrenCacheListener);
         pathChildrenCache.start();
     }
-
+    /**
+     * 创建临时结点
+     * */
+    public static void createEphemeralNode(CuratorFramework zkClient, String path) {
+        try {
+            // 创建临时节点（EPHEMERAL 模式）
+            String createdPath = zkClient.create()
+                    .creatingParentsIfNeeded()
+                    .withMode(CreateMode.EPHEMERAL)  // 指定为临时节点
+                    .withACL(org.apache.zookeeper.ZooDefs.Ids.OPEN_ACL_UNSAFE)  // 设置ACL
+                    .forPath(path, "status:ok".getBytes());  // 指定节点路径和数据
+        } catch (Exception e) {
+            log.error("创建临时结点失败!", e);
+        }
+    }
+    public static void deleteEphemeralNode(CuratorFramework zkClient, String path) {
+        // 方法2：强制删除节点（无论是否有子节点）
+        try {
+            zkClient.delete().deletingChildrenIfNeeded().forPath(path);
+        } catch (Exception e) {
+            log.error("删除临时结点：{}失败", path);
+        }
+    }
 }
