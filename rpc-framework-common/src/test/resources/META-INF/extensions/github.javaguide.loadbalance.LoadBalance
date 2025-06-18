@@ -1,0 +1,1 @@
+loadBalance=github.javaguide.loadbalance.loadbalancer.ConsistentHashLoadBalance
