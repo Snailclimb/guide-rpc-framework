@@ -1,9 +1,0 @@
-#!/bin/sh
-#set -x
-
-echo "begin to execute hook"gst
-mvn checkstyle:check
-
-RESULT=$?
-
-exit $RESULT

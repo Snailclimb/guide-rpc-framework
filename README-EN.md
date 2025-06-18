@@ -16,7 +16,7 @@ If you're going to use the  [guide-rpc-framework](https://github.com/Snailclimb/
 
 ##  Introduction
 
- [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) is an RPC framework based on Netty+Kyro+Zookeeper. Detailed code comments, clear structure, and integrated Check Style specification code structure make it ideal for reading and learning.
+ [guide-rpc-framework](https://github.com/Snailclimb/guide-rpc-framework) is an RPC framework based on Netty+Kyro+Zookeeper. Detailed code comments, clear structure make it ideal for reading and learning.
 
 Due to the limited energy and ability of me, if you think there is something to be improved and perfected, welcome to fork this project, then clone it to local, and submit PR to me after local modification, I will Review your code as soon as possible.
 
@@ -52,30 +52,7 @@ As a leader in the field of RPC framework [Dubbo](https://github.com/apache/dubb
 
 Fork the project to your own repository, then clone the project to its own locale: `git clone git@github.com:username/guide-rpc-framework.git`  use java IDE such as IDEA to open and wait for the project initialization to complete.
 
-### Initialize git hooks
 
-**This step is mainly to run Check Style before submitting the code to ensure that the code format is correct. If there is a problem, it cannot be submitted. **
-
->The following demonstrates the operation corresponding to Mac/Linux. Window users need to manually copy the `pre-commit` file under the `config/git-hooks` directory to the `.git/hooks/` directory under the project.
-
-Execute these commands:
-
-```bash
-➜guide-rpc-framework git: (master)✗chmod + x ./init.sh
-➜guide-rpc-framework git: (master)✗./init.sh
-```
-
-The main function of the `init.sh` script is to copy the git commit hook to the `.git/hooks/` directory under the project so that it will be executed every time you commit.
-
-### CheckStyle plug-in download and configuration
-
-IntelliJ IDEA-> Preferences->Plugins-> search to download CheckStyle plug-in, and then configure it as follows.
-
-![CheckStyle plug-in download and configuration](./images/setting-check-style.png)
-
-After the configuration is complete, use this plugin as follows!
-
-![How to use the plug-in](./images/run-check-style.png)
 
 ### Download and run zookeeper
 
