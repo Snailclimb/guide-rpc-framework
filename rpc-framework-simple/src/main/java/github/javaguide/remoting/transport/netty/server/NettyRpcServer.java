@@ -5,8 +5,8 @@ import github.javaguide.config.RpcServiceConfig;
 import github.javaguide.factory.SingletonFactory;
 import github.javaguide.provider.ServiceProvider;
 import github.javaguide.provider.impl.ZkServiceProviderImpl;
-import github.javaguide.remoting.transport.netty.codec.RpcMessageDecoder;
-import github.javaguide.remoting.transport.netty.codec.RpcMessageEncoder;
+import github.javaguide.remoting.transport.netty.codec.RpcMessageCodec;
+import github.javaguide.remoting.transport.netty.codec.RpcMessageFrameDecoder;
 import github.javaguide.utils.RuntimeUtil;
 import github.javaguide.utils.concurrent.threadpool.ThreadPoolFactoryUtil;
 import io.netty.bootstrap.ServerBootstrap;
@@ -56,6 +56,9 @@ public class NettyRpcServer {
         );
         try {
             ServerBootstrap b = new ServerBootstrap();
+            // channel间可以共享的handler
+            RpcMessageCodec rpcMessageCodec = new RpcMessageCodec();
+            NettyRpcServerHandler nettyRpcServerHandler = new NettyRpcServerHandler();
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     // TCP默认开启了 Nagle 算法，该算法的作用是尽可能的发送大数据快，减少网络传输。TCP_NODELAY 参数的作用就是控制是否启用 Nagle 算法。
@@ -72,9 +75,12 @@ public class NettyRpcServer {
                             // 30 秒之内没有收到客户端请求的话就关闭连接
                             ChannelPipeline p = ch.pipeline();
                             p.addLast(new IdleStateHandler(30, 0, 0, TimeUnit.SECONDS));
-                            p.addLast(new RpcMessageEncoder());
-                            p.addLast(new RpcMessageDecoder());
-                            p.addLast(serviceHandlerGroup, new NettyRpcServerHandler());
+                            // RPCMessageFrame  解码器
+                            p.addLast(new RpcMessageFrameDecoder());
+                            // RPCMessage       编解码器
+                            p.addLast(rpcMessageCodec);
+                            // 可共享的 serverHandler
+                            p.addLast(serviceHandlerGroup, nettyRpcServerHandler);
                         }
                     });
 

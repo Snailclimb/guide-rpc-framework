@@ -12,8 +12,8 @@ import github.javaguide.remoting.dto.RpcMessage;
 import github.javaguide.remoting.dto.RpcRequest;
 import github.javaguide.remoting.dto.RpcResponse;
 import github.javaguide.remoting.transport.RpcRequestTransport;
-import github.javaguide.remoting.transport.netty.codec.RpcMessageDecoder;
-import github.javaguide.remoting.transport.netty.codec.RpcMessageEncoder;
+import github.javaguide.remoting.transport.netty.codec.RpcMessageCodec;
+import github.javaguide.remoting.transport.netty.codec.RpcMessageFrameDecoder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -47,6 +47,7 @@ public final class NettyRpcClient implements RpcRequestTransport {
     public NettyRpcClient() {
         // initialize resources such as EventLoopGroup, Bootstrap
         eventLoopGroup = new NioEventLoopGroup();
+        RpcMessageCodec rpcMessageCodec = new RpcMessageCodec();
         bootstrap = new Bootstrap();
         bootstrap.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
@@ -60,8 +61,9 @@ public final class NettyRpcClient implements RpcRequestTransport {
                         ChannelPipeline p = ch.pipeline();
                         // If no data is sent to the server within 15 seconds, a heartbeat request is sent
                         p.addLast(new IdleStateHandler(0, 5, 0, TimeUnit.SECONDS));
-                        p.addLast(new RpcMessageEncoder());
-                        p.addLast(new RpcMessageDecoder());
+                        // RPCMessageFrame  解码器
+                        p.addLast(new RpcMessageFrameDecoder());
+                        p.addLast(rpcMessageCodec);
                         p.addLast(new NettyRpcClientHandler());
                     }
                 });
